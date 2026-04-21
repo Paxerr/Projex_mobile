@@ -12,7 +12,16 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Projex_mobile">
         <activity
-            android:name=".MainActivity"
+            android:name=".AddTaskActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ProTaskActivity"
+            android:exported="false" />
+        <activity
+            android:name=".TaskActivity"
+            android:exported="true" />
+        <activity
+            android:name=".ProjectActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
