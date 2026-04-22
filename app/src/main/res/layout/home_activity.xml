@@ -39,12 +39,12 @@
 
                 <com.google.android.material.imageview.ShapeableImageView
                     android:id="@+id/imgUserAvatar"
-                    android:paddingLeft="4dp"
+                    android:paddingStart="4dp"
                     android:layout_width="44dp"
                     android:layout_height="40dp"
                     android:contentDescription="@null"
                     android:scaleType="centerCrop"
-                    android:src="@drawable/ic_user"
+                    android:src="@drawable/logo_account"
                     app:shapeAppearanceOverlay="@style/CircleAppearance" />
 
                 <TextView
@@ -500,13 +500,12 @@
     <LinearLayout
         android:id="@+id/custom_bottom_nav"
         android:layout_width="match_parent"
-        android:layout_height="72dp"
-        android:layout_marginTop="8dp"
+        android:layout_height="64dp"
         android:background="#101114"
+        android:elevation="18dp"
         android:orientation="horizontal"
         android:paddingTop="8dp"
         android:paddingBottom="10dp"
-        android:elevation="18dp"
         app:layout_constraintBottom_toBottomOf="parent">
 
         <LinearLayout
@@ -519,8 +518,8 @@
             <ImageView
                 android:layout_width="22dp"
                 android:layout_height="22dp"
-                android:src="@drawable/logo_google"
                 android:contentDescription="@null"
+                android:src="@drawable/ic_home"
                 app:tint="#85ADFF" />
 
             <TextView
@@ -543,8 +542,8 @@
             <ImageView
                 android:layout_width="22dp"
                 android:layout_height="22dp"
-                android:src="@drawable/logo_google"
                 android:contentDescription="@null"
+                android:src="@drawable/ic_spaces"
                 app:tint="#6B7280" />
 
             <TextView
@@ -567,8 +566,8 @@
             <ImageView
                 android:layout_width="22dp"
                 android:layout_height="22dp"
-                android:src="@drawable/logo_google"
                 android:contentDescription="@null"
+                android:src="@drawable/ic_tasks"
                 app:tint="#6B7280" />
 
             <TextView
@@ -591,8 +590,8 @@
             <ImageView
                 android:layout_width="22dp"
                 android:layout_height="22dp"
-                android:src="@drawable/logo_google"
                 android:contentDescription="@null"
+                android:src="@drawable/ic_notification"
                 app:tint="#6B7280" />
 
             <TextView
@@ -615,8 +614,8 @@
             <ImageView
                 android:layout_width="22dp"
                 android:layout_height="22dp"
-                android:src="@drawable/logo_google"
                 android:contentDescription="@null"
+                android:src="@drawable/ic_user"
                 app:tint="#6B7280" />
 
             <TextView
