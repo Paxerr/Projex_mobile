@@ -37,26 +37,29 @@
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
 
-                <ImageView
-                    android:layout_width="52dp"
-                    android:layout_height="34dp"
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:id="@+id/imgUserAvatar"
+                    android:paddingLeft="4dp"
+                    android:layout_width="44dp"
+                    android:layout_height="40dp"
+                    android:contentDescription="@null"
+                    android:scaleType="centerCrop"
                     android:src="@drawable/ic_user"
-
-                    android:contentDescription="@null" />
+                    app:shapeAppearanceOverlay="@style/CircleAppearance" />
 
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="12dp"
+                    android:layout_marginStart="16dp"
                     android:layout_weight="1"
-                    android:text="RyouK"
+                    android:text="David"
                     android:textColor="#FFFFFF"
                     android:textSize="20sp"
                     android:textStyle="bold" />
 
                 <FrameLayout
-                    android:layout_width="38dp"
-                    android:layout_height="38dp"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
                     android:background="@drawable/home_bg_card"
                     android:foreground="?attr/selectableItemBackgroundBorderless"
                     android:padding="9dp">
@@ -90,9 +93,9 @@
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:layout_width="match_parent"
-                    android:layout_height="56dp"
+                    android:layout_height="48dp"
                     android:background="@null"
-                    android:paddingStart="52dp"
+                    android:paddingStart="48dp"
                     android:paddingEnd="4dp"
                     android:textColor="#FFFFFF"
                     android:textColorHint="#0B7280"
@@ -102,7 +105,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="28dp"
+                android:layout_marginTop="24dp"
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
 
@@ -128,7 +131,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
+                android:layout_marginTop="16dp"
                 android:orientation="horizontal">
 
                 <LinearLayout
@@ -143,12 +146,12 @@
                         android:layout_width="34dp"
                         android:layout_height="34dp"
                         android:background="@drawable/home_bg_card"
-                        android:padding="7dp">
+                        android:padding="4dp">
 
                         <ImageView
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:src="@drawable/logo_google"
+                            android:src="@drawable/logo_github"
                             android:contentDescription="@null" />
                     </FrameLayout>
 
@@ -171,7 +174,7 @@
                 </LinearLayout>
 
                 <Space
-                    android:layout_width="12dp"
+                    android:layout_width="16dp"
                     android:layout_height="1dp" />
 
                 <LinearLayout
@@ -186,12 +189,12 @@
                         android:layout_width="34dp"
                         android:layout_height="34dp"
                         android:background="@drawable/home_bg_card"
-                        android:padding="7dp">
+                        android:padding="4dp">
 
                         <ImageView
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:src="@drawable/logo_github"
+                            android:src="@drawable/ic_logo"
                             android:contentDescription="@null" />
                     </FrameLayout>
 
@@ -212,15 +215,16 @@
                         android:textColor="#6B7280"
                         android:textSize="11sp" />
                 </LinearLayout>
+
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="18dp"
                 android:background="@drawable/home_bg_card"
                 android:orientation="vertical"
-                android:padding="20dp">
+                android:padding="24dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -245,7 +249,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="4dp"
+                            android:layout_marginTop="8dp"
                             android:text="CÔNG VIỆC"
                             android:textColor="#6B7280"
                             android:textSize="11sp" />
@@ -263,7 +267,7 @@
                     android:layout_width="170dp"
                     android:layout_height="170dp"
                     android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="26dp">
+                    android:layout_marginTop="24dp">
 
                     <ProgressBar
                         style="?android:attr/progressBarStyleHorizontal"
@@ -271,7 +275,7 @@
                         android:layout_height="match_parent"
                         android:indeterminate="false"
                         android:max="100"
-                        android:progress="36"
+                        android:progress="40"
                         android:progressDrawable="@drawable/home_bg_progress_circle" />
 
                     <LinearLayout
@@ -302,7 +306,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="18dp"
+                    android:layout_marginTop="24dp"
                     android:orientation="vertical">
 
                     <LinearLayout
@@ -425,7 +429,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="16dp"
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
 
@@ -438,22 +442,15 @@
                     android:textSize="12sp"
                     android:textStyle="bold" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="XEM TẤT CẢ"
-                    android:textColor="#85ADFF"
-                    android:textSize="12sp"
-                    android:textStyle="bold" />
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
+                android:layout_marginTop="16dp"
                 android:background="@drawable/home_bg_card"
-                android:padding="16dp"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:padding="16dp">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -466,8 +463,8 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    android:text="Updated 2h ago"
+                    android:layout_marginTop="8dp"
+                    android:text="Đã cập nhật 2h trước"
                     android:textColor="#9CA3AF"
                     android:textSize="12sp" />
             </LinearLayout>
@@ -475,7 +472,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="12dp"
                 android:background="@drawable/home_bg_card"
                 android:padding="16dp"
                 android:orientation="vertical">
@@ -602,7 +599,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
-                android:text="NOTIF"
+                android:text="NOTIFICATION"
                 android:textColor="#6B7280"
                 android:textSize="10sp"
                 android:textStyle="bold" />
