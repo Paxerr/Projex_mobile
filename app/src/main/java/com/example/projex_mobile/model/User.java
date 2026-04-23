@@ -1,3 +1,5 @@
+package com.example.projex_mobile.model;
+
 // User.java
 public class User {
     private int Id;
