@@ -12,6 +12,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.projex_mobile.adapter.TaskAdapter;
+import com.example.projex_mobile.object.Task;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class TaskActivity extends AppCompatActivity {
 
@@ -54,5 +62,19 @@ public class TaskActivity extends AppCompatActivity {
 
             popup.show();
         });
+
+        RecyclerView rvTask = findViewById(R.id.rvTask);
+
+
+        List<Task> list = new ArrayList<>();
+        list.add(new Task("Thiết kế UI", "Todo"));
+        list.add(new Task("Build API", "InProgress"));
+        list.add(new Task("Test", "Done"));
+
+
+        TaskAdapter adapter = new TaskAdapter(list);
+
+        rvTask.setLayoutManager(new LinearLayoutManager(this));
+        rvTask.setAdapter(adapter);
     }
 }

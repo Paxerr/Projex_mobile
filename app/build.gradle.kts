@@ -56,5 +56,6 @@ dependencies {
     androidTestImplementation(platform(libs.compose.bom))
     androidTestImplementation(libs.ui.test.junit4)
     debugImplementation(libs.ui.tooling)
+    implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")
     debugImplementation(libs.ui.test.manifest)
 }
