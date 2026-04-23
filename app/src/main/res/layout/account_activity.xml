@@ -53,7 +53,7 @@
                 android:contentDescription="Back"
                 android:src="@drawable/ic_back_24"
                 android:tint="#FFFFFF"
-                app:srcCompat="@drawable/outline_arrow_left_alt_24" />
+                app:srcCompat="@drawable/ic_back" />
         </com.google.android.material.card.MaterialCardView>
 
         <TextView
@@ -86,7 +86,7 @@
                 android:contentDescription="Edit profile"
                 android:src="@drawable/ic_edit_24"
                 android:tint="#4A8CFF"
-                app:srcCompat="@drawable/outline_edit_24" />
+                app:srcCompat="@drawable/account_ic_edit" />
         </com.google.android.material.card.MaterialCardView>
 
         <com.google.android.material.card.MaterialCardView
@@ -116,7 +116,7 @@
             android:id="@+id/viewOnlineDot"
             android:layout_width="18dp"
             android:layout_height="18dp"
-            android:background="@drawable/bg_online_dot"
+            android:background="@drawable/account_online_dot"
             app:layout_constraintBottom_toBottomOf="@+id/cardAvatar"
             app:layout_constraintEnd_toEndOf="@+id/cardAvatar" />
 
@@ -318,7 +318,7 @@
                         android:contentDescription="Notification"
                         android:src="@drawable/ic_bell_24"
                         android:tint="#4A8CFF"
-                        app:srcCompat="@drawable/outline_doorbell_24" />
+                        app:srcCompat="@drawable/account_ic_nofication" />
                 </com.google.android.material.card.MaterialCardView>
 
                 <TextView
@@ -450,7 +450,7 @@
                         android:contentDescription="Logout"
                         android:src="@drawable/ic_logout_24"
                         android:tint="#FF4D4D"
-                        app:srcCompat="@drawable/outline_logout_24" />
+                        app:srcCompat="@drawable/account_logout" />
                 </com.google.android.material.card.MaterialCardView>
 
                 <TextView
@@ -515,7 +515,7 @@
                         android:contentDescription="Home"
                         android:src="@drawable/ic_home_24"
                         android:tint="#8A909B"
-                        app:srcCompat="@drawable/outline_home_24" />
+                        app:srcCompat="@drawable/account_ic_home" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -549,7 +549,7 @@
                         android:contentDescription="Spaces"
                         android:src="@drawable/ic_spaces_24"
                         android:tint="#8A909B"
-                        app:srcCompat="@drawable/outline_apps_24" />
+                        app:srcCompat="@drawable/ic_space" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -583,7 +583,7 @@
                         android:contentDescription="Tasks"
                         android:src="@drawable/ic_tasks_24"
                         android:tint="#8A909B"
-                        app:srcCompat="@drawable/outline_checklist_24" />
+                        app:srcCompat="@drawable/ic_task" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -617,7 +617,7 @@
                         android:contentDescription="Notification"
                         android:src="@drawable/ic_notification_24"
                         android:tint="#8A909B"
-                        app:srcCompat="@drawable/outline_add_alert_24" />
+                        app:srcCompat="@drawable/ic_nofication" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -651,7 +651,7 @@
                         android:contentDescription="User"
                         android:src="@drawable/ic_user_24"
                         android:tint="#8CB2FF"
-                        app:srcCompat="@drawable/outline_frame_person_24" />
+                        app:srcCompat="@drawable/ic_avatar" />
 
                     <TextView
                         android:layout_width="wrap_content"
