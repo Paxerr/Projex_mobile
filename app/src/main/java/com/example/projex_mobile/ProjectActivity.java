@@ -53,7 +53,7 @@ public class ProjectActivity extends AppCompatActivity {
         PieDataSet dataSet = new PieDataSet(entries, "Status");
 
         dataSet.setColors(
-                Color.parseColor("#0000FF"),
+                Color.parseColor("#880000FF"),
                 Color.parseColor("#00FF00"),
                 Color.parseColor("#FF00FF"),
                 Color.parseColor("#FF0000")

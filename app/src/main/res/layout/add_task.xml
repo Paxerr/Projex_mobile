@@ -1,3 +1,4 @@
+
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
@@ -94,7 +95,7 @@
                     android:layout_weight="1"
                     android:orientation="horizontal"
                     android:gravity="center"
-                    android:background="@drawable/bg_2"
+                    android:background="@drawable/pro_background"
                     android:paddingVertical="8dp"
                     android:layout_marginEnd="13dp">
 
@@ -129,7 +130,7 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:gravity="center_vertical"
-                    android:background="@drawable/bg_2"
+                    android:background="@drawable/pro_background"
                     android:paddingVertical="8dp"
                     android:paddingHorizontal="11dp"
                     android:layout_marginEnd="13dp">
@@ -164,7 +165,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:background="@drawable/bg_2"
+                android:background="@drawable/pro_background"
                 android:padding="8dp"
                 android:layout_marginBottom="24dp"
                 android:layout_marginHorizontal="20dp"
@@ -189,7 +190,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:background="@drawable/bg_2"
+                android:background="@drawable/pro_background"
                 android:padding="8dp"
 
                 android:paddingHorizontal="16dp"
@@ -213,7 +214,7 @@
 
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/bg_2"
+                    android:background="@drawable/pro_background"
                     android:padding="8dp"
 
                     android:paddingHorizontal="16dp"
@@ -238,7 +239,7 @@
                     android:id="@+id/r4sjohnt3q2u"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/bg_2"
+                    android:background="@drawable/pro_background"
                     android:padding="8dp"
 
                     android:paddingHorizontal="16dp"
@@ -262,7 +263,7 @@
 
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/bg_2"
+                    android:background="@drawable/pro_background"
                     android:padding="8dp"
 
                     android:paddingHorizontal="16dp"
@@ -286,7 +287,7 @@
 
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/bg_2"
+                    android:background="@drawable/pro_background"
                     android:padding="8dp"
 
                     android:paddingHorizontal="16dp"
@@ -313,7 +314,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:gravity="center_vertical"
-                android:background="@drawable/bg_2"
+                android:background="@drawable/pro_background"
                 android:padding="8dp"
                 android:layout_marginHorizontal="20dp"
                 android:elevation="12dp">
@@ -323,7 +324,7 @@
                     android:layout_width="25dp"
                     android:layout_height="25dp"
                     android:layout_marginEnd="12dp"
-                    android:src="@drawable/attachment"
+                    android:src="@drawable/ic_attachment"
                     android:scaleType="fitXY" />
 
                 <TextView
@@ -347,7 +348,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/bg_2"
+        android:background="@drawable/pro_background"
         android:paddingVertical="9dp"
         android:paddingHorizontal="5dp"
 
@@ -371,7 +372,7 @@
             <ImageView
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:src="@drawable/home"/>
+                android:src="@drawable/ic_home"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -401,7 +402,7 @@
             <ImageView
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:src="@drawable/space"/>
+                android:src="@drawable/ic_space"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -431,7 +432,7 @@
             <ImageView
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:src="@drawable/task"/>
+                android:src="@drawable/ic_task"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -461,7 +462,7 @@
             <ImageView
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:src="@drawable/noti"/>
+                android:src="@drawable/ic_noti"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -491,7 +492,7 @@
             <ImageView
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:src="@drawable/user"/>
+                android:src="@drawable/ic_user"/>
 
             <TextView
                 android:layout_width="wrap_content"

@@ -36,7 +36,7 @@
         <ImageView
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:src="@drawable/addicon"
+            android:src="@drawable/ic_add"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/logo"/>
 
@@ -79,7 +79,7 @@
                         android:textStyle="bold"
                         android:layout_marginEnd="16dp"
                         android:clickable="true"
-                        android:background="@drawable/bg_2"
+                        android:background="@drawable/pro_background"
                         android:gravity="center"/>
 
                     <TextView
@@ -92,7 +92,7 @@
                         android:textSize="16sp"
                         android:textStyle="bold"
                         android:clickable="true"
-                        android:background="@drawable/bg_2"
+                        android:background="@drawable/pro_background"
                         android:gravity="center"/>
                 </LinearLayout>
                 <TextView
@@ -110,7 +110,7 @@
                     android:id="@+id/rpfgcfr4np1o"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/bg_2"
+                    android:background="@drawable/pro_background"
                     android:paddingTop="40dp"
                     android:paddingHorizontal="24dp"
                     android:layout_marginBottom="16dp"
@@ -348,14 +348,14 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:orientation="vertical"
-                        android:background="@drawable/bg_2"
+                        android:background="@drawable/pro_background"
                         android:padding="16dp"
                         android:layout_marginEnd="12dp">
 
                         <ImageView
                             android:layout_width="20dp"
                             android:layout_height="20dp"
-                            android:src="@drawable/clock"
+                            android:src="@drawable/ic_clock"
                             android:layout_marginBottom="6dp"/>
 
                         <TextView
@@ -383,14 +383,14 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:orientation="vertical"
-                        android:background="@drawable/bg_2"
+                        android:background="@drawable/pro_background"
                         android:padding="16dp"
                         android:clickable="true">
 
                         <ImageView
                             android:layout_width="18dp"
                             android:layout_height="18dp"
-                            android:src="@drawable/team"
+                            android:src="@drawable/ic_team"
                             android:layout_marginBottom="6dp"/>
 
                         <TextView
@@ -462,7 +462,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/bg_2"
+        android:background="@drawable/pro_background"
         android:paddingVertical="9dp"
         android:paddingHorizontal="5dp"
 
@@ -486,7 +486,7 @@
             <ImageView
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:src="@drawable/home"/>
+                android:src="@drawable/ic_home"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -516,7 +516,7 @@
             <ImageView
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:src="@drawable/space"/>
+                android:src="@drawable/ic_space"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -546,7 +546,7 @@
             <ImageView
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:src="@drawable/task"/>
+                android:src="@drawable/ic_task"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -576,7 +576,7 @@
             <ImageView
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:src="@drawable/noti"/>
+                android:src="@drawable/ic_noti"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -606,7 +606,7 @@
             <ImageView
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:src="@drawable/user"/>
+                android:src="@drawable/ic_user"/>
 
             <TextView
                 android:layout_width="wrap_content"

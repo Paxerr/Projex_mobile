@@ -38,7 +38,7 @@
             android:id="@+id/btnCreate"
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:src="@drawable/addicon"
+            android:src="@drawable/ic_add"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/logo"/>
 
@@ -94,7 +94,7 @@
 
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:background="@drawable/bg_2"
+                        android:background="@drawable/pro_background"
                         android:paddingVertical="8dp"
                         android:paddingHorizontal="16dp"
                         android:orientation="horizontal"
@@ -105,7 +105,7 @@
                             android:layout_width="25dp"
                             android:layout_height="25dp"
                             android:layout_marginEnd="16dp"
-                            android:src="@drawable/search_icon"/>
+                            android:src="@drawable/ic_search"/>
 
                         <EditText
                             android:id="@+id/search_bartext"
@@ -134,7 +134,7 @@
                                 android:id="@+id/rtd8wc5g24ip"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:background="@drawable/bg_2"
+                                android:background="@drawable/pro_background"
                                 android:paddingVertical="11dp"
                                 android:paddingHorizontal="16dp"
                                 android:layout_marginEnd="12dp"
@@ -145,7 +145,7 @@
                                     android:layout_width="10dp"
                                     android:layout_height="7dp"
                                     android:layout_marginEnd="8dp"
-                                    android:src="@drawable/alltask"/>
+                                    android:src="@drawable/ic_alltask"/>
 
                                 <TextView
                                     android:layout_width="wrap_content"
@@ -161,7 +161,7 @@
                                 android:id="@+id/btnStatus"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:background="@drawable/bg_2"
+                                android:background="@drawable/pro_background"
                                 android:paddingVertical="12dp"
                                 android:paddingHorizontal="26dp"
                                 android:layout_marginEnd="12dp"
@@ -181,7 +181,7 @@
                                 <ImageView
                                     android:layout_width="15dp"
                                     android:layout_height="14dp"
-                                    android:src="@drawable/drop" />
+                                    android:src="@drawable/ic_drop" />
                             </LinearLayout>
 
 
@@ -205,7 +205,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/bg_2"
+        android:background="@drawable/pro_background"
         android:paddingVertical="9dp"
         android:paddingHorizontal="5dp"
 
@@ -229,7 +229,7 @@
             <ImageView
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:src="@drawable/home"/>
+                android:src="@drawable/ic_home"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -259,7 +259,7 @@
             <ImageView
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:src="@drawable/space"/>
+                android:src="@drawable/ic_space"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -289,7 +289,7 @@
             <ImageView
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:src="@drawable/task"/>
+                android:src="@drawable/ic_task"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -319,7 +319,7 @@
             <ImageView
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:src="@drawable/noti"/>
+                android:src="@drawable/ic_noti"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -349,7 +349,7 @@
             <ImageView
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:src="@drawable/user"/>
+                android:src="@drawable/ic_user"/>
 
             <TextView
                 android:layout_width="wrap_content"
