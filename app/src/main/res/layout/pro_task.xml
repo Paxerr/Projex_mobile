@@ -1,0 +1,423 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="#000000"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#CC000000"
+        android:layout_marginTop="20dp"
+        android:padding="16dp">
+
+        <ImageView
+            android:id="@+id/logo"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:src="@android:drawable/star_big_on"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="GGshop"
+            android:textColor="#FFF"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toEndOf="@id/logo"
+            app:layout_constraintTop_toTopOf="@id/logo"
+            android:layout_marginStart="8dp"/>
+
+
+
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/ic_add"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/logo"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <ScrollView
+        android:id="@+id/rml115nl1a2c"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="#0E0E0E">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/rptcyr96ez6s"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="32dp"
+                android:paddingHorizontal="24dp"
+                android:orientation="vertical">
+                <LinearLayout
+
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginBottom="6dp">
+
+                    <TextView
+                        android:id="@+id/overview"
+                        android:layout_width="0dp"
+                        android:layout_height="30dp"
+                        android:layout_weight="1"
+                        android:text="Tổng quan"
+                        android:textColor="#FFFFFF"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:layout_marginEnd="16dp"
+                        android:clickable="true"
+                        android:background="@drawable/pro_background"
+                        android:gravity="center"/>
+
+                    <TextView
+                        android:id="@+id/btnpro_task"
+                        android:layout_width="0dp"
+                        android:layout_height="30dp"
+                        android:layout_weight="1"
+                        android:text="Task"
+                        android:textColor="#FFFFFF"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:clickable="true"
+                        android:background="@drawable/pro_background"
+                        android:gravity="center"/>
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    android:orientation="vertical">
+
+                    <!-- Title -->
+                    <TextView
+                        android:id="@+id/r875sh0uo2x7"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Công việc"
+                        android:textColor="#FFFFFF"
+                        android:textSize="36sp"
+                        android:textStyle="bold"
+                        android:layout_marginBottom="8dp"/>
+
+                    <!-- Description -->
+                    <TextView
+                        android:id="@+id/rqqxco8n23"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Quản lý hiệu quả các nhiệm vụ của dự án\ntrong không gian làm việc tối giản."
+                        android:textColor="#ABABAB"
+                        android:textSize="16sp"
+                        android:layout_marginBottom="16dp"/>
+
+                    <!-- Search -->
+                    <LinearLayout
+
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/pro_background"
+                        android:paddingVertical="8dp"
+                        android:paddingHorizontal="16dp"
+                        android:orientation="horizontal"
+                        android:layout_marginBottom="16dp">
+
+                        <ImageView
+
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"
+                            android:layout_marginEnd="16dp"
+                            android:src="@drawable/ic_search"/>
+
+                        <EditText
+                            android:id="@+id/search_bartext"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="Tìm kiếm công việc..."
+                            android:textColorHint="#ABABAB"
+                            android:textSize="14sp"
+                            android:textColor="#FFFFFF"/>
+
+
+                    </LinearLayout>
+
+                    <!-- Filter -->
+                    <HorizontalScrollView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <!-- All Tasks -->
+                            <LinearLayout
+                                android:id="@+id/rtd8wc5g24ip"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:background="@drawable/pro_background"
+                                android:paddingVertical="11dp"
+                                android:paddingHorizontal="16dp"
+                                android:layout_marginEnd="12dp"
+                                android:orientation="horizontal"
+                                android:gravity="center_vertical">
+
+                                <ImageView
+                                    android:layout_width="10dp"
+                                    android:layout_height="7dp"
+                                    android:layout_marginEnd="8dp"
+                                    android:src="@drawable/ic_alltask"/>
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="All Tasks"
+                                    android:textColor="#FFFFFF"
+                                    android:textSize="12sp"
+                                    android:textStyle="bold"/>
+                            </LinearLayout>
+
+                            <!-- Trạng thái -->
+                            <LinearLayout
+                                android:id="@+id/btnStatus"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:background="@drawable/pro_background"
+                                android:paddingVertical="12dp"
+                                android:paddingHorizontal="26dp"
+                                android:layout_marginEnd="12dp"
+                                android:orientation="horizontal"
+                                android:gravity="center_vertical"
+                                android:clickable="true">
+
+                                <TextView
+                                    android:id="@+id/textStatus"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Trạng thái"
+                                    android:textColor="#FFFFFF"
+                                    android:textSize="12sp"
+                                    android:layout_marginEnd="8dp"/>
+
+                                <ImageView
+                                    android:layout_width="15dp"
+                                    android:layout_height="14dp"
+                                    android:src="@drawable/ic_drop" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:id="@+id/ngth"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:background="@drawable/pro_background"
+                                android:paddingVertical="12dp"
+                                android:paddingHorizontal="26dp"
+                                android:layout_marginEnd="12dp"
+                                android:orientation="horizontal"
+                                android:gravity="center_vertical">
+
+                                <TextView
+                                    android:id="@+id/ngth_text"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Người thực hiện"
+                                    android:textColor="#FFFFFF"
+                                    android:textSize="12sp"
+                                    android:layout_marginEnd="8dp"
+                                    />
+
+                                <ImageView
+                                    android:layout_width="15dp"
+                                    android:layout_height="15dp"
+                                    android:src="@drawable/ic_drop"/>
+                            </LinearLayout>
+
+                        </LinearLayout>
+                    </HorizontalScrollView>
+
+                </LinearLayout>                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rvTasks"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="128dp"
+                    />
+            </LinearLayout>
+
+        </LinearLayout>
+    </ScrollView>
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/pro_background"
+        android:paddingVertical="9dp"
+        android:paddingHorizontal="5dp"
+
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <!-- HOME -->
+        <LinearLayout
+            android:id="@+id/btnHome"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:padding="8dp"
+            android:clickable="true"
+
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/btnSpaces"
+            app:layout_constraintTop_toTopOf="parent"
+            >
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_home"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Home"
+                android:textSize="10sp"
+                android:textStyle="bold"
+                android:textColor="#737373"
+                android:layout_marginTop="4dp"/>
+        </LinearLayout>
+
+        <!-- SPACES -->
+        <LinearLayout
+            android:id="@+id/btnSpaces"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:padding="8dp"
+            android:clickable="true"
+
+            app:layout_constraintStart_toEndOf="@id/btnHome"
+            app:layout_constraintEnd_toStartOf="@id/btnTasks"
+            app:layout_constraintTop_toTopOf="parent"
+            >
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_space"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="SPACES"
+                android:textSize="10sp"
+                android:textStyle="bold"
+                android:textColor="#737373"
+                android:layout_marginTop="4dp"/>
+        </LinearLayout>
+
+        <!-- TASK -->
+        <LinearLayout
+            android:id="@+id/btnTasks"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:padding="8dp"
+            android:clickable="true"
+
+            app:layout_constraintStart_toEndOf="@id/btnSpaces"
+            app:layout_constraintEnd_toStartOf="@id/btnNotify"
+            app:layout_constraintTop_toTopOf="parent"
+            >
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_task"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="TASKS"
+                android:textSize="10sp"
+                android:textStyle="bold"
+                android:textColor="#737373"
+                android:layout_marginTop="4dp"/>
+        </LinearLayout>
+
+        <!-- NOTIFY -->
+        <LinearLayout
+            android:id="@+id/btnNotify"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:padding="8dp"
+            android:clickable="true"
+
+            app:layout_constraintStart_toEndOf="@id/btnTasks"
+            app:layout_constraintEnd_toStartOf="@id/btnUser"
+            app:layout_constraintTop_toTopOf="parent"
+            >
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_noti"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="NOTIFY"
+                android:textSize="10sp"
+                android:textStyle="bold"
+                android:textColor="#737373"
+                android:layout_marginTop="4dp"/>
+        </LinearLayout>
+
+        <!-- USER -->
+        <LinearLayout
+            android:id="@+id/btnUser"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:padding="8dp"
+            android:clickable="true"
+
+            app:layout_constraintStart_toEndOf="@id/btnNotify"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            >
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_user"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="USER"
+                android:textSize="10sp"
+                android:textStyle="bold"
+                android:textColor="#737373"
+                android:layout_marginTop="4dp"/>
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</LinearLayout>
