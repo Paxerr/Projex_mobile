@@ -1,4 +1,4 @@
-package com.example.projex_mobile.model;
+package com.example.projex_mobile.objects;
 
 // TaskAssignment.java
 public class TaskAssignment {
