@@ -20,11 +20,15 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".MainActivity"/>
+
         <activity android:name=".ForgotPasswordActivity"/>
         <activity android:name=".RegisterActivity"/>
         <activity android:name=".RePasswordActivity"/>
         <activity android:name=".VerifyActivity"/>
+        <activity android:name=".ProjectActivity"/>
+        <activity android:name=".ProTaskActivity"/>
+        <activity android:name=".TaskActivity"/>
+        <activity android:name=".AddTaskActivity"/>
 
     </application>
 
