@@ -44,6 +44,7 @@
                 android:gravity="center_vertical">
 
                 <TextView
+                    android:id="@+id/btnTatCa"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@drawable/notice_bg_btn_active"
@@ -55,6 +56,7 @@
                     android:textStyle="bold" />
 
                 <TextView
+                    android:id="@+id/btnChuaDoc"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
@@ -90,251 +92,19 @@
                 android:textStyle="bold"
                 android:letterSpacing="0.05" />
 
-            <LinearLayout
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvNotifications"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:orientation="horizontal">
-
-                <View
-                    android:layout_width="8dp"
-                    android:layout_height="8dp"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginEnd="8dp"
-                    android:background="@drawable/notice_dot_unread" />
-
-                <FrameLayout
-                    android:layout_width="44dp"
-                    android:layout_height="44dp"
-                    android:background="@drawable/notice_bg_avatar">
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:text="Dat"
-                        android:textColor="#FFFFFF"
-                        android:textSize="16sp" />
-                </FrameLayout>
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_marginStart="12dp"
-                    android:orientation="vertical"
-                    android:layout_gravity="center_vertical">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Vẽ Sequence diagram của Người mua"
-                        android:textColor="#FFFFFF"
-                        android:textSize="15sp"
-                        android:textStyle="bold"
-                        android:lineSpacingExtra="4dp"/>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="4dp"
-                        android:text="Dat updated a story"
-                        android:textColor="#9CA3AF"
-                        android:textSize="13sp" />
-                </LinearLayout>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="GGSHOP-3"
-                    android:textColor="#6B7280"
-                    android:textSize="10sp"
-                    android:textStyle="bold"
-                    android:layout_marginTop="4dp"/>
-            </LinearLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginStart="64dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginBottom="16dp"
-                android:background="#202124" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <View
-                    android:layout_width="8dp"
-                    android:layout_height="8dp"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginEnd="8dp"
-                    android:background="@android:color/transparent" /> <FrameLayout
-                android:layout_width="44dp"
-                android:layout_height="44dp"
-                android:background="@drawable/notice_bg_avatar">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:text="TA"
-                    android:textColor="#FFFFFF"
-                    android:textSize="16sp" />
-            </FrameLayout>
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_marginStart="12dp"
-                    android:orientation="vertical"
-                    android:layout_gravity="center_vertical">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Sequence diagram Đăng xuất"
-                        android:textColor="#9CA3AF" android:textSize="15sp"
-                        android:textStyle="bold"
-                        android:lineSpacingExtra="4dp"/>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="4dp"
-                        android:text="Tuan Anh updated a task"
-                        android:textColor="#6B7280"
-                        android:textSize="13sp" />
-                </LinearLayout>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="GGSHOP-8"
-                    android:textColor="#4B5563"
-                    android:textSize="10sp"
-                    android:textStyle="bold"
-                    android:layout_marginTop="4dp"/>
-            </LinearLayout>
+                android:nestedScrollingEnabled="false" />
 
         </LinearLayout>
     </ScrollView>
 
-    <LinearLayout
-        android:id="@+id/custom_bottom_nav"
+    <include
+        layout="@layout/layout_bottom_nav"
         android:layout_width="match_parent"
-        android:layout_height="64dp"
-        android:background="#101114"
-        android:elevation="16dp"
-        android:orientation="horizontal"
-        android:paddingTop="8dp"
-        android:paddingBottom="0dp"
-        app:layout_constraintBottom_toBottomOf="parent">
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:orientation="vertical">
-            <ImageView
-                android:layout_width="22dp"
-                android:layout_height="22dp"
-                android:src="@drawable/ic_home"
-                app:tint="#6B7280" />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:text="HOME"
-                android:textColor="#6B7280"
-                android:textSize="10sp"
-                android:textStyle="bold" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:orientation="vertical">
-            <ImageView
-                android:layout_width="22dp"
-                android:layout_height="22dp"
-                android:src="@drawable/ic_spaces"
-                app:tint="#6B7280" /> <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:text="SPACES"
-            android:textColor="#6B7280"
-            android:textSize="10sp"
-            android:textStyle="bold" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:orientation="vertical">
-            <ImageView
-                android:layout_width="22dp"
-                android:layout_height="22dp"
-                android:src="@drawable/ic_tasks"
-                app:tint="#6B7280" />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:text="TASKS"
-                android:textColor="#6B7280"
-                android:textSize="10sp"
-                android:textStyle="bold" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:orientation="vertical">
-            <ImageView
-                android:layout_width="22dp"
-                android:layout_height="22dp"
-                android:src="@drawable/ic_notification"
-                app:tint="#85ADFF" />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:text="NOTIFICATION"
-                android:textColor="#85ADFF"
-                android:textSize="10sp"
-                android:textStyle="bold" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:orientation="vertical">
-            <ImageView
-                android:layout_width="22dp"
-                android:layout_height="22dp"
-                android:src="@drawable/ic_user"
-                app:tint="#6B7280" />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:text="USER"
-                android:textColor="#6B7280"
-                android:textSize="10sp"
-                android:textStyle="bold" />
-        </LinearLayout>
-
-    </LinearLayout>
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -26,14 +26,14 @@
             android:layout_width="22dp"
             android:layout_height="22dp"
             android:src="@drawable/ic_home"
-            app:tint="#85ADFF" />
+            app:tint="#6B7280" />
         <TextView
             android:id="@+id/tv_home"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
             android:text="HOME"
-            android:textColor="#85ADFF"
+            android:textColor="#6B7280"
             android:textSize="10sp"
             android:textStyle="bold" />
     </LinearLayout>

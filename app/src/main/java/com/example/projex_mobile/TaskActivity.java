@@ -50,7 +50,7 @@ public class TaskActivity extends AppCompatActivity {
                         break;
                     case "In Progress":
                         // xử lý
-                        status.setText("TIn Progress");
+                        status.setText("In Progress");
                         break;
                     case "Done":
                         // xử lý
