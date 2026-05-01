@@ -49,10 +49,6 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         } else {
             holder.vDot.setBackgroundColor(ContextCompat.getColor(holder.itemView.getContext(), android.R.color.transparent));
         }
-
-        // Ẩn separator nếu là item cuối
-        boolean isLast = position == getItemCount() - 1;
-        holder.vSeparator.setVisibility(isLast ? View.GONE : View.VISIBLE);
     }
 
     @Override
@@ -61,13 +57,12 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        View vDot, vSeparator;
+        View vDot;
         TextView tvAvatar, tvTitle, tvMessage, tvTicket;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             vDot = itemView.findViewById(R.id.vDot);
-            vSeparator = itemView.findViewById(R.id.vSeparator);
             tvAvatar = itemView.findViewById(R.id.tvAvatar);
             tvTitle = itemView.findViewById(R.id.tvTitle);
             tvMessage = itemView.findViewById(R.id.tvMessage);
