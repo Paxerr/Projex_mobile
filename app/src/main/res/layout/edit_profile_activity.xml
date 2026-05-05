@@ -25,7 +25,6 @@
             android:layout_height="22dp"
             android:layout_gravity="center"
             android:contentDescription="Back"
-            android:src="@drawable/ic_arrow_back_24"
             app:srcCompat="@drawable/ic_back"
             app:tint="#FFFFFF" />
     </com.google.android.material.card.MaterialCardView>
@@ -85,7 +84,6 @@
             android:layout_height="16dp"
             android:layout_gravity="center"
             android:contentDescription="Camera"
-            android:src="@drawable/ic_camera_24"
             app:srcCompat="@drawable/ic_camera"
             app:tint="#FFFFFF" />
     </com.google.android.material.card.MaterialCardView>
