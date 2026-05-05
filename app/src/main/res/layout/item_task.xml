@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="12dp"
+    android:padding="8dp"
     android:background="#1E1E1E"
     android:layout_marginBottom="8dp">
 
@@ -30,6 +30,7 @@
         android:text="Status"
         android:textColor="#AAAAAA"
         android:textSize="16sp"
+        app:layout_constraintHorizontal_weight="1"
         android:background="@drawable/pro_background"
         android:padding="8dp"
         app:layout_constraintEnd_toEndOf="parent"
