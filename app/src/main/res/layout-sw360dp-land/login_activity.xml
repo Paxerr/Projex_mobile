@@ -1,22 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/Login"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".LoginActivity">
+    tools:context=".LoginActivity"
+    tools:ignore="MissingDefaultResource">
 
     <ScrollView
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:background="@drawable/login_bg"
         android:fillViewport="true"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintEnd_toEndOf="parent">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -24,7 +26,6 @@
             android:orientation="vertical"
             android:padding="24dp">
 
-            <!-- LOGO -->
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -57,10 +58,10 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
+                android:layout_marginTop="16dp"
                 android:text="Chào mừng trở lại!"
                 android:textColor="#FFFFFF"
-                android:textSize="24sp"
+                android:textSize="30sp"
                 android:textStyle="bold" />
 
             <!-- SUBTITLE -->
@@ -69,54 +70,54 @@
                 android:layout_height="wrap_content"
                 android:text="Đăng nhập để quản lý các dự án của bạn."
                 android:textColor="#9CA3AF"
-                android:textSize="12sp" />
+                android:textSize="15sp" />
 
             <!-- EMAIL -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
+                android:layout_marginTop="16dp"
                 android:text="EMAIL / TÀI KHOẢN"
                 android:textColor="#6B7280"
-                android:textSize="10sp"
+                android:textSize="12sp"
                 android:textStyle="bold" />
 
             <EditText
                 android:id="@+id/edtEmail"
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:layout_marginTop="4dp"
+                android:layout_height="56dp"
+                android:layout_marginTop="8dp"
                 android:background="@drawable/login_input_text"
                 android:drawableStart="@android:drawable/ic_menu_info_details"
-                android:drawablePadding="4dp"
+                android:drawablePadding="10dp"
                 android:hint="Example@ggshop.com"
                 android:inputType="textEmailAddress"
-                android:paddingHorizontal="8dp"
+                android:paddingHorizontal="16dp"
                 android:textColor="#FFFFFF"
                 android:textColorHint="#9CA3AF"
-                android:textSize="12sp" />
+                android:textSize="14sp" />
 
             <!-- PASSWORD -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="16dp"
                 android:text="MẬT KHẨU"
                 android:textColor="#6B7280"
-                android:textSize="10sp"
+                android:textSize="12sp"
                 android:textStyle="bold" />
 
             <EditText
                 android:id="@+id/edtPassword"
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:layout_marginTop="4dp"
+                android:layout_height="56dp"
+                android:layout_marginTop="8dp"
                 android:background="@drawable/login_input_text"
                 android:drawableStart="@android:drawable/ic_lock_lock"
-                android:drawablePadding="4dp"
+                android:drawablePadding="10dp"
                 android:hint="*********"
                 android:inputType="textPassword"
-                android:paddingHorizontal="8dp"
+                android:paddingHorizontal="16dp"
                 android:textColor="#FFFFFF"
                 android:textColorHint="#9CA3AF"
                 android:textSize="14sp" />
@@ -130,9 +131,9 @@
                 android:layout_marginTop="10dp"
                 android:text="Quên mật khẩu?"
                 android:textColor="#3B82F6"
-                android:textSize="9sp" />
+                android:textSize="13sp" />
 
-<!--            layout btn-->
+            <!--            layout btn-->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -144,24 +145,24 @@
                     android:id="@+id/btnRegister"
                     android:layout_weight="1"
                     android:layout_width="0dp"
-                    android:layout_height="40dp"
+                    android:layout_height="54dp"
                     android:background="@drawable/login_bg_btn_register"
                     android:text="Đăng ký"
                     android:textColor="#FFFFFF"
-                    android:textSize="12sp"
+                    android:textSize="16sp"
                     app:backgroundTint="@null" />
                 <!-- LOGIN -->
                 <Button
                     android:id="@+id/btnLogin"
                     android:layout_width="0dp"
-                    android:layout_height="40dp"
+                    android:layout_height="54dp"
                     android:layout_weight="1"
                     android:background="@drawable/login_bg_btn_login"
                     android:text="Đăng nhập"
                     android:textColor="#FFFFFF"
-                    android:textSize="12sp"
+                    android:textSize="16sp"
                     app:backgroundTint="@null"
-                    android:layout_marginStart="16dp"/>
+                    android:layout_marginStart="10dp"/>
             </LinearLayout>
 
 
@@ -169,7 +170,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="9dp"
+                android:layout_marginTop="22dp"
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
 
@@ -185,7 +186,7 @@
                     android:layout_marginHorizontal="12dp"
                     android:text="HOẶC ĐĂNG NHẬP VỚI"
                     android:textColor="#6B7280"
-                    android:textSize="8sp" />
+                    android:textSize="11sp" />
 
                 <View
                     android:layout_width="0dp"
@@ -198,7 +199,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="9dp"
+                android:layout_marginTop="18dp"
                 android:layout_marginBottom="24dp"
                 android:orientation="horizontal">
 
@@ -206,7 +207,7 @@
                 <LinearLayout
                     android:id="@+id/btnGoogle"
                     android:layout_width="0dp"
-                    android:layout_height="40dp"
+                    android:layout_height="54dp"
                     android:layout_weight="1"
                     android:background="@drawable/login_bg_btn_option_login"
                     android:clickable="true"
@@ -227,18 +228,18 @@
                         android:layout_marginStart="8dp"
                         android:text="Google"
                         android:textColor="#FFFFFF"
-                        android:textSize="12sp" />
+                        android:textSize="16sp" />
                 </LinearLayout>
 
                 <Space
-                    android:layout_width="16dp"
+                    android:layout_width="20dp"
                     android:layout_height="1dp" />
 
                 <!-- GITHUB -->
                 <LinearLayout
                     android:id="@+id/btnGithub"
                     android:layout_width="0dp"
-                    android:layout_height="40dp"
+                    android:layout_height="54dp"
                     android:layout_weight="1"
                     android:background="@drawable/login_bg_btn_option_login"
                     android:clickable="true"
@@ -259,7 +260,7 @@
                         android:layout_marginStart="8dp"
                         android:text="Github"
                         android:textColor="#FFFFFF"
-                        android:textSize="12sp" />
+                        android:textSize="16sp" />
                 </LinearLayout>
 
             </LinearLayout>

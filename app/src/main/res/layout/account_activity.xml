@@ -6,6 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#000000"
+    tools:context=".AccountActivity"
     tools:deviceWidth="390dp"
     tools:deviceHeight="803dp">
 
@@ -50,7 +51,6 @@
                 android:layout_height="22dp"
                 android:layout_gravity="center"
                 android:contentDescription="Back"
-                android:src="@drawable/ic_back"
                 android:tint="#FFFFFF"
                 app:srcCompat="@drawable/ic_back" />
         </com.google.android.material.card.MaterialCardView>
@@ -83,7 +83,6 @@
                 android:layout_height="22dp"
                 android:layout_gravity="center"
                 android:contentDescription="Edit profile"
-                android:src="@drawable/account_ic_edit"
                 android:tint="#4A8CFF"
                 app:srcCompat="@drawable/account_ic_edit" />
         </com.google.android.material.card.MaterialCardView>
@@ -149,7 +148,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            app:layout_constraintGuide_percent="0.0" />
+            app:layout_constraintGuide_begin="0dp" />
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/cardTasks"
@@ -315,7 +314,6 @@
                         android:layout_height="20dp"
                         android:layout_gravity="center"
                         android:contentDescription="Notification"
-                        android:src="@drawable/account_ic_nofication"
                         android:tint="#4A8CFF"
                         app:srcCompat="@drawable/account_ic_nofication" />
                 </com.google.android.material.card.MaterialCardView>
@@ -402,7 +400,6 @@
                     android:layout_width="18dp"
                     android:layout_height="18dp"
                     android:contentDescription="Go"
-                    android:src="@drawable/account_change_password"
                     android:tint="#687085"
                     app:layout_constraintBottom_toBottomOf="@+id/iconLockCard"
                     app:layout_constraintEnd_toEndOf="parent"
