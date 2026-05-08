@@ -25,9 +25,21 @@
         <activity android:name=".ProTaskActivity"/>
         <activity android:name=".TaskActivity"/>
         <activity android:name=".AddTaskActivity"/>
+        <activity android:name=".HomeActivity"/>
+
+
+        <activity
+            android:name=".HomeActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+
         <activity
             android:name=".TeamActivity"
-            android:exported="true">
+            android:exported="false">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>

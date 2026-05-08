@@ -1,23 +1,21 @@
-package com.example.projex_mobile.adapter;
+package com.example.projex_mobile.adapter;  // ✅ Package đúng
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
-import androidx.annotation.NonNull;
+import androidx.annotation.NonNull;  // ✅ Import này
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.example.projex_mobile.R;
-import com.example.projex_mobile.objects.Recent;
-
+import com.example.projex_mobile.objects.RecentActivity;
+import com.google.android.material.chip.Chip;
+import com.google.android.material.imageview.ShapeableImageView;
 import java.util.List;
 
 public class RecentActivityAdapter extends RecyclerView.Adapter<RecentActivityAdapter.ViewHolder> {
+    private List<RecentActivity> items;
 
-    private List<Recent> items;
-
-    public RecentActivityAdapter(List<Recent> items) {
+    public RecentActivityAdapter(List<RecentActivity> items) {
         this.items = items;
     }
 
@@ -25,29 +23,40 @@ public class RecentActivityAdapter extends RecyclerView.Adapter<RecentActivityAd
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.home_recent, parent, false);
+                .inflate(R.layout.item_recent_activity, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Recent item = items.get(position);
-        holder.tvTitle.setText(item.Title);
-        holder.tvDescription.setText(item.description);
+        RecentActivity item = items.get(position);
+
+        holder.tvTitle.setText(item.getTitle());
+        holder.tvMessage.setText(item.getMessage());
+        holder.tvTicket.setText(item.getTicketCode());
+        holder.tvTime.setText(item.getTimeAgo());
+        holder.chipStatus.setText(item.getStatus());
+        holder.imgAvatar.setText(item.getAvatarText());
     }
 
     @Override
     public int getItemCount() {
-        return items.size();
+        return items != null ? items.size() : 0;
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView tvTitle, tvDescription;
+    static class ViewHolder extends RecyclerView.ViewHolder {  // ✅ static OK
+        TextView tvTitle, tvMessage, tvTicket, tvTime;
+        ShapeableImageView imgAvatar;
+        Chip chipStatus;
 
-        public ViewHolder(@NonNull View itemView) {
+        ViewHolder(@NonNull View itemView) {  // ✅ @NonNull OK
             super(itemView);
             tvTitle = itemView.findViewById(R.id.tvTitle);
-            tvDescription = itemView.findViewById(R.id.tvDescription);
+            tvMessage = itemView.findViewById(R.id.tvMessage);
+            tvTicket = itemView.findViewById(R.id.tvTicket);
+            tvTime = itemView.findViewById(R.id.tvTime);
+            imgAvatar = itemView.findViewById(R.id.imgAvatar);
+            chipStatus = itemView.findViewById(R.id.chipStatus);
         }
     }
 }

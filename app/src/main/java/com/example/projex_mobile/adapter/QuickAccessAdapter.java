@@ -1,24 +1,21 @@
-package com.example.projex_mobile.adapter;
+package com.example.projex_mobile.adapter;  // ✅ Package đúng
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
-import com.example.projex_mobile.R;
-import com.example.projex_mobile.objects.QuickAccess;
-
+import com.example.projex_mobile.R;  // ✅ Sửa package R
+import com.example.projex_mobile.objects.QuickAccessItem;  // ✅ Sửa package Model
 import java.util.List;
 
 public class QuickAccessAdapter extends RecyclerView.Adapter<QuickAccessAdapter.ViewHolder> {
 
-    private final List<QuickAccess> items;
+    private final List<QuickAccessItem> items;
 
-    public QuickAccessAdapter(List<QuickAccess> items) {
+    public QuickAccessAdapter(List<QuickAccessItem> items) {
         this.items = items;
     }
 
@@ -26,16 +23,15 @@ public class QuickAccessAdapter extends RecyclerView.Adapter<QuickAccessAdapter.
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.home_quick_access, parent, false);
+                .inflate(R.layout.item_quick_access, parent, false);  // ✅ Layout đúng
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        QuickAccess item = items.get(position);
-        holder.ivIcon.setImageResource(item.IconRes);
-        holder.tvName.setText(item.Name);
-        holder.tvLabel.setText(item.Label);
+        QuickAccessItem item = items.get(position);
+        holder.ivIcon.setImageResource(item.getIconRes());  // ✅ Getter (style bạn bạn)
+        holder.tvTitle.setText(item.getTitle());           // ✅ Chỉ 1 TextView (đơn giản)
     }
 
     @Override
@@ -45,13 +41,12 @@ public class QuickAccessAdapter extends RecyclerView.Adapter<QuickAccessAdapter.
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         ImageView ivIcon;
-        TextView tvName, tvLabel;
+        TextView tvTitle;  // ✅ Bỏ tvLabel (đơn giản)
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             ivIcon = itemView.findViewById(R.id.ivIcon);
-            tvName = itemView.findViewById(R.id.tvName);
-            tvLabel = itemView.findViewById(R.id.tvLabel);
+            tvTitle = itemView.findViewById(R.id.tvTitle);
         }
     }
 }
