@@ -1,6 +1,6 @@
 package com.example.projex_mobile.objects;
 
-public class RecentActivity {
+public class RecentItem {
     private int id;
     private String title;
     private String message;
@@ -11,7 +11,7 @@ public class RecentActivity {
     private String timeAgo;      // "2h ago"
     private String status;       // "InProgress"
 
-    public RecentActivity() {
+    public RecentItem() {
     }
 
     public int getId() {

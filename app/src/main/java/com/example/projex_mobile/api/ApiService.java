@@ -1,7 +1,7 @@
-package com.example.project_mobile.api;
+package com.example.projex_mobile.api;
 
 import com.example.projex_mobile.objects.DashboardOverview;
-import com.example.projex_mobile.objects.RecentActivity;
+import com.example.projex_mobile.objects.RecentItem;
 import java.util.List;
 import retrofit2.Call;
 import retrofit2.http.GET;
@@ -12,5 +12,5 @@ public interface ApiService {
     Call<DashboardOverview> getDashboardOverview(@Header("Authorization") String token);
 
     @GET("api/dashboard/my-tasks")
-    Call<List<RecentActivity>> getMyTasks(@Header("Authorization") String token);
+    Call<List<RecentItem>> getMyTasks(@Header("Authorization") String token);
 }

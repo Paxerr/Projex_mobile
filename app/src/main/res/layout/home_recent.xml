@@ -81,6 +81,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="2h ago"
+            android:paddingTop="4dp"
             android:textColor="#9CA3AF"
             android:textSize="12sp" />
 
@@ -93,8 +94,7 @@
             android:text="InProgress"
             android:textColor="#FFFFFF"
             android:textSize="11sp"
-            app:chipBackgroundColor="#3B82F6"
-            style="@style/Widget.Material3.Chip.Choice" />
+            app:chipBackgroundColor="#3B82F6" />
 
     </LinearLayout>
 
