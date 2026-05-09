@@ -37,13 +37,11 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         holder.tvMessage.setText(item.message);
         holder.tvTicket.setText(item.ticket);
 
-        // Avatar chữ cái
         String shortName = item.avatarText.length() >= 2
                 ? item.avatarText.substring(0, 2)
                 : item.avatarText;
         holder.tvAvatar.setText(shortName);
 
-        // Hiển thị dot chưa đọc hoặc bỏ (trong suốt)
         if (item.isUnread) {
             holder.vDot.setBackgroundResource(R.drawable.notice_dot_unread);
         } else {

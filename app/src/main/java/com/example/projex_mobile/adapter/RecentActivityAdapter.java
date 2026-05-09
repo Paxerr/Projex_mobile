@@ -1,4 +1,4 @@
-package com.example.projex_mobile.adapter;  // ✅ Package đúng
+package com.example.projex_mobile.adapter;
 
 import android.graphics.Color;
 import android.view.LayoutInflater;
@@ -7,8 +7,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-import com.example.projex_mobile.R;  // ✅ Package đúng
-import com.example.projex_mobile.objects.RecentItem;  // ✅ Package đúng
+import com.example.projex_mobile.R;
+import com.example.projex_mobile.objects.RecentItem;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.imageview.ShapeableImageView;
 import java.util.List;
@@ -25,7 +25,7 @@ public class RecentActivityAdapter extends RecyclerView.Adapter<RecentActivityAd
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.home_recent, parent, false);  // ✅ Layout của bạn
+                .inflate(R.layout.home_recent, parent, false);
         return new ViewHolder(view);
     }
 
@@ -33,14 +33,12 @@ public class RecentActivityAdapter extends RecyclerView.Adapter<RecentActivityAd
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         RecentItem item = items.get(position);
 
-        // ✅ Bind ĐẦY ĐỦ 6 fields
         holder.tvTitle.setText(item.getTitle());
         holder.tvMessage.setText(item.getMessage());
         holder.tvTicket.setText(item.getTicketCode());
         holder.tvTime.setText(item.getTimeAgo());
         holder.chipStatus.setText(item.getStatus());
 
-        // ✅ FIX ShapeableImageView.setText()
         setAvatar(holder.imgAvatar, item.getAvatarText());
     }
 
@@ -49,17 +47,13 @@ public class RecentActivityAdapter extends RecyclerView.Adapter<RecentActivityAd
         return items != null ? items.size() : 0;
     }
 
-    // ✅ Tạo avatar từ text
     private void setAvatar(ShapeableImageView imageView, String initials) {
         if (initials != null && !initials.isEmpty()) {
-            // Background color theo initials
             int color = getAvatarColor(initials.hashCode());
             imageView.setBackgroundTintList(android.content.res.ColorStateList.valueOf(color));
 
-            // Text overlay (giả lập)
             imageView.setContentDescription(initials);  // Accessibility
 
-            // Icon placeholder (mặc định)
             imageView.setImageResource(android.R.drawable.ic_menu_gallery);
         }
     }
