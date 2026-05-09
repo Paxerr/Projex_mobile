@@ -12,11 +12,9 @@
         android:supportsRtl="true"
         android:usesCleartextTraffic="true"
         android:theme="@style/Theme.Projex_mobile">
-        <activity
-            android:name=".LoginActivity"
-            android:exported="false" />
 
-
+        <!--Khai báo các acti-->
+        <activity android:name=".TeamActivity"/>
         <activity android:name=".ForgotPasswordActivity"/>
         <activity android:name=".RegisterActivity"/>
         <activity android:name=".RePasswordActivity"/>
@@ -26,10 +24,12 @@
         <activity android:name=".TaskActivity"/>
         <activity android:name=".AddTaskActivity"/>
         <activity android:name=".ThemThanhVienActivity" />
-
+        <activity android:name=".HomeActivity" />
+<!--        acti start-->
         <activity
-            android:name=".HomeActivity"
-            android:exported="true">
+            android:name=".AuthActivity"
+            android:exported="true"
+            android:screenOrientation="fullSensor">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
