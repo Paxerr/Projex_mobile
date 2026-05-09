@@ -78,8 +78,6 @@ public class RecentActivityAdapter extends RecyclerView.Adapter<RecentActivityAd
             tvMessage = itemView.findViewById(R.id.tvMessage);
             tvTicket = itemView.findViewById(R.id.tvTicket);
             tvTime = itemView.findViewById(R.id.tvTime);
-            imgAvatar = itemView.findViewById(R.id.imgAvatar);
-            chipStatus = itemView.findViewById(R.id.chipStatus);
         }
     }
 }
