@@ -27,7 +27,7 @@ public class NotificationActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.notification_activity);
+        setContentView(R.layout.notification_fragment);
 
         rvNotifications = findViewById(R.id.rvNotifications);
         btnTatCa = findViewById(R.id.btnTatCa);
