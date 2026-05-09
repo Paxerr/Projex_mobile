@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+
+    <style
+        name="Custom_login_tab"
+        parent="TextAppearance.MaterialComponents.Body1">
+
+        <item name="android:textSize">16sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="textAllCaps">false</item>
+
+    </style>
+
+</resources>
