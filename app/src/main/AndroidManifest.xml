@@ -24,15 +24,15 @@
         <activity android:name=".TaskActivity"/>
         <activity android:name=".AddTaskActivity"/>
         <activity android:name=".ThemThanhVienActivity" />
-
+        <activity android:name=".HomeActivity" />
 <!--        acti start-->
         <activity
             android:name=".AuthActivity"
             android:exported="true"
             android:screenOrientation="fullSensor">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 

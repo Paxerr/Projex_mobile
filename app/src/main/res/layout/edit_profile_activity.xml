@@ -5,8 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#000000"
-    android:padding="20dp"
-    tools:context=".EditProfileActivity">
+    android:padding="20dp">
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/btnBack"
@@ -168,7 +167,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:backgroundTint="#000000"
-            android:drawableStart="@drawable/ic_lock_24"
+            android:drawableStart="@drawable/account_change_password"
             android:drawablePadding="12dp"
             android:hint="a.nguyen@gmail.com"
             android:paddingStart="14dp"
@@ -215,7 +214,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:backgroundTint="#000000"
-            android:drawableStart="@drawable/ic_phone_24"
             android:drawablePadding="12dp"
             android:hint="+84 901 234 567"
             android:paddingStart="14dp"

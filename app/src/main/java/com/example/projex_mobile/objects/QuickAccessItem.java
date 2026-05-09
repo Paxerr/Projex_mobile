@@ -1,0 +1,37 @@
+package com.example.projex_mobile.objects;
+
+public class QuickAccessItem {
+    private int id;
+    private String name;
+    private int iconRes;
+    private String label;
+    private String route;
+    private int count;
+
+    public QuickAccessItem() {}
+
+    public QuickAccessItem(int id, String name, int iconRes, String label) {
+        this.id = id;
+        this.name = name;
+        this.iconRes = iconRes;
+        this.label = label;
+    }
+
+    public int getId() { return id; }
+    public void setId(int id) { this.id = id; }
+
+    public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
+
+    public int getIconRes() { return iconRes; }
+    public void setIconRes(int iconRes) { this.iconRes = iconRes; }
+
+    public String getLabel() { return label; }
+    public void setLabel(String label) { this.label = label; }
+
+    public String getRoute() { return route; }
+    public void setRoute(String route) { this.route = route; }
+
+    public int getCount() { return count; }
+    public void setCount(int count) { this.count = count; }
+}

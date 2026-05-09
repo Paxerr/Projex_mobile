@@ -17,4 +17,9 @@ public class RetrofitClient {
         }
         return retrofit;
     }
+
+
+    public static com.example.projex_mobile.api.ApiService getApiService(String token) {
+        return getClient().create(com.example.projex_mobile.api.ApiService.class);
+    }
 }
