@@ -8,9 +8,8 @@ public class RecentItem {
     private String avatarText;
     private boolean isRead;
     private String createdAt;
-    private String timeAgo;      // "2h ago"
-    private String status;       // "InProgress"
-
+    private String timeAgo;
+    private String status;
     public RecentItem() {
     }
 

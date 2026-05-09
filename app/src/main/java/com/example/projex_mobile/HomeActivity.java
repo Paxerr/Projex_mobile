@@ -9,8 +9,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import com.example.projex_mobile.fragments.HomeFragment;
-import com.example.projex_mobile.fragments.SpaceFragment;
 import com.example.projex_mobile.fragments.NotificationFragment;
+import com.example.projex_mobile.fragments.SpaceFragment;
 
 public class HomeActivity extends AppCompatActivity {
 
@@ -30,8 +30,7 @@ public class HomeActivity extends AppCompatActivity {
         setupNavigation();
 
         if (savedInstanceState == null) {
-            replaceFragment(new HomeFragment());
-            setSelectedNav(R.id.nav_home);
+            showHome();
         }
     }
 
@@ -50,20 +49,24 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     private void setupNavigation() {
-        navHome.setOnClickListener(v -> {
-            replaceFragment(new HomeFragment());
-            setSelectedNav(R.id.nav_home);
-        });
+        navHome.setOnClickListener(v -> showHome());
+        navSpaces.setOnClickListener(v -> showSpaces());
+        navNotifications.setOnClickListener(v -> showNotifications());
+    }
 
-        navSpaces.setOnClickListener(v -> {
-            replaceFragment(new SpaceFragment());
-            setSelectedNav(R.id.nav_spaces);
-        });
+    private void showHome() {
+        replaceFragment(new HomeFragment());
+        setSelectedNav(R.id.nav_home);
+    }
 
-        navNotifications.setOnClickListener(v -> {
-            replaceFragment(new NotificationFragment());
-            setSelectedNav(R.id.nav_notifications);
-        });
+    private void showSpaces() {
+        replaceFragment(new SpaceFragment());
+        setSelectedNav(R.id.nav_spaces);
+    }
+
+    private void showNotifications() {
+        replaceFragment(new NotificationFragment());
+        setSelectedNav(R.id.nav_notifications);
     }
 
     private void replaceFragment(Fragment fragment) {
@@ -79,8 +82,7 @@ public class HomeActivity extends AppCompatActivity {
         TextView[] texts = {tvHome, tvSpaces, tvNotifications};
 
         for (int i = 0; i < ids.length; i++) {
-            boolean selected = ids[i] == selectedId;
-            int color = selected ? ACTIVE_COLOR : INACTIVE_COLOR;
+            int color = ids[i] == selectedId ? ACTIVE_COLOR : INACTIVE_COLOR;
             icons[i].setColorFilter(color);
             texts[i].setTextColor(color);
         }

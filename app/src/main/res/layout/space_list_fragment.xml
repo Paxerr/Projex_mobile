@@ -44,7 +44,7 @@
                     android:paddingStart="8dp"
                     android:text="KHÔNG GIAN"
                     android:textColor="#FFFFFF"
-                    android:textSize="20sp"
+                    android:textSize="24sp"
                     android:textStyle="bold" />
 
                 <FrameLayout
