@@ -1,7 +1,7 @@
 package com.example.projex_mobile;
 
-import android.app.Activity;
 import android.os.Bundle;
+import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager2.widget.ViewPager2;
@@ -14,6 +14,7 @@ public class AuthActivity extends AppCompatActivity {
 
     private TabLayout tabLayout;
     private ViewPager2 viewPager;
+    private View authContent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,17 +23,15 @@ public class AuthActivity extends AppCompatActivity {
 
         tabLayout = findViewById(R.id.tabLayout);
         viewPager = findViewById(R.id.viewPager);
+        authContent = findViewById(R.id.authContent);
 
-        AuthPagerAdapter adapter =
-                new AuthPagerAdapter(this);
-
+        AuthPagerAdapter adapter = new AuthPagerAdapter(this);
         viewPager.setAdapter(adapter);
 
         new TabLayoutMediator(
                 tabLayout,
                 viewPager,
                 (tab, position) -> {
-
                     if (position == 0) {
                         tab.setText("Đăng nhập");
                     } else {
@@ -40,5 +39,10 @@ public class AuthActivity extends AppCompatActivity {
                     }
                 }
         ).attach();
+
+        getSupportFragmentManager().addOnBackStackChangedListener(() -> {
+            boolean hasOverlay = getSupportFragmentManager().getBackStackEntryCount() > 0;
+            authContent.setVisibility(hasOverlay ? View.GONE : View.VISIBLE);
+        });
     }
 }
