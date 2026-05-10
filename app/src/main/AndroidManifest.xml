@@ -25,6 +25,10 @@
         <activity android:name=".AddTaskActivity"/>
         <activity android:name=".ThemThanhVienActivity" />
         <activity android:name=".HomeActivity" />
+        <activity
+            android:name=".SpaceCreateActivity"
+            android:exported="false" />
+
 <!--        acti start-->
         <activity
             android:name=".AuthActivity"

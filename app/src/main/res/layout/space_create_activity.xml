@@ -19,6 +19,7 @@
             android:id="@+id/btnHuy"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:paddingTop="24dp"
             android:text="Hủy"
             android:textColor="#9CA3AF"
             android:textSize="16sp" />
@@ -27,6 +28,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:paddingTop="24dp"
             android:gravity="center"
             android:text="Tạo không gian"
             android:textColor="#FFFFFF"
@@ -37,6 +39,7 @@
             android:id="@+id/btnTao"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:paddingTop="24dp"
             android:text="Tạo"
             android:textColor="#85ADFF"
             android:textSize="16sp"
@@ -91,7 +94,7 @@
                 android:textStyle="bold" />
 
             <EditText
-                android:id="@+id/edtMaKhongGian"
+                android:id="@+id/edtTenNguoiQuanLy"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
                 android:background="@drawable/home_bg_card"
@@ -113,7 +116,7 @@
                 android:textStyle="bold" />
 
             <EditText
-                android:id="@+id/edtMaKhongGian"
+                android:id="@+id/edtMoTaKhongGian"
                 android:layout_width="match_parent"
                 android:layout_height="120dp"
                 android:background="@drawable/home_bg_card"
