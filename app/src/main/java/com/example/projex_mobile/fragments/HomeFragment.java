@@ -26,7 +26,6 @@ import com.example.projex_mobile.api.RetrofitClient;
 import com.example.projex_mobile.objects.DashboardOverview;
 import com.example.projex_mobile.objects.QuickAccessItem;
 import com.example.projex_mobile.objects.RecentItem;
-import com.google.android.material.imageview.ShapeableImageView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,10 +56,6 @@ public class HomeFragment extends Fragment {
             handler.postDelayed(this, 5000);
         }
     };
-
-    public static HomeFragment newInstance() {
-        return new HomeFragment();
-    }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
