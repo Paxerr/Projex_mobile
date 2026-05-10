@@ -24,10 +24,12 @@
         <activity android:name=".TaskActivity"/>
         <activity android:name=".AddTaskActivity"/>
         <activity android:name=".ThemThanhVienActivity" />
-        <activity android:name=".HomeActivity" />
+        <activity
+            android:name=".SpaceCreateActivity"
+            android:exported="false" />
 <!--        acti start-->
         <activity
-            android:name=".AuthActivity"
+            android:name=".HomeActivity"
             android:exported="true"
             android:screenOrientation="fullSensor">
             <intent-filter>

@@ -48,6 +48,7 @@
                     android:textStyle="bold" />
 
                 <FrameLayout
+                    android:id="@+id/btnAddSpace"
                     android:layout_width="48dp"
                     android:layout_height="48dp"
                     android:background="@drawable/home_bg_card"
