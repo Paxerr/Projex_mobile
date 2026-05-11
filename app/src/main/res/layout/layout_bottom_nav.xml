@@ -4,13 +4,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/custom_bottom_nav"
     android:layout_width="match_parent"
-    android:layout_height="64dp"
+    android:layout_height="72dp"
     android:layout_gravity="bottom"
     android:background="#101114"
     android:elevation="16dp"
     android:orientation="horizontal"
     android:paddingTop="8dp"
-    android:paddingBottom="8dp">
+    android:paddingBottom="16dp">
 
     <LinearLayout
         android:id="@+id/nav_home"
@@ -26,8 +26,8 @@
 
         <ImageView
             android:id="@+id/iv_home"
-            android:layout_width="22dp"
-            android:layout_height="22dp"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
             android:contentDescription="@null"
             android:src="@drawable/ic_home"
             app:tint="#85ADFF" />
@@ -57,8 +57,8 @@
 
         <ImageView
             android:id="@+id/iv_spaces"
-            android:layout_width="22dp"
-            android:layout_height="22dp"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
             android:contentDescription="@null"
             android:src="@drawable/ic_spaces"
             app:tint="#6B7280" />
@@ -88,8 +88,8 @@
 
         <ImageView
             android:id="@+id/iv_tasks"
-            android:layout_width="22dp"
-            android:layout_height="22dp"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
             android:contentDescription="@null"
             android:src="@drawable/ic_tasks"
             app:tint="#6B7280" />
@@ -119,8 +119,8 @@
 
         <ImageView
             android:id="@+id/iv_notifications"
-            android:layout_width="22dp"
-            android:layout_height="22dp"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
             android:contentDescription="@null"
             android:src="@drawable/ic_notification"
             app:tint="#6B7280" />
@@ -150,8 +150,8 @@
 
         <ImageView
             android:id="@+id/iv_user"
-            android:layout_width="22dp"
-            android:layout_height="22dp"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
             android:contentDescription="@null"
             android:src="@drawable/ic_user"
             app:tint="#6B7280" />

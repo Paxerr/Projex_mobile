@@ -11,6 +11,10 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.graphics.Rect;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.view.MotionEvent;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -26,7 +30,8 @@ import com.example.projex_mobile.api.RetrofitClient;
 import com.example.projex_mobile.objects.DashboardOverview;
 import com.example.projex_mobile.objects.QuickAccessItem;
 import com.example.projex_mobile.objects.RecentItem;
-import com.google.android.material.imageview.ShapeableImageView;
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,34 +46,42 @@ public class HomeFragment extends Fragment {
     private RecyclerView rvQuickAccess, rvRecentActivity;
     private ProgressBar progressBar;
     private View recentLabel;
+    private TextInputLayout searchLayout;
+    private TextInputEditText edtSearch;
 
     private QuickAccessAdapter quickAccessAdapter;
     private RecentActivityAdapter recentAdapter;
     private final List<QuickAccessItem> quickAccessList = new ArrayList<>();
     private final List<RecentItem> recentList = new ArrayList<>();
     private String token;
+    private static final boolean IS_MOCK_MODE = true;
 
     private final Handler handler = new Handler(Looper.getMainLooper());
     private final Runnable refreshRunnable = new Runnable() {
         @Override
         public void run() {
-            loadDashboardOverview();
-            loadRecentActivities();
+            if (IS_MOCK_MODE) {
+                updateProgressCardMock();
+            } else {
+                loadDashboardOverview();
+                loadRecentActivities();
+            }
             handler.postDelayed(this, 5000);
         }
     };
 
-    public static HomeFragment newInstance() {
-        return new HomeFragment();
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.home_fragment, container, false);
     }
 
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.home_fragment, container, false);
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
         initViews(view);
+        setupSearchBar(view);
         setupRecyclerViews();
         loadData();
-        return view;
     }
 
     @Override
@@ -80,7 +93,7 @@ public class HomeFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
-        handler.removeCallbacks(refreshRunnable);
+        handler.removeCallbacksAndMessages(null);
     }
 
     private void initViews(View view) {
@@ -95,6 +108,8 @@ public class HomeFragment extends Fragment {
         tvTestTasks = view.findViewById(R.id.tvTestTasks);
         tvTodoTasks = view.findViewById(R.id.tvTodoTasks);
         tvRecentEmpty = view.findViewById(R.id.tvRecentEmpty);
+        searchLayout = view.findViewById(R.id.searchLayout);
+        edtSearch = view.findViewById(R.id.edtSearch);
     }
 
     private void setupRecyclerViews() {
@@ -116,23 +131,78 @@ public class HomeFragment extends Fragment {
 
         loadQuickAccess();
         updateProgressCardMock();
-        updateRecentState();
-    }
 
+        if (IS_MOCK_MODE) {
+            loadRecentMock();
+        } else {
+            loadRecentActivities();
+        }
+    }
+    private void setupSearchBar(View view) {
+        if (searchLayout == null || edtSearch == null) return;
+
+        searchLayout.setHint("Tìm kiếm");
+        edtSearch.setCursorVisible(false);
+
+        edtSearch.setOnFocusChangeListener((v, hasFocus) -> {
+            if (hasFocus) {
+                searchLayout.setHint(null);
+                edtSearch.setCursorVisible(true);
+            } else {
+                CharSequence text = edtSearch.getText();
+                if (text == null || text.toString().trim().isEmpty()) {
+                    searchLayout.setHint("Tìm kiếm");
+                }
+                edtSearch.setCursorVisible(false);
+            }
+        });
+
+        edtSearch.addTextChangedListener(new TextWatcher() {
+            @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            @Override public void afterTextChanged(Editable s) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (s != null && s.length() > 0) {
+                    searchLayout.setHint(null);
+                } else if (!edtSearch.hasFocus()) {
+                    searchLayout.setHint("Tìm kiếm");
+                }
+            }
+        });
+
+        view.setOnTouchListener((v, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_DOWN && edtSearch.isFocused()) {
+                Rect rect = new Rect();
+                edtSearch.getGlobalVisibleRect(rect);
+                if (!rect.contains((int) event.getRawX(), (int) event.getRawY())) {
+                    edtSearch.clearFocus();
+                    edtSearch.setCursorVisible(false);
+                    v.performClick();
+                }
+            }
+            return false;
+        });
+    }
     private void loadQuickAccess() {
-        quickAccessList.clear();
+        int oldSize = quickAccessList.size();
+        if (oldSize > 0) {
+            quickAccessList.clear();
+            quickAccessAdapter.notifyItemRangeRemoved(0, oldSize);
+        }
+
         quickAccessList.add(new QuickAccessItem(1, "My Tasks", R.drawable.ic_tasks, "CÁ NHÂN"));
         quickAccessList.add(new QuickAccessItem(2, "Projects", R.drawable.ic_document, "DỰ ÁN"));
         quickAccessList.add(new QuickAccessItem(3, "Reports", R.drawable.ic_attachment, "BÁO CÁO"));
         quickAccessList.add(new QuickAccessItem(4, "Team", R.drawable.ic_team, "ĐỘI NHÓM"));
-        quickAccessAdapter.notifyDataSetChanged();
+        quickAccessAdapter.notifyItemRangeInserted(0, quickAccessList.size());
     }
 
     private void loadDashboardOverview() {
         if (token == null || token.isEmpty()) return;
 
         ApiService apiService = RetrofitClient.getApiService(token);
-        apiService.getDashboardOverview(token).enqueue(new Callback<DashboardOverview>() {
+        apiService.getDashboardOverview(token).enqueue(new Callback<>() {
             @Override
             public void onResponse(@NonNull Call<DashboardOverview> call, @NonNull Response<DashboardOverview> response) {
                 if (response.isSuccessful() && response.body() != null) {
@@ -151,28 +221,39 @@ public class HomeFragment extends Fragment {
 
     private void loadRecentActivities() {
         if (token == null || token.isEmpty()) {
+            int oldSize = recentList.size();
             recentList.clear();
-            recentAdapter.notifyDataSetChanged();
+            if (oldSize > 0) {
+                recentAdapter.notifyItemRangeRemoved(0, oldSize);
+            }
             updateRecentState();
             return;
         }
 
         ApiService apiService = RetrofitClient.getApiService(token);
-        apiService.getMyTasks(token).enqueue(new Callback<List<RecentItem>>() {
+        apiService.getMyTasks(token).enqueue(new Callback<>() {
             @Override
             public void onResponse(@NonNull Call<List<RecentItem>> call, @NonNull Response<List<RecentItem>> response) {
+                int oldSize = recentList.size();
                 recentList.clear();
+                if (oldSize > 0) {
+                    recentAdapter.notifyItemRangeRemoved(0, oldSize);
+                }
+
                 if (response.isSuccessful() && response.body() != null) {
                     recentList.addAll(response.body());
+                    recentAdapter.notifyItemRangeInserted(0, recentList.size());
                 }
-                recentAdapter.notifyDataSetChanged();
                 updateRecentState();
             }
 
             @Override
             public void onFailure(@NonNull Call<List<RecentItem>> call, @NonNull Throwable t) {
+                int oldSize = recentList.size();
                 recentList.clear();
-                recentAdapter.notifyDataSetChanged();
+                if (oldSize > 0) {
+                    recentAdapter.notifyItemRangeRemoved(0, oldSize);
+                }
                 updateRecentState();
             }
         });
@@ -185,41 +266,48 @@ public class HomeFragment extends Fragment {
         double progress = totalTasks > 0 ? (doneTasks * 100.0 / totalTasks) : 0;
 
         progressBar.setProgress((int) progress);
-        tvProgressPercent.setText(String.format("%.0f%%", progress));
-        tvDoneTasks.setText(doneTasks + " Tasks");
-        tvInProgressTasks.setText(inProgress + " Tasks");
-        tvTestTasks.setText("5 Tasks");
-        tvTodoTasks.setText(Math.max(totalTasks - doneTasks - inProgress, 0) + " Tasks");
+        tvProgressPercent.setText(getString(R.string.progress_percent, progress));
+        tvDoneTasks.setText(getString(R.string.tasks_label, doneTasks));
+        tvInProgressTasks.setText(getString(R.string.tasks_label, inProgress));
+        tvTestTasks.setText(getString(R.string.tasks_label, 5));
+        tvTodoTasks.setText(getString(R.string.tasks_label, Math.max(totalTasks - doneTasks - inProgress, 0)));
     }
 
     private void updateRecentState() {
-        boolean hasItems = recentList != null && !recentList.isEmpty();
+        boolean hasItems = !recentList.isEmpty();
         recentLabel.setVisibility(View.VISIBLE);
         rvRecentActivity.setVisibility(hasItems ? View.VISIBLE : View.GONE);
         tvRecentEmpty.setVisibility(hasItems ? View.GONE : View.VISIBLE);
     }
 
+
+    //test
     private void updateProgressCardMock() {
         progressBar.setProgress(40);
-        tvProgressPercent.setText("40%");
-        tvDoneTasks.setText("12 Tasks");
-        tvInProgressTasks.setText("5 Tasks");
-        tvTestTasks.setText("5 Tasks");
-        tvTodoTasks.setText("8 Tasks");
+        tvProgressPercent.setText(getString(R.string.progress_percent, 40f));
+        tvDoneTasks.setText(getString(R.string.tasks_label, 12));
+        tvInProgressTasks.setText(getString(R.string.tasks_label, 5));
+        tvTestTasks.setText(getString(R.string.tasks_label, 5));
+        tvTodoTasks.setText(getString(R.string.tasks_label, 8));
     }
 
     private void loadRecentMock() {
+        int oldSize = recentList.size();
         recentList.clear();
-        RecentItem item = new RecentItem();
-        item.setTitle("Vẽ Sequence diagram");
-        item.setMessage("Dat updated a story");
-        item.setTicketCode("GGSHOP-3");
-        item.setAvatarText("DA");
-        item.setTimeAgo("2h ago");
-        item.setStatus("InProgress");
-        recentList.add(item);
+        if (oldSize > 0) {
+            recentAdapter.notifyItemRangeRemoved(0, oldSize);
+        }
 
-        recentAdapter.notifyDataSetChanged();
+        RecentItem item1 = new RecentItem();
+        item1.setTitle("Vẽ Sequence diagram");
+        item1.setMessage("Dat updated a story");
+        item1.setTicketCode("GGSHOP-3");
+        item1.setAvatarText("DA");
+        item1.setTimeAgo("2h ago");
+        item1.setStatus("InProgress");
+        recentList.add(item1);
+
+        recentAdapter.notifyItemRangeInserted(0, recentList.size());
         updateRecentState();
     }
 }
