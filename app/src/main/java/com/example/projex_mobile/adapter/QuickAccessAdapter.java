@@ -5,7 +5,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-
+import android.content.res.ColorStateList;
+import android.graphics.Color;
+import androidx.core.content.ContextCompat;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -33,9 +35,31 @@ public class QuickAccessAdapter extends RecyclerView.Adapter<QuickAccessAdapter.
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         QuickAccessItem item = items.get(position);
+
         holder.ivIcon.setImageResource(item.getIconRes());
         holder.tvName.setText(item.getName());
         holder.tvLabel.setText(item.getLabel());
+
+        int tintColor;
+        switch (item.getName()) {
+            case "My Tasks":
+                tintColor = Color.parseColor("#4A80FF");
+                break;
+            case "Projects":
+                tintColor = Color.parseColor("#FFECB3");
+                break;
+            case "Reports":
+                tintColor = Color.parseColor("#7C4DFF");
+                break;
+            case "Team":
+                tintColor = Color.parseColor("#4ECDC4");
+                break;
+            default:
+                tintColor = Color.parseColor("#4A80FF");
+                break;
+        }
+
+        holder.ivIcon.setImageTintList(ColorStateList.valueOf(tintColor));
     }
 
     @Override

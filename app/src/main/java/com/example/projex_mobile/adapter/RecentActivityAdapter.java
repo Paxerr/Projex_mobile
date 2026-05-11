@@ -5,17 +5,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.example.projex_mobile.R;
 import com.example.projex_mobile.objects.RecentItem;
-import com.google.android.material.chip.Chip;
-import com.google.android.material.imageview.ShapeableImageView;
+
 import java.util.List;
 
 public class RecentActivityAdapter extends RecyclerView.Adapter<RecentActivityAdapter.ViewHolder> {
 
-    private List<RecentItem> items;
+    private final List<RecentItem> items;
 
     public RecentActivityAdapter(List<RecentItem> items) {
         this.items = items;
@@ -37,9 +38,12 @@ public class RecentActivityAdapter extends RecyclerView.Adapter<RecentActivityAd
         holder.tvMessage.setText(item.getMessage());
         holder.tvTicket.setText(item.getTicketCode());
         holder.tvTime.setText(item.getTimeAgo());
-        holder.chipStatus.setText(item.getStatus());
 
-        setAvatar(holder.imgAvatar, item.getAvatarText());
+        holder.tvAvatar.setText(item.getAvatarText() != null && !item.getAvatarText().isEmpty()
+                ? item.getAvatarText()
+                : "NA");
+
+        setAvatarStyle(holder.tvAvatar, item.getAvatarText());
     }
 
     @Override
@@ -47,14 +51,14 @@ public class RecentActivityAdapter extends RecyclerView.Adapter<RecentActivityAd
         return items != null ? items.size() : 0;
     }
 
-    private void setAvatar(ShapeableImageView imageView, String initials) {
+    private void setAvatarStyle(TextView avatarView, String initials) {
         if (initials != null && !initials.isEmpty()) {
             int color = getAvatarColor(initials.hashCode());
-            imageView.setBackgroundTintList(android.content.res.ColorStateList.valueOf(color));
-
-            imageView.setContentDescription(initials);  // Accessibility
-
-            imageView.setImageResource(android.R.drawable.ic_menu_gallery);
+            avatarView.setBackgroundTintList(android.content.res.ColorStateList.valueOf(color));
+            avatarView.setText(initials);
+        } else {
+            avatarView.setBackgroundTintList(android.content.res.ColorStateList.valueOf(Color.parseColor("#6B7280")));
+            avatarView.setText("NA");
         }
     }
 
@@ -68,12 +72,11 @@ public class RecentActivityAdapter extends RecyclerView.Adapter<RecentActivityAd
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView tvTitle, tvMessage, tvTicket, tvTime;
-        ShapeableImageView imgAvatar;
-        Chip chipStatus;
+        TextView tvAvatar, tvTitle, tvMessage, tvTicket, tvTime;
 
         ViewHolder(@NonNull View itemView) {
             super(itemView);
+            tvAvatar = itemView.findViewById(R.id.tvAvatar);
             tvTitle = itemView.findViewById(R.id.tvTitle);
             tvMessage = itemView.findViewById(R.id.tvMessage);
             tvTicket = itemView.findViewById(R.id.tvTicket);
