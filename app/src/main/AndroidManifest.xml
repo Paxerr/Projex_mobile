@@ -15,7 +15,7 @@
 
         <!--Khai báo các acti-->
         <activity android:name=".TeamActivity"/>
-        <activity android:name=".ForgotPasswordActivity"/>
+
         <activity android:name=".RegisterActivity"/>
         <activity android:name=".RePasswordActivity"/>
         <activity android:name=".VerifyActivity"/>
