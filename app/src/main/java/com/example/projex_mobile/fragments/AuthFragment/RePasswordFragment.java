@@ -7,37 +7,35 @@ import android.widget.Button;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 import com.example.projex_mobile.R;
 
-public class ForgotPasswordFragment extends Fragment {
-
-    public ForgotPasswordFragment() {
-        super(R.layout.forgot_password_fragment);
+public class RePasswordFragment extends Fragment {
+    public RePasswordFragment() {
+        super(R.layout.re_password_fragment);
     }
-
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        Button btnBack = view.findViewById(R.id.btnBack);
-        Button btnNext = view.findViewById(R.id.btnNext);
+        Button btnUpdatePassword = view.findViewById(R.id.btnUpdatePassword);
+        Button btnLogin = view.findViewById(R.id.btnLogin);
 
-        btnBack.setOnClickListener(v -> {
+        btnLogin.setOnClickListener(v -> {
             requireActivity()
                     .getSupportFragmentManager()
-                    .popBackStack();
+                    .popBackStack(null,
+                            FragmentManager.POP_BACK_STACK_INCLUSIVE);
         });
 
-        btnNext.setOnClickListener(v -> {
+        btnUpdatePassword.setOnClickListener(v -> {
             requireActivity()
                     .getSupportFragmentManager()
-                    .beginTransaction()
-                    .replace(R.id.authOverlayContainer, new VerifyFragment())
-                    .addToBackStack("verify_fragment")
-                    .commit();
+                    .popBackStack(null,
+                            FragmentManager.POP_BACK_STACK_INCLUSIVE);
         });
-
 
     }
+
 }

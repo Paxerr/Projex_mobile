@@ -16,9 +16,6 @@
         <!--Khai báo các acti-->
         <activity android:name=".TeamActivity"/>
 
-        <activity android:name=".RegisterActivity"/>
-        <activity android:name=".RePasswordActivity"/>
-        <activity android:name=".VerifyActivity"/>
         <activity android:name=".ProjectActivity"/>
         <activity android:name=".ProTaskActivity"/>
         <activity android:name=".TaskActivity"/>
@@ -31,7 +28,7 @@
 
 <!--        acti start-->
         <activity
-            android:name=".HomeActivity"
+            android:name=".AuthActivity"
             android:exported="true"
             android:screenOrientation="fullSensor">
             <intent-filter>

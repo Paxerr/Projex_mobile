@@ -10,34 +10,32 @@ import androidx.fragment.app.Fragment;
 
 import com.example.projex_mobile.R;
 
-public class ForgotPasswordFragment extends Fragment {
-
-    public ForgotPasswordFragment() {
-        super(R.layout.forgot_password_fragment);
+public class VerifyFragment extends Fragment {
+    public VerifyFragment(){
+        super(R.layout.verify_fragment);
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+
         Button btnBack = view.findViewById(R.id.btnBack);
-        Button btnNext = view.findViewById(R.id.btnNext);
+        Button btnVerify = view.findViewById(R.id.btnVerify);
 
         btnBack.setOnClickListener(v -> {
             requireActivity()
                     .getSupportFragmentManager()
                     .popBackStack();
         });
-
-        btnNext.setOnClickListener(v -> {
+        btnVerify.setOnClickListener(v -> {
             requireActivity()
                     .getSupportFragmentManager()
                     .beginTransaction()
-                    .replace(R.id.authOverlayContainer, new VerifyFragment())
-                    .addToBackStack("verify_fragment")
+                    .replace(R.id.authOverlayContainer, new RePasswordFragment())
+                    .addToBackStack("re_password_fragment")
                     .commit();
         });
-
-
     }
+
 }
