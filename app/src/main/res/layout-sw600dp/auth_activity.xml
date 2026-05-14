@@ -9,8 +9,9 @@
 
     <LinearLayout
         android:id="@+id/authContent"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="500dp"
+        android:layout_height="800dp"
+        android:layout_gravity="center"
         android:orientation="vertical"
         android:padding="24dp">
 
@@ -67,8 +68,7 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
+            android:layout_height="500dp"
             android:layout_marginTop="16dp">
 
             <androidx.viewpager2.widget.ViewPager2
@@ -76,8 +76,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:background="@drawable/login_input_view"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent" />
 
             <com.google.android.material.tabs.TabLayout
                 android:id="@+id/tabLayout"
