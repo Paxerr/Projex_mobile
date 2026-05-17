@@ -7,18 +7,18 @@
     android:layout_height="match_parent"
     android:background="#000000"
     tools:context=".AccountActivity"
-    tools:deviceWidth="390dp"
-    tools:deviceHeight="803dp">
+    tools:deviceWidth="600dp"
+    tools:deviceHeight="960dp">
 
     <TextView
         android:id="@+id/tvScreenTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="18dp"
+        android:layout_marginStart="40dp"
+        android:layout_marginTop="26dp"
         android:text="Trang tài khoản"
         android:textColor="#57A7FF"
-        android:textSize="18sp"
+        android:textSize="22sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -27,10 +27,10 @@
         android:id="@+id/contentArea"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="24dp"
-        android:layout_marginBottom="10dp"
+        android:layout_marginStart="40dp"
+        android:layout_marginTop="18dp"
+        android:layout_marginEnd="40dp"
+        android:layout_marginBottom="18dp"
         app:layout_constraintBottom_toTopOf="@+id/bottomNavBar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -38,20 +38,20 @@
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/btnBack"
-            android:layout_width="44dp"
-            android:layout_height="44dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             app:cardBackgroundColor="#1A1A1A"
-            app:cardCornerRadius="22dp"
+            app:cardCornerRadius="25dp"
             app:cardElevation="0dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
             <ImageView
-                android:layout_width="22dp"
-                android:layout_height="22dp"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
                 android:layout_gravity="center"
                 android:contentDescription="Back"
-                android:tint="#FFFFFF"
+                app:tint="#FFFFFF"
                 app:srcCompat="@drawable/ic_back" />
         </com.google.android.material.card.MaterialCardView>
 
@@ -61,7 +61,7 @@
             android:layout_height="wrap_content"
             android:text="Tài khoản"
             android:textColor="#B9BDC8"
-            android:textSize="16sp"
+            android:textSize="18sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="@+id/btnBack"
             app:layout_constraintEnd_toEndOf="parent"
@@ -70,30 +70,30 @@
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/btnEditProfile"
-            android:layout_width="44dp"
-            android:layout_height="44dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             app:cardBackgroundColor="#1A1A1A"
-            app:cardCornerRadius="22dp"
+            app:cardCornerRadius="25dp"
             app:cardElevation="0dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
             <ImageView
-                android:layout_width="22dp"
-                android:layout_height="22dp"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
                 android:layout_gravity="center"
                 android:contentDescription="Edit profile"
-                android:tint="#4A8CFF"
+                app:tint="#4A8CFF"
                 app:srcCompat="@drawable/account_ic_edit" />
         </com.google.android.material.card.MaterialCardView>
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/cardAvatar"
-            android:layout_width="92dp"
-            android:layout_height="92dp"
-            android:layout_marginTop="22dp"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:layout_marginTop="34dp"
             app:cardBackgroundColor="#2A9EB9"
-            app:cardCornerRadius="24dp"
+            app:cardCornerRadius="30dp"
             app:cardElevation="0dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -106,14 +106,14 @@
                 android:gravity="center"
                 android:text="TD"
                 android:textColor="#FFFFFF"
-                android:textSize="30sp"
+                android:textSize="36sp"
                 android:textStyle="bold" />
         </com.google.android.material.card.MaterialCardView>
 
         <View
             android:id="@+id/viewOnlineDot"
-            android:layout_width="18dp"
-            android:layout_height="18dp"
+            android:layout_width="22dp"
+            android:layout_height="22dp"
             android:background="@drawable/account_online_dot"
             app:layout_constraintBottom_toBottomOf="@+id/cardAvatar"
             app:layout_constraintEnd_toEndOf="@+id/cardAvatar" />
@@ -122,10 +122,10 @@
             android:id="@+id/tvFullName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="14dp"
+            android:layout_marginTop="18dp"
             android:text="Tiến Đạt Đinh"
             android:textColor="#FFFFFF"
-            android:textSize="24sp"
+            android:textSize="28sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -135,10 +135,10 @@
             android:id="@+id/tvEmail"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
+            android:layout_marginTop="6dp"
             android:text="dinhtiendat2105@gmail.com"
             android:textColor="#8C909A"
-            android:textSize="14sp"
+            android:textSize="18sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tvFullName" />
@@ -153,10 +153,10 @@
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/cardTasks"
             android:layout_width="0dp"
-            android:layout_height="76dp"
-            android:layout_marginTop="18dp"
+            android:layout_height="104dp"
+            android:layout_marginTop="32dp"
             app:cardBackgroundColor="#17191F"
-            app:cardCornerRadius="16dp"
+            app:cardCornerRadius="24dp"
             app:cardElevation="0dp"
             app:layout_constraintEnd_toStartOf="@+id/cardProjects"
             app:layout_constraintStart_toStartOf="parent"
@@ -175,16 +175,16 @@
                     android:layout_height="wrap_content"
                     android:text="24"
                     android:textColor="#FFFFFF"
-                    android:textSize="22sp"
+                    android:textSize="30sp"
                     android:textStyle="bold" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="2dp"
+                    android:layout_marginTop="4dp"
                     android:text="TASKS"
                     android:textColor="#6E778A"
-                    android:textSize="10sp"
+                    android:textSize="13sp"
                     android:textStyle="bold" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
@@ -192,9 +192,9 @@
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/cardProjects"
             android:layout_width="0dp"
-            android:layout_height="76dp"
+            android:layout_height="104dp"
             app:cardBackgroundColor="#17191F"
-            app:cardCornerRadius="16dp"
+            app:cardCornerRadius="24dp"
             app:cardElevation="0dp"
             app:layout_constraintBottom_toBottomOf="@+id/cardTasks"
             app:layout_constraintEnd_toStartOf="@+id/cardOnTime"
@@ -214,16 +214,16 @@
                     android:layout_height="wrap_content"
                     android:text="12"
                     android:textColor="#FFFFFF"
-                    android:textSize="22sp"
+                    android:textSize="30sp"
                     android:textStyle="bold" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="2dp"
+                    android:layout_marginTop="4dp"
                     android:text="PROJECTS"
                     android:textColor="#6E778A"
-                    android:textSize="10sp"
+                    android:textSize="13sp"
                     android:textStyle="bold" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
@@ -231,9 +231,9 @@
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/cardOnTime"
             android:layout_width="0dp"
-            android:layout_height="76dp"
+            android:layout_height="104dp"
             app:cardBackgroundColor="#17191F"
-            app:cardCornerRadius="16dp"
+            app:cardCornerRadius="24dp"
             app:cardElevation="0dp"
             app:layout_constraintBottom_toBottomOf="@+id/cardTasks"
             app:layout_constraintEnd_toEndOf="parent"
@@ -253,16 +253,16 @@
                     android:layout_height="wrap_content"
                     android:text="98%"
                     android:textColor="#FFFFFF"
-                    android:textSize="22sp"
+                    android:textSize="30sp"
                     android:textStyle="bold" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="2dp"
+                    android:layout_marginTop="4dp"
                     android:text="ON TIME"
                     android:textColor="#6E778A"
-                    android:textSize="10sp"
+                    android:textSize="13sp"
                     android:textStyle="bold" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
@@ -271,22 +271,22 @@
             android:id="@+id/tvSystemSettings"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="22dp"
+            android:layout_marginTop="36dp"
+            android:letterSpacing="0.25"
             android:text="CÀI ĐẶT HỆ THỐNG"
             android:textColor="#48505E"
-            android:textSize="11sp"
+            android:textSize="14sp"
             android:textStyle="bold"
-            android:letterSpacing="0.25"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/cardTasks" />
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/cardNotifications"
             android:layout_width="0dp"
-            android:layout_height="72dp"
-            android:layout_marginTop="10dp"
+            android:layout_height="96dp"
+            android:layout_marginTop="16dp"
             app:cardBackgroundColor="#17191F"
-            app:cardCornerRadius="18dp"
+            app:cardCornerRadius="24dp"
             app:cardElevation="0dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -295,26 +295,26 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:paddingStart="14dp"
-                android:paddingEnd="14dp">
+                android:paddingStart="24dp"
+                android:paddingEnd="24dp">
 
                 <com.google.android.material.card.MaterialCardView
                     android:id="@+id/iconBellCard"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
+                    android:layout_width="56dp"
+                    android:layout_height="56dp"
                     app:cardBackgroundColor="#202A3C"
-                    app:cardCornerRadius="12dp"
+                    app:cardCornerRadius="18dp"
                     app:cardElevation="0dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent">
 
                     <ImageView
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
+                        android:layout_width="28dp"
+                        android:layout_height="28dp"
                         android:layout_gravity="center"
                         android:contentDescription="Notification"
-                        android:tint="#4A8CFF"
+                        app:tint="#4A8CFF"
                         app:srcCompat="@drawable/account_ic_nofication" />
                 </com.google.android.material.card.MaterialCardView>
 
@@ -322,10 +322,10 @@
                     android:id="@+id/tvNotificationText"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="12dp"
+                    android:layout_marginStart="20dp"
                     android:text="Thông báo đẩy"
                     android:textColor="#FFFFFF"
-                    android:textSize="15sp"
+                    android:textSize="18sp"
                     android:textStyle="bold"
                     app:layout_constraintBottom_toBottomOf="@+id/iconBellCard"
                     app:layout_constraintEnd_toStartOf="@+id/switchNotifications"
@@ -337,6 +337,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:checked="true"
+                    android:scaleX="1.15"
+                    android:scaleY="1.15"
                     app:layout_constraintBottom_toBottomOf="@+id/iconBellCard"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="@+id/iconBellCard" />
@@ -346,10 +348,10 @@
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/cardChangePassword"
             android:layout_width="0dp"
-            android:layout_height="72dp"
-            android:layout_marginTop="10dp"
+            android:layout_height="96dp"
+            android:layout_marginTop="16dp"
             app:cardBackgroundColor="#17191F"
-            app:cardCornerRadius="18dp"
+            app:cardCornerRadius="24dp"
             app:cardElevation="0dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -358,26 +360,26 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:paddingStart="14dp"
-                android:paddingEnd="14dp">
+                android:paddingStart="24dp"
+                android:paddingEnd="24dp">
 
                 <com.google.android.material.card.MaterialCardView
                     android:id="@+id/iconLockCard"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
+                    android:layout_width="56dp"
+                    android:layout_height="56dp"
                     app:cardBackgroundColor="#1C2432"
-                    app:cardCornerRadius="12dp"
+                    app:cardCornerRadius="18dp"
                     app:cardElevation="0dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent">
 
                     <ImageView
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
+                        android:layout_width="28dp"
+                        android:layout_height="28dp"
                         android:layout_gravity="center"
                         android:contentDescription="Lock"
-                        android:tint="#FFFFFF"
+                        app:tint="#FFFFFF"
                         app:srcCompat="@drawable/login_ic_lock" />
                 </com.google.android.material.card.MaterialCardView>
 
@@ -385,10 +387,10 @@
                     android:id="@+id/tvChangePassword"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="12dp"
+                    android:layout_marginStart="20dp"
                     android:text="Đổi mật khẩu"
                     android:textColor="#FFFFFF"
-                    android:textSize="15sp"
+                    android:textSize="18sp"
                     android:textStyle="bold"
                     app:layout_constraintBottom_toBottomOf="@+id/iconLockCard"
                     app:layout_constraintEnd_toStartOf="@+id/icChevronRight"
@@ -397,10 +399,10 @@
 
                 <ImageView
                     android:id="@+id/icChevronRight"
-                    android:layout_width="18dp"
-                    android:layout_height="18dp"
+                    android:layout_width="26dp"
+                    android:layout_height="26dp"
                     android:contentDescription="Go"
-                    android:tint="#687085"
+                    app:tint="#687085"
                     app:layout_constraintBottom_toBottomOf="@+id/iconLockCard"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="@+id/iconLockCard" />
@@ -410,10 +412,10 @@
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/cardLogout"
             android:layout_width="0dp"
-            android:layout_height="72dp"
-            android:layout_marginTop="10dp"
+            android:layout_height="96dp"
+            android:layout_marginTop="16dp"
             app:cardBackgroundColor="#170909"
-            app:cardCornerRadius="18dp"
+            app:cardCornerRadius="24dp"
             app:cardElevation="0dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -423,27 +425,27 @@
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="53dp"
-                android:paddingStart="14dp"
-                android:paddingEnd="14dp">
+                android:layout_height="match_parent"
+                android:paddingStart="24dp"
+                android:paddingEnd="24dp">
 
                 <com.google.android.material.card.MaterialCardView
                     android:id="@+id/iconLogoutCard"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
+                    android:layout_width="56dp"
+                    android:layout_height="56dp"
                     app:cardBackgroundColor="#2B1212"
-                    app:cardCornerRadius="12dp"
+                    app:cardCornerRadius="18dp"
                     app:cardElevation="0dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent">
 
                     <ImageView
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
+                        android:layout_width="28dp"
+                        android:layout_height="28dp"
                         android:layout_gravity="center"
                         android:contentDescription="Logout"
-                        android:tint="#FF4D4D"
+                        app:tint="#FF4D4D"
                         app:srcCompat="@drawable/account_logout" />
                 </com.google.android.material.card.MaterialCardView>
 
@@ -451,10 +453,10 @@
                     android:id="@+id/tvLogout"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="12dp"
+                    android:layout_marginStart="20dp"
                     android:text="ĐĂNG XUẤT"
                     android:textColor="#FF4D4D"
-                    android:textSize="15sp"
+                    android:textSize="18sp"
                     android:textStyle="bold"
                     app:layout_constraintBottom_toBottomOf="@+id/iconLogoutCard"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -462,16 +464,104 @@
                     app:layout_constraintTop_toTopOf="@+id/iconLogoutCard" />
             </androidx.constraintlayout.widget.ConstraintLayout>
         </com.google.android.material.card.MaterialCardView>
-
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <include
+    <com.google.android.material.card.MaterialCardView
         android:id="@+id/bottomNavBar"
-        layout="@layout/layout_bottom_nav"
         android:layout_width="0dp"
-        android:layout_height="64dp"
+        android:layout_height="96dp"
+        android:layout_marginStart="40dp"
+        android:layout_marginEnd="40dp"
+        android:layout_marginBottom="18dp"
+        app:cardBackgroundColor="#171A22"
+        app:cardCornerRadius="22dp"
+        app:cardElevation="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp">
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/bottomHome"
+                android:layout_width="0dp"
+                android:layout_height="72dp"
+                android:layout_margin="6dp"
+                android:layout_weight="1"
+                app:cardBackgroundColor="#171A22"
+                app:cardCornerRadius="18dp"
+                app:cardElevation="0dp">
+                <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent" android:gravity="center" android:orientation="vertical">
+                    <ImageView android:layout_width="24dp" android:layout_height="24dp" android:contentDescription="Home" app:tint="#8A909B" app:srcCompat="@drawable/account_ic_home" />
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="4dp" android:text="HOME" android:textColor="#8A909B" android:textSize="11sp" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/bottomSpaces"
+                android:layout_width="0dp"
+                android:layout_height="72dp"
+                android:layout_margin="6dp"
+                android:layout_weight="1"
+                app:cardBackgroundColor="#171A22"
+                app:cardCornerRadius="18dp"
+                app:cardElevation="0dp">
+                <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent" android:gravity="center" android:orientation="vertical">
+                    <ImageView android:layout_width="24dp" android:layout_height="24dp" android:contentDescription="Spaces" app:tint="#8A909B" app:srcCompat="@drawable/ic_space" />
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="4dp" android:text="SPACES" android:textColor="#8A909B" android:textSize="11sp" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/bottomTasks"
+                android:layout_width="0dp"
+                android:layout_height="72dp"
+                android:layout_margin="6dp"
+                android:layout_weight="1"
+                app:cardBackgroundColor="#171A22"
+                app:cardCornerRadius="18dp"
+                app:cardElevation="0dp">
+                <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent" android:gravity="center" android:orientation="vertical">
+                    <ImageView android:layout_width="24dp" android:layout_height="24dp" android:contentDescription="Tasks" app:tint="#8A909B" app:srcCompat="@drawable/ic_task" />
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="4dp" android:text="TASKS" android:textColor="#8A909B" android:textSize="11sp" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/bottomNotification"
+                android:layout_width="0dp"
+                android:layout_height="72dp"
+                android:layout_margin="6dp"
+                android:layout_weight="1"
+                app:cardBackgroundColor="#171A22"
+                app:cardCornerRadius="18dp"
+                app:cardElevation="0dp">
+                <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent" android:gravity="center" android:orientation="vertical">
+                    <ImageView android:layout_width="24dp" android:layout_height="24dp" android:contentDescription="Notification" app:tint="#8A909B" app:srcCompat="@drawable/ic_nofication" />
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="4dp" android:text="NOTIFICATION" android:textColor="#8A909B" android:textSize="11sp" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/bottomUser"
+                android:layout_width="0dp"
+                android:layout_height="72dp"
+                android:layout_margin="6dp"
+                android:layout_weight="1"
+                app:cardBackgroundColor="#2A3B63"
+                app:cardCornerRadius="18dp"
+                app:cardElevation="0dp">
+                <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent" android:gravity="center" android:orientation="vertical">
+                    <ImageView android:layout_width="24dp" android:layout_height="24dp" android:contentDescription="User" app:tint="#8CB2FF" app:srcCompat="@drawable/ic_avatar" />
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="4dp" android:text="USER" android:textColor="#8CB2FF" android:textSize="11sp" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
 </androidx.constraintlayout.widget.ConstraintLayout>

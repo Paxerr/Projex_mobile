@@ -35,7 +35,7 @@ public class ThemThanhVienActivity extends AppCompatActivity {
         TextView btnAdd = findViewById(R.id.btnAdd);
 
         View roleBox = findViewById(R.id.roleBox);
-        TextView tvTitleTop = findViewById(R.id.tvTitleTop);
+        TextView tvTitleTop = findViewById(R.id.tvScreenTitle);
 
         StringBuilder missing = new StringBuilder();
         if (modalOverlay == null) missing.append(" modalOverlay");
