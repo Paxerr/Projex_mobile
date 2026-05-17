@@ -21,14 +21,23 @@ public class ForgotPasswordFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         Button btnBack = view.findViewById(R.id.btnBack);
+        Button btnNext = view.findViewById(R.id.btnNext);
 
         btnBack.setOnClickListener(v -> {
             requireActivity()
                     .getSupportFragmentManager()
                     .popBackStack();
-
-            View authContent = requireActivity().findViewById(R.id.authContent);
-            authContent.setVisibility(View.VISIBLE);
         });
+
+        btnNext.setOnClickListener(v -> {
+            requireActivity()
+                    .getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.authOverlayContainer, new VerifyFragment())
+                    .addToBackStack("verify_fragment")
+                    .commit();
+        });
+
+
     }
 }

@@ -45,7 +45,6 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
         holder.txtTitle.setText(task.title);
         holder.txtStatus.setText(task.status);
 
-        // 🎨 đổi màu theo trạng thái
         switch (task.status) {
             case "Done":
                 holder.txtStatus.setTextColor(Color.GREEN);

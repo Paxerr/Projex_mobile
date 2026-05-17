@@ -15,24 +15,24 @@
 
         <!--Khai báo các acti-->
         <activity android:name=".TeamActivity"/>
-        <activity android:name=".ForgotPasswordActivity"/>
-        <activity android:name=".RegisterActivity"/>
-        <activity android:name=".RePasswordActivity"/>
-        <activity android:name=".VerifyActivity"/>
+
         <activity android:name=".ProjectActivity"/>
         <activity android:name=".ProTaskActivity"/>
         <activity android:name=".TaskActivity"/>
         <activity android:name=".AddTaskActivity"/>
         <activity android:name=".ThemThanhVienActivity" />
 
+        <activity
+            android:name=".SpaceCreateActivity"
+            android:exported="false" />
+
 <!--        acti start-->
         <activity
-            android:name=".AuthActivity"
-            android:exported="true"
-            android:screenOrientation="fullSensor">
+            android:name=".AccountActivity"
+            android:exported="true">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 

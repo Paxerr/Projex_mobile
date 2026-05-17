@@ -51,7 +51,7 @@
                 android:layout_height="22dp"
                 android:layout_gravity="center"
                 android:contentDescription="Back"
-                android:tint="#FFFFFF"
+                app:tint="#FFFFFF"
                 app:srcCompat="@drawable/ic_back" />
         </com.google.android.material.card.MaterialCardView>
 
@@ -83,7 +83,7 @@
                 android:layout_height="22dp"
                 android:layout_gravity="center"
                 android:contentDescription="Edit profile"
-                android:tint="#4A8CFF"
+                app:tint="#4A8CFF"
                 app:srcCompat="@drawable/account_ic_edit" />
         </com.google.android.material.card.MaterialCardView>
 
@@ -314,7 +314,7 @@
                         android:layout_height="20dp"
                         android:layout_gravity="center"
                         android:contentDescription="Notification"
-                        android:tint="#4A8CFF"
+                        app:tint="#4A8CFF"
                         app:srcCompat="@drawable/account_ic_nofication" />
                 </com.google.android.material.card.MaterialCardView>
 
@@ -377,7 +377,7 @@
                         android:layout_height="20dp"
                         android:layout_gravity="center"
                         android:contentDescription="Lock"
-                        android:tint="#FFFFFF"
+                        app:tint="#FFFFFF"
                         app:srcCompat="@drawable/login_ic_lock" />
                 </com.google.android.material.card.MaterialCardView>
 
@@ -400,7 +400,7 @@
                     android:layout_width="18dp"
                     android:layout_height="18dp"
                     android:contentDescription="Go"
-                    android:tint="#687085"
+                    app:tint="#687085"
                     app:layout_constraintBottom_toBottomOf="@+id/iconLockCard"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="@+id/iconLockCard" />
@@ -443,7 +443,7 @@
                         android:layout_height="20dp"
                         android:layout_gravity="center"
                         android:contentDescription="Logout"
-                        android:tint="#FF4D4D"
+                        app:tint="#FF4D4D"
                         app:srcCompat="@drawable/account_logout" />
                 </com.google.android.material.card.MaterialCardView>
 
@@ -465,194 +465,13 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <com.google.android.material.card.MaterialCardView
+    <include
         android:id="@+id/bottomNavBar"
+        layout="@layout/layout_bottom_nav"
         android:layout_width="0dp"
-        android:layout_height="76dp"
-        android:layout_marginStart="14dp"
-        android:layout_marginEnd="14dp"
-        android:layout_marginBottom="10dp"
-        app:cardBackgroundColor="#171A22"
-        app:cardCornerRadius="18dp"
-        app:cardElevation="0dp"
+        android:layout_height="64dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:orientation="horizontal"
-            android:paddingStart="6dp"
-            android:paddingEnd="6dp">
-
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/bottomHome"
-                android:layout_width="0dp"
-                android:layout_height="56dp"
-                android:layout_margin="4dp"
-                android:layout_weight="1"
-                app:cardBackgroundColor="#171A22"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="0dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center"
-                    android:orientation="vertical">
-
-                    <ImageView
-                        android:layout_width="18dp"
-                        android:layout_height="18dp"
-                        android:contentDescription="Home"
-                        android:tint="#8A909B"
-                        app:srcCompat="@drawable/account_ic_home" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="3dp"
-                        android:text="HOME"
-                        android:textColor="#8A909B"
-                        android:textSize="9sp" />
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
-
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/bottomSpaces"
-                android:layout_width="0dp"
-                android:layout_height="56dp"
-                android:layout_margin="4dp"
-                android:layout_weight="1"
-                app:cardBackgroundColor="#171A22"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="0dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center"
-                    android:orientation="vertical">
-
-                    <ImageView
-                        android:layout_width="18dp"
-                        android:layout_height="18dp"
-                        android:contentDescription="Spaces"
-                        android:tint="#8A909B"
-                        app:srcCompat="@drawable/ic_space" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="3dp"
-                        android:text="SPACES"
-                        android:textColor="#8A909B"
-                        android:textSize="9sp" />
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
-
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/bottomTasks"
-                android:layout_width="0dp"
-                android:layout_height="56dp"
-                android:layout_margin="4dp"
-                android:layout_weight="1"
-                app:cardBackgroundColor="#171A22"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="0dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center"
-                    android:orientation="vertical">
-
-                    <ImageView
-                        android:layout_width="18dp"
-                        android:layout_height="18dp"
-                        android:contentDescription="Tasks"
-                        android:tint="#8A909B"
-                        app:srcCompat="@drawable/ic_task" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="3dp"
-                        android:text="TASKS"
-                        android:textColor="#8A909B"
-                        android:textSize="9sp" />
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
-
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/bottomNotification"
-                android:layout_width="0dp"
-                android:layout_height="56dp"
-                android:layout_margin="4dp"
-                android:layout_weight="1"
-                app:cardBackgroundColor="#171A22"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="0dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center"
-                    android:orientation="vertical">
-
-                    <ImageView
-                        android:layout_width="18dp"
-                        android:layout_height="18dp"
-                        android:contentDescription="Notification"
-                        android:tint="#8A909B"
-                        app:srcCompat="@drawable/ic_nofication" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="3dp"
-                        android:text="NOTIFICATION"
-                        android:textColor="#8A909B"
-                        android:textSize="9sp" />
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
-
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/bottomUser"
-                android:layout_width="0dp"
-                android:layout_height="56dp"
-                android:layout_margin="4dp"
-                android:layout_weight="1"
-                app:cardBackgroundColor="#2A3B63"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="0dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center"
-                    android:orientation="vertical">
-
-                    <ImageView
-                        android:layout_width="18dp"
-                        android:layout_height="18dp"
-                        android:contentDescription="User"
-                        android:tint="#8CB2FF"
-                        app:srcCompat="@drawable/ic_avatar" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="3dp"
-                        android:text="USER"
-                        android:textColor="#8CB2FF"
-                        android:textSize="9sp" />
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
-
-        </LinearLayout>
-    </com.google.android.material.card.MaterialCardView>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
