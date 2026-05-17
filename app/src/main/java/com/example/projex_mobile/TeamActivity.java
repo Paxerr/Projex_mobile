@@ -12,6 +12,7 @@ public class TeamActivity extends AppCompatActivity {
 
     private ImageView btnAddMember;
     private ImageView btnEditRoleMember1;
+    private ImageView btnEditRoleMember2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,6 +26,7 @@ public class TeamActivity extends AppCompatActivity {
     private void initViews() {
         btnAddMember = findViewById(R.id.btn_add_member);
         btnEditRoleMember1 = findViewById(R.id.btn_edit_role_member1);
+        btnEditRoleMember2 = findViewById(R.id.btn_edit_role_member2);
     }
 
     private void handleEvents() {
@@ -32,6 +34,7 @@ public class TeamActivity extends AppCompatActivity {
 
         // Bấm nút 3 chấm của thành viên để sang màn chỉnh sửa quyền
         btnEditRoleMember1.setOnClickListener(v -> openRoleScreen());
+        btnEditRoleMember2.setOnClickListener(v -> openRoleScreen());
     }
 
     public void onAddMemberClick(View view) {

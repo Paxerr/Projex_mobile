@@ -51,7 +51,7 @@
                 android:layout_height="22dp"
                 android:layout_gravity="center"
                 android:contentDescription="Back"
-                android:tint="#FFFFFF"
+                app:tint="#FFFFFF"
                 app:srcCompat="@drawable/ic_back" />
         </com.google.android.material.card.MaterialCardView>
 
@@ -83,7 +83,7 @@
                 android:layout_height="22dp"
                 android:layout_gravity="center"
                 android:contentDescription="Edit profile"
-                android:tint="#4A8CFF"
+                app:tint="#4A8CFF"
                 app:srcCompat="@drawable/account_ic_edit" />
         </com.google.android.material.card.MaterialCardView>
 
@@ -314,7 +314,7 @@
                         android:layout_height="20dp"
                         android:layout_gravity="center"
                         android:contentDescription="Notification"
-                        android:tint="#4A8CFF"
+                        app:tint="#4A8CFF"
                         app:srcCompat="@drawable/account_ic_nofication" />
                 </com.google.android.material.card.MaterialCardView>
 
@@ -377,7 +377,7 @@
                         android:layout_height="20dp"
                         android:layout_gravity="center"
                         android:contentDescription="Lock"
-                        android:tint="#FFFFFF"
+                        app:tint="#FFFFFF"
                         app:srcCompat="@drawable/login_ic_lock" />
                 </com.google.android.material.card.MaterialCardView>
 
@@ -400,7 +400,7 @@
                     android:layout_width="18dp"
                     android:layout_height="18dp"
                     android:contentDescription="Go"
-                    android:tint="#687085"
+                    app:tint="#687085"
                     app:layout_constraintBottom_toBottomOf="@+id/iconLockCard"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="@+id/iconLockCard" />
@@ -443,7 +443,7 @@
                         android:layout_height="20dp"
                         android:layout_gravity="center"
                         android:contentDescription="Logout"
-                        android:tint="#FF4D4D"
+                        app:tint="#FF4D4D"
                         app:srcCompat="@drawable/account_logout" />
                 </com.google.android.material.card.MaterialCardView>
 

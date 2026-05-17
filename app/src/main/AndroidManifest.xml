@@ -28,7 +28,7 @@
 
 <!--        acti start-->
         <activity
-            android:name=".AuthActivity"
+            android:name=".AccountActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
