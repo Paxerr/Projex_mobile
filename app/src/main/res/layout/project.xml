@@ -22,12 +22,12 @@
             app:layout_constraintTop_toTopOf="parent"/>
 
         <TextView
-            android:id="@+id/title"
+            android:id="@+id/txtProject"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="GGshop"
             android:textColor="#FFF"
-            android:textSize="20sp"
+            android:textSize="24sp"
             android:textStyle="bold"
             app:layout_constraintStart_toEndOf="@id/logo"
             app:layout_constraintTop_toTopOf="@id/logo"
@@ -369,6 +369,7 @@
                             android:layout_marginBottom="2dp"/>
 
                         <TextView
+                            android:id="@+id/txtTime"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="14 Days"
@@ -404,6 +405,7 @@
                             android:layout_marginBottom="2dp"/>
 
                         <TextView
+                            android:id="@+id/txtCount"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="8 People"

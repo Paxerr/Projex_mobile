@@ -7,11 +7,7 @@ import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -50,7 +46,7 @@ public class TaskActivity extends AppCompatActivity {
                         break;
                     case "In Progress":
                         // xử lý
-                        status.setText("TIn Progress");
+                        status.setText("In Progress");
                         break;
                     case "Done":
                         // xử lý

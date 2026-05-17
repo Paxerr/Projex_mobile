@@ -6,6 +6,7 @@
     <style name="CircleAppearance">
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">50%</item> </style>
-    <color name="role_card_normal">#EEF1F5</color>
-    <color name="role_card_selected">#BFD2FF</color>
+        <color name="text_secondary">#9CA3AF</color>
+        <color name="blue">#4A80FF</color>
+
 </resources>
