@@ -24,7 +24,7 @@ public class ProjectActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.project);
 
-        LinearLayout btnTask = findViewById(R.id.btnTasks);
+        LinearLayout btnTask = findViewById(R.id.nav_tasks);
 
         btnTask.setOnClickListener(v -> {
             Intent intent = new Intent(ProjectActivity.this, TaskActivity.class);

@@ -1,15 +1,66 @@
+# Android Studio
+# Java Android App Project
+
+# IDE files
+.idea/
 *.iml
-.gradle
-/local.properties
-/.idea/caches
-/.idea/libraries
-/.idea/modules.xml
-/.idea/workspace.xml
-/.idea/navEditor.xml
-/.idea/assetWizardSettings.xml
-.DS_Store
-/build
-/captures
-.externalNativeBuild
-.cxx
+
+# Gradle
+.gradle/
+build/
+*/build/
+
+# Local machine config (SDK path)
 local.properties
+
+# Generated files
+captures/
+.externalNativeBuild/
+.cxx/
+
+# Java compiled files
+*.class
+
+# APK / Bundle outputs
+*.apk
+*.aab
+*.ap_
+
+# Logs
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Signing keys / Sensitive files
+*.jks
+*.keystore
+*.pem
+
+# Temporary files
+*.tmp
+*.swp
+
+# Crash / profiling outputs
+*.hprof
+
+# Firebase / secrets (uncomment if needed)
+# google-services.json
+# serviceAccountKey.json
+
+
+# ==================================
+# IMPORTANT: DO NOT IGNORE THESE
+# (must be uploaded to GitHub)
+# ==================================
+# app/src/main/AndroidManifest.xml
+# app/src/main/java/
+# app/src/main/res/
+# build.gradle
+# build.gradle.kts
+# settings.gradle
+# settings.gradle.kts
+# gradlew
+# gradlew.bat
+# gradle/wrapper/

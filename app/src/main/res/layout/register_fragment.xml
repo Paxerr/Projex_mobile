@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/Register"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="48dp"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <!-- FULLNAME -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="HỌ VÀ TÊN"
+                android:textColor="#888888"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/edtFullName"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/login_input_text"
+                android:drawableStart="@android:drawable/ic_menu_info_details"
+                android:drawablePadding="10dp"
+                android:hint="Nguyen Van A"
+                android:paddingHorizontal="16dp"
+                android:textColor="#FFFFFF"
+                android:textColorHint="#9CA3AF"
+                android:textSize="14sp" />
+
+            <!-- EMAIL -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="EMAIL / TÀI KHOẢN"
+                android:textColor="#888888"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/edtEmail"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/login_input_text"
+                android:drawableStart="@android:drawable/ic_menu_info_details"
+                android:drawablePadding="10dp"
+                android:hint="Example@ggshop.com"
+                android:inputType="textEmailAddress"
+                android:paddingHorizontal="16dp"
+                android:textColor="#FFFFFF"
+                android:textColorHint="#9CA3AF"
+                android:textSize="14sp" />
+
+            <!-- PASSWORD -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="MẬT KHẨU"
+                android:textColor="#888888"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/edtPassword"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/login_input_text"
+                android:drawableStart="@android:drawable/ic_lock_lock"
+                android:drawablePadding="10dp"
+                android:hint="********"
+                android:inputType="textPassword"
+                android:paddingHorizontal="16dp"
+                android:textColor="#FFFFFF"
+                android:textColorHint="#9CA3AF"
+                android:textSize="14sp" />
+
+            <!-- TERMS -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="14dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <CheckBox
+                    android:id="@+id/cbTerms"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:buttonTint="#3B82F6" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:text="Tôi đồng ý với"
+                    android:textColor="#6B7280"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=" điều khoản dịch vụ"
+                    android:textColor="#3B82F6"
+                    android:textSize="12sp" />
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/btnLogin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/login_bg_btn_login"
+                android:text="Đăng ký"
+                android:textColor="#FFFFFF"
+                android:textSize="16sp"
+                app:backgroundTint="@null" />
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+</ScrollView>
