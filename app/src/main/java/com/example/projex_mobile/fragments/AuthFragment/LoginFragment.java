@@ -77,68 +77,50 @@ public class LoginFragment extends Fragment {
                 public void onResponse(@NonNull Call<JsonObject> call, @NonNull Response<JsonObject> response) {
                     btnLogin.setEnabled(true);
 
-                    if (!isAdded()) {
-                        return;
-                    }
+                    if (!isAdded()) return;
 
                     if (!response.isSuccessful()) {
-                        Toast.makeText(requireContext(), "Đăng nhập thất bại: " + response.code(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(requireContext(),
+                                "Đăng nhập thất bại: " + response.code(),
+                                Toast.LENGTH_SHORT).show();
                         return;
                     }
 
                     JsonObject body = response.body();
                     if (body == null) {
-                        Toast.makeText(requireContext(), "Server không trả dữ liệu", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(requireContext(),
+                                "Server không trả dữ liệu",
+                                Toast.LENGTH_SHORT).show();
                         return;
                     }
 
                     String token = extractString(body, "token");
-                    if (token == null) {
-                        token = extractString(body, "accessToken");
-                    }
-
-                    JsonObject data = getObject(body, "data");
-                    if (token == null && data != null) {
-                        token = extractString(data, "token");
-                        if (token == null) {
-                            token = extractString(data, "accessToken");
-                        }
+                    if (token == null || token.isEmpty()) {
+                        Toast.makeText(requireContext(),
+                                "Đăng nhập thất bại: sever không trả token",
+                                Toast.LENGTH_SHORT).show();
+                        return;
                     }
 
                     JsonObject userObject = getObject(body, "user");
-                    if (userObject == null && data != null) {
-                        userObject = getObject(data, "user");
-                    }
-
                     String fullName = userObject != null ? extractString(userObject, "fullName") : null;
                     String responseEmail = userObject != null ? extractString(userObject, "email") : null;
 
                     if (fullName == null || fullName.isEmpty()) {
                         fullName = email.contains("@") ? email.substring(0, email.indexOf('@')) : email;
                     }
+
                     if (responseEmail == null || responseEmail.isEmpty()) {
                         responseEmail = email;
-                    }
-
-                    if (token == null || token.isEmpty()) {
-                        String message = extractString(body, "message");
-                        if ((message == null || message.isEmpty()) && data != null) {
-                            message = extractString(data, "message");
-                        }
-                        Toast.makeText(
-                                requireContext(),
-                                message != null ? message : "Đăng nhập thất bại: thiếu token",
-                                Toast.LENGTH_SHORT
-                        ).show();
-                        return;
                     }
 
                     if (!token.startsWith("Bearer ")) {
                         token = "Bearer " + token;
                     }
 
-                    SharedPreferences prefs = requireActivity().getSharedPreferences("user_prefs", Context.MODE_PRIVATE);
-                    prefs.edit()
+                    requireActivity()
+                            .getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
+                            .edit()
                             .putString("token", token)
                             .putString("user_name", fullName)
                             .putString("user_email", responseEmail)

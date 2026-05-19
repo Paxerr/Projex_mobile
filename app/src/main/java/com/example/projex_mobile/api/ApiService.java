@@ -15,6 +15,9 @@ public interface ApiService {
     @POST("api/auth/login")
     Call<JsonObject> login(@Body Map<String, String> body);
 
+    @POST("api/auth/register")
+    Call<JsonObject> register(@Body Map<String, String> body);
+
     @GET("api/dashboard/overview")
     Call<DashboardOverview> getDashboardOverview(@Header("Authorization") String token);
 
