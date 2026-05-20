@@ -14,11 +14,9 @@
         android:theme="@style/Theme.Projex_mobile">
 
         <!--Khai báo các acti-->
-        <activity android:name=".TeamActivity"/>
-        <activity android:name=".ProjectActivity"/>
-        <activity android:name=".ProTaskActivity"/>
-        <activity android:name=".TaskActivity"/>
-        <activity android:name=".AddTaskActivity"/>
+
+        <activity android:name=".AuthActivity"/>
+
         <activity android:name=".ThemThanhVienActivity" />
 
         <activity

@@ -12,7 +12,7 @@ import com.example.projex_mobile.fragments.HomeFragment;
 import com.example.projex_mobile.fragments.NotificationFragment;
 import com.example.projex_mobile.fragments.SpaceFragment;
 import com.example.projex_mobile.fragments.TaskFragment;
-
+import com.example.projex_mobile.fragments.ProTaskFragment;
 public class HomeActivity extends AppCompatActivity {
 
     private LinearLayout navHome, navSpaces, navNotifications,navTask;
