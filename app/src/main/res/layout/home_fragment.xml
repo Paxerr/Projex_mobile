@@ -49,20 +49,6 @@
                 android:textSize="20sp"
                 android:textStyle="bold" />
 
-            <FrameLayout
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:background="@drawable/home_bg_card"
-                android:foreground="?attr/selectableItemBackgroundBorderless"
-                android:padding="9dp">
-
-                <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:src="@android:drawable/ic_input_add"
-                    android:contentDescription="@null"
-                    app:tint="#FFFFFF" />
-            </FrameLayout>
         </LinearLayout>
 
         <include

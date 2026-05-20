@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="12dp"
+    android:background="@drawable/home_bg_card"
+    android:padding="16dp">
+
+    <FrameLayout
+        android:id="@+id/iconContainer"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:background="@drawable/home_bg_card"
+        android:padding="6dp">
+
+        <ImageView
+            android:id="@+id/imgProjectIcon"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:contentDescription="@null"
+            android:src="@drawable/ic_logo" />
+    </FrameLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_toEndOf="@id/iconContainer"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="36dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tvProjectName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="gg_projex"
+            android:textColor="#FFFFFF"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+
+        <TextView
+            android:id="@+id/tvProjectStatus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="Active"
+            android:textColor="#6B7280"
+            android:textSize="11sp" />
+
+
+        <TextView
+            android:id="@+id/tvProjectMemberCount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="5 members"
+            android:textColor="#6B7280"
+            android:textSize="11sp" />
+
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/imgFavorite"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:contentDescription="@null"
+        android:src="@drawable/ic_favorite_border"
+        app:tint="#6B7280" />
+</RelativeLayout>
