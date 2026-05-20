@@ -29,7 +29,16 @@ public class ProjectFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.space_list_fragment, container, false);
+        View view = inflater.inflate(R.layout.project_fragment, container, false);
+
+        if(getArguments() != null){
+
+            int id = getArguments().getInt("project_id");
+            String name = getArguments().getString("project_name");
+
+        }
+
+        return view;
     }
 
     @Override
