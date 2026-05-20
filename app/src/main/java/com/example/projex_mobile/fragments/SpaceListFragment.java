@@ -256,8 +256,23 @@ public class SpaceListFragment extends Fragment implements ProjectAdapter.OnProj
     @Override
     public void onProjectClick(ProjectItem item) {
         saveRecent(item.getId());
+
         recentProjectId = item.getId();
-        Toast.makeText(requireContext(), item.getName(), Toast.LENGTH_SHORT).show();
+
+        ProjectFragment fragment = new ProjectFragment();
+
+        Bundle bundle = new Bundle();
+        bundle.putInt("project_id", item.getId());
+        bundle.putString("project_name", item.getName());
+
+        fragment.setArguments(bundle);
+
+        requireActivity()
+                .getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.fragment_container, fragment)
+                .addToBackStack(null)
+                .commit();
     }
 
     @Override
