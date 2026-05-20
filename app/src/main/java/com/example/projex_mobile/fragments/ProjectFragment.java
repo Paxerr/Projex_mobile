@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -23,44 +22,29 @@ import java.util.ArrayList;
 public class ProjectFragment extends Fragment {
 
     public ProjectFragment() {
-        // Required empty public constructor
+        super(R.layout.space_list_fragment);
     }
 
     @Override
-    public View onCreateView(
-            @NonNull LayoutInflater inflater,
-            ViewGroup container,
-            Bundle savedInstanceState
-    ) {
-        return inflater.inflate(
-                R.layout.project_fragment,
-                container,
-                false
-        );
+    public View onCreateView(@NonNull LayoutInflater inflater,
+                             @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.space_list_fragment, container, false);
     }
 
     @Override
-    public void onViewCreated(
-            @NonNull View view,
-            @Nullable Bundle savedInstanceState
-    ) {
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
         TextView btnProTask = view.findViewById(R.id.btnpro_task);
-
         btnProTask.setOnClickListener(v -> {
-
             requireActivity()
                     .getSupportFragmentManager()
                     .beginTransaction()
-                    .add(R.id.space_fragment_container,
-                            new ProTaskFragment())
+                    .replace(R.id.fragment_container, new ProTaskFragment())
                     .addToBackStack(null)
                     .commit();
         });
-
-
-
-        // Biểu đồ
 
         PieChart pieChart = view.findViewById(R.id.pieChart);
 
@@ -71,7 +55,6 @@ public class ProjectFragment extends Fragment {
         entries.add(new PieEntry(15f, "Test"));
 
         PieDataSet dataSet = new PieDataSet(entries, "Status");
-
         dataSet.setColors(
                 Color.parseColor("#880000FF"),
                 Color.parseColor("#00FF00"),
@@ -85,7 +68,6 @@ public class ProjectFragment extends Fragment {
         pieChart.setUsePercentValues(true);
         pieChart.setData(data);
         pieChart.getDescription().setEnabled(false);
-
         pieChart.invalidate();
         pieChart.animateY(1000);
     }
