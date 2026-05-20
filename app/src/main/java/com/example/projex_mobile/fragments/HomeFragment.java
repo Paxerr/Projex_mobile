@@ -191,7 +191,7 @@ public class HomeFragment extends Fragment {
             quickAccessAdapter.notifyItemRangeRemoved(0, oldSize);
         }
 
-        quickAccessList.add(new QuickAccessItem(1, "My Tasks", R.drawable.ic_tasks, "CÁ NHÂN"));
+        quickAccessList.add(new QuickAccessItem(1, "My Tasks", R.drawable.home_ic_task, "CÁ NHÂN"));
         quickAccessList.add(new QuickAccessItem(2, "Projects", R.drawable.ic_document, "DỰ ÁN"));
         quickAccessList.add(new QuickAccessItem(3, "Reports", R.drawable.ic_attachment, "BÁO CÁO"));
         quickAccessList.add(new QuickAccessItem(4, "Team", R.drawable.ic_team, "ĐỘI NHÓM"));
