@@ -10,9 +10,9 @@ import androidx.fragment.app.Fragment;
 
 import com.example.projex_mobile.fragments.HomeFragment;
 import com.example.projex_mobile.fragments.NotificationFragment;
-import com.example.projex_mobile.fragments.SpaceFragment;
+import com.example.projex_mobile.fragments.SpaceListFragment;
 import com.example.projex_mobile.fragments.TaskFragment;
-import com.example.projex_mobile.fragments.ProTaskFragment;
+
 public class HomeActivity extends AppCompatActivity {
 
     private LinearLayout navHome, navSpaces, navNotifications,navTask;
@@ -65,7 +65,7 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     private void showSpaces() {
-        replaceFragment(new SpaceFragment());
+        replaceFragment(new SpaceListFragment());
         setSelectedNav(R.id.nav_spaces);
     }
 
@@ -73,6 +73,7 @@ public class HomeActivity extends AppCompatActivity {
         replaceFragment(new NotificationFragment());
         setSelectedNav(R.id.nav_notifications);
     }
+
     private void showTask() {
         replaceFragment(new TaskFragment());
         setSelectedNav(R.id.nav_tasks);
