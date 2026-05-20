@@ -73,6 +73,7 @@ public class HomeActivity extends AppCompatActivity {
         replaceFragment(new NotificationFragment());
         setSelectedNav(R.id.nav_notifications);
     }
+
     private void showTask() {
         replaceFragment(new TaskFragment());
         setSelectedNav(R.id.nav_tasks);

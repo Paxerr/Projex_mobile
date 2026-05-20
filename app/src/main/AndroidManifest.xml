@@ -15,7 +15,6 @@
 
         <!--Khai báo các acti-->
         <activity android:name=".TeamActivity"/>
-
         <activity android:name=".ProjectActivity"/>
         <activity android:name=".ProTaskActivity"/>
         <activity android:name=".TaskActivity"/>
@@ -28,7 +27,7 @@
 
 <!--        acti start-->
         <activity
-            android:name=".AccountActivity"
+            android:name=".HomeActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
