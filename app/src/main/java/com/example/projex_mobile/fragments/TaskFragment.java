@@ -1,11 +1,9 @@
 package com.example.projex_mobile.fragments;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.TextView;
@@ -14,10 +12,9 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.projex_mobile.AddTaskActivity;
 import com.example.projex_mobile.R;
 import com.example.projex_mobile.adapter.TaskAdapter;
-import com.example.projex_mobile.object.Task;
+import com.example.projex_mobile.objects.Task;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,18 +36,7 @@ public class TaskFragment extends Fragment {
                 false
         );
 
-        ImageView btnCreat;
 
-        btnCreat = view.findViewById(R.id.btnCreate);
-
-        btnCreat.setOnClickListener(v -> {
-
-            Intent intent =
-                    new Intent(requireContext(),
-                            AddTaskActivity.class);
-
-            startActivity(intent);
-        });
 
         LinearLayout btnStatus =
                 view.findViewById(R.id.btnStatus);
@@ -99,9 +85,21 @@ public class TaskFragment extends Fragment {
 
         List<Task> list = new ArrayList<>();
 
-        list.add(new Task("Thiết kế UI", "Todo"));
-        list.add(new Task("Build API", "InProgress"));
-        list.add(new Task("Test", "Done"));
+        Task t1 = new Task();
+        t1.setTitle("Thiết kế UI");
+        t1.setStatus("Todo");
+
+        Task t2 = new Task();
+        t2.setTitle("Build API");
+        t2.setStatus("InProgress");
+
+        Task t3 = new Task();
+        t3.setTitle("Test");
+        t3.setStatus("Done");
+
+        list.add(t1);
+        list.add(t2);
+        list.add(t3);
 
         TaskAdapter adapter =
                 new TaskAdapter(list);

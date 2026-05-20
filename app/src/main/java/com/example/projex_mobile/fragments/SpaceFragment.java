@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.RelativeLayout;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -16,7 +17,7 @@ import androidx.fragment.app.Fragment;
 
 import com.example.projex_mobile.R;
 import com.example.projex_mobile.SpaceCreateActivity;
-
+import com.example.projex_mobile.fragments.ProjectFragment;
 public class SpaceFragment extends Fragment {
 
     private ActivityResultLauncher<Intent> createSpaceLauncher;
@@ -51,7 +52,25 @@ public class SpaceFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.space_list_fragment, container, false);
+
+        View view = inflater.inflate(
+                R.layout.space_list_fragment,
+                container,
+                false
+        );
+        RelativeLayout txtProjects = view.findViewById(R.id.txtProjects);
+
+        txtProjects.setOnClickListener(v -> {
+
+            requireActivity()
+                    .getSupportFragmentManager()
+                    .beginTransaction()
+                    .add(R.id.space_fragment_container, new ProjectFragment())
+                    .addToBackStack(null)
+                    .commit();
+
+        });
+        return view;
     }
 
     @Override
@@ -72,4 +91,6 @@ public class SpaceFragment extends Fragment {
     private void reloadSpaces() {
         // Sau này: gọi lại API hoặc refresh adapter
     }
+
+
 }
