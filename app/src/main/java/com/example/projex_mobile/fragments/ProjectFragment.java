@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -45,7 +46,7 @@ public class ProjectFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        TextView btnProTask = view.findViewById(R.id.btnpro_task);
+        LinearLayout btnProTask = view.findViewById(R.id.btnpro_task);
         btnProTask.setOnClickListener(v -> {
             requireActivity()
                     .getSupportFragmentManager()
@@ -58,23 +59,23 @@ public class ProjectFragment extends Fragment {
         PieChart pieChart = view.findViewById(R.id.pieChart);
 
         ArrayList<PieEntry> entries = new ArrayList<>();
-        entries.add(new PieEntry(40f, "Done"));
-        entries.add(new PieEntry(30f, "In Progress"));
-        entries.add(new PieEntry(15f, "To Do"));
-        entries.add(new PieEntry(15f, "Test"));
+        entries.add(new PieEntry(40f));
+        entries.add(new PieEntry(30f));
+        entries.add(new PieEntry(15f));
+        entries.add(new PieEntry(15f));
 
         PieDataSet dataSet = new PieDataSet(entries, "Status");
         dataSet.setColors(
-                Color.parseColor("#880000FF"),
-                Color.parseColor("#00FF00"),
-                Color.parseColor("#FF00FF"),
-                Color.parseColor("#FF0000")
+                Color.parseColor("#0FADFF"),
+                Color.parseColor("#EFEB3B"),
+                Color.parseColor("#48FB98"),
+                Color.parseColor("#A855F7")
         );
 
         PieData data = new PieData(dataSet);
-        data.setValueTextSize(14f);
+        data.setValueTextSize(0f);
 
-        pieChart.setUsePercentValues(true);
+        pieChart.getLegend().setEnabled(false);
         pieChart.setData(data);
         pieChart.getDescription().setEnabled(false);
         pieChart.invalidate();
