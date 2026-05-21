@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.TextView;
@@ -37,9 +38,9 @@ public class ProTaskFragment extends Fragment {
                               @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        TextView overview = view.findViewById(R.id.overview);
+        ImageView btnBack = view.findViewById(R.id.btnBack);
 
-        overview.setOnClickListener(v -> {
+        btnBack.setOnClickListener(v -> {
 
             requireActivity()
                     .getSupportFragmentManager()

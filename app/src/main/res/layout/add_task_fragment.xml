@@ -91,7 +91,7 @@
                             android:layout_height="wrap_content"
                             android:text="GGshop"
                             android:textColor="#FFFFFF"
-                            android:textSize="24sp"
+                            android:textSize="16sp"
                             android:textStyle="bold"
                             android:layout_marginEnd="8dp"
                             android:gravity="center_horizontal"/>
@@ -121,7 +121,7 @@
                         android:layout_weight="1"
                         android:hint="Tên task"
                         android:textColorHint="#FFFFFF"
-                        android:textSize="18sp"
+                        android:textSize="12sp"
                         android:textColor="#FFFFFF"
                         />
 
@@ -147,7 +147,7 @@
                         android:layout_weight="1"
                         android:hint="Description"
                         android:textColorHint="#FFFFFF"
-                        android:textSize="18sp"
+                        android:textSize="12sp"
                         android:textColor="#FFFFFF"/>
 
 
@@ -168,7 +168,7 @@
                     <EditText
                         android:id="@+id/Duedate"
                         android:textColorHint="#FFFFFF"
-                        android:textSize="18sp"
+                        android:textSize="12sp"
                         android:layout_height="wrap_content"
                         android:layout_width="0dp"
                         android:hint="Due date"
@@ -192,7 +192,7 @@
                     <EditText
                         android:id="@+id/Startdate"
                         android:textColorHint="#FFFFFF"
-                        android:textSize="18sp"
+                        android:textSize="12sp"
                         android:layout_height="wrap_content"
                         android:layout_width="wrap_content"
                         android:hint="Start date"
@@ -216,7 +216,7 @@
                     <EditText
                         android:id="@+id/Priority"
                         android:textColorHint="#FFFFFF"
-                        android:textSize="18sp"
+                        android:textSize="12sp"
                         android:layout_height="wrap_content"
                         android:layout_width="0dp"
                         android:hint="Priority"
@@ -251,7 +251,7 @@
                         android:layout_weight="1"
                         android:text="Tệp đính kèm"
                         android:textColor="#FFFFFF"
-                        android:textSize="16sp"
+                        android:textSize="12sp"
                         android:textStyle="bold" />
 
 
