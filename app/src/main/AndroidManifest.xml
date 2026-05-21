@@ -16,8 +16,8 @@
         <!--Khai báo các acti-->
 
         <activity android:name=".AuthActivity"/>
-
-        <activity android:name=".ThemThanhVienActivity" />
+        <activity android:name=".EditProfileActivity"/>
+        <activity android:name=".RoleActivity"/>
 
         <activity
             android:name=".SpaceCreateActivity"

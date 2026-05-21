@@ -5,13 +5,12 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Patterns;
+import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.android.material.button.MaterialButton;
-import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.textfield.TextInputEditText;
 
 import java.util.Locale;
@@ -65,23 +64,28 @@ public class EditProfileActivity extends AppCompatActivity {
     }
 
     private void handleEvents() {
-        MaterialCardView btnBack = findViewById(R.id.btnBack);
-        MaterialCardView btnChangeAvatar = findViewById(R.id.btnChangeAvatar);
+        View btnBack = findViewById(R.id.btnBack);
+        View btnChangeAvatar = findViewById(R.id.btnChangeAvatar);
+        View btnSave = findViewById(R.id.btnSave);
+        View btnCancel = findViewById(R.id.btnCancel);
 
-        MaterialButton btnSave = findViewById(R.id.btnSave);
-        MaterialButton btnCancel = findViewById(R.id.btnCancel);
+        if (btnBack != null) {
+            btnBack.setOnClickListener(v -> finish());
+        }
 
-        btnBack.setOnClickListener(v -> finish());
+        if (btnCancel != null) {
+            btnCancel.setOnClickListener(v -> finish());
+        }
 
-        btnCancel.setOnClickListener(v -> finish());
+        if (btnChangeAvatar != null) {
+            btnChangeAvatar.setOnClickListener(v ->
+                    Toast.makeText(this, "Chức năng đổi ảnh đại diện", Toast.LENGTH_SHORT).show()
+            );
+        }
 
-        btnChangeAvatar.setOnClickListener(v -> {
-            Toast.makeText(this, "Chức năng đổi ảnh đại diện", Toast.LENGTH_SHORT).show();
-
-            // Sau này muốn chọn ảnh từ máy thì xử lý tại đây.
-        });
-
-        btnSave.setOnClickListener(v -> saveProfile());
+        if (btnSave != null) {
+            btnSave.setOnClickListener(v -> saveProfile());
+        }
     }
 
     private void handleTextBoxEvents() {
