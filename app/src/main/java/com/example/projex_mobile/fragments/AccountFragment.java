@@ -2,10 +2,12 @@ package com.example.projex_mobile.fragments;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.ActivityNotFoundException;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -92,6 +94,7 @@ public class AccountFragment extends Fragment {
     private void handleEvents(View view) {
         MaterialCardView btnBack = view.findViewById(R.id.btnBack);
         MaterialCardView btnEditProfile = view.findViewById(R.id.btnEditProfile);
+        ImageView icEditProfile = view.findViewById(R.id.icEditProfile);
         MaterialCardView cardChangePassword = view.findViewById(R.id.cardChangePassword);
         MaterialCardView cardLogout = view.findViewById(R.id.cardLogout);
         SwitchMaterial switchNotifications = view.findViewById(R.id.switchNotifications);
@@ -102,8 +105,14 @@ public class AccountFragment extends Fragment {
                     .popBackStack());
         }
 
+        View.OnClickListener editProfileClickListener = v -> openEditProfileScreen();
+
         if (btnEditProfile != null) {
-            btnEditProfile.setOnClickListener(v -> openEditProfileScreen());
+            btnEditProfile.setOnClickListener(editProfileClickListener);
+        }
+
+        if (icEditProfile != null) {
+            icEditProfile.setOnClickListener(editProfileClickListener);
         }
 
         if (switchNotifications != null) {
@@ -141,6 +150,8 @@ public class AccountFragment extends Fragment {
             intent.putExtra("email", currentEmail);
             intent.putExtra("phone", currentPhone);
             editProfileLauncher.launch(intent);
+        } catch (ActivityNotFoundException e) {
+            Toast.makeText(requireContext(), "Chưa khai báo EditProfileActivity trong AndroidManifest.xml", Toast.LENGTH_SHORT).show();
         } catch (Exception e) {
             Toast.makeText(requireContext(), "Không mở được màn chỉnh sửa hồ sơ", Toast.LENGTH_SHORT).show();
         }
