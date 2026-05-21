@@ -2,19 +2,19 @@ package com.example.projex_mobile.fragments;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ProgressBar;
-import android.widget.TextView;
-import android.widget.Toast;
-import android.graphics.Rect;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -30,6 +30,10 @@ import com.example.projex_mobile.api.RetrofitClient;
 import com.example.projex_mobile.objects.DashboardOverview;
 import com.example.projex_mobile.objects.QuickAccessItem;
 import com.example.projex_mobile.objects.RecentItem;
+import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.data.PieData;
+import com.github.mikephil.charting.data.PieDataSet;
+import com.github.mikephil.charting.data.PieEntry;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
@@ -41,10 +45,11 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class HomeFragment extends Fragment {
+
     private TextView tvUserName, tvProgressPercent, tvDoneTasks, tvInProgressTasks, tvTestTasks, tvTodoTasks;
     private TextView tvRecentEmpty;
     private RecyclerView rvQuickAccess, rvRecentActivity;
-    private ProgressBar progressBar;
+    private PieChart pieChart;
     private View recentLabel;
     private TextInputLayout searchLayout;
     private TextInputEditText edtSearch;
@@ -82,12 +87,13 @@ public class HomeFragment extends Fragment {
         setupSearchBar(view);
         setupRecyclerViews();
         loadData();
+
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        handler.post(refreshRunnable);
+        loadData();
     }
 
     @Override
@@ -101,7 +107,7 @@ public class HomeFragment extends Fragment {
         rvQuickAccess = view.findViewById(R.id.rvQuickAccess);
         rvRecentActivity = view.findViewById(R.id.rvRecentActivity);
         recentLabel = view.findViewById(R.id.recentLabel);
-        progressBar = view.findViewById(R.id.progressBar);
+        pieChart = view.findViewById(R.id.pieChart);
         tvProgressPercent = view.findViewById(R.id.tvProgressPercent);
         tvDoneTasks = view.findViewById(R.id.tvDoneTasks);
         tvInProgressTasks = view.findViewById(R.id.tvInProgressTasks);
@@ -138,6 +144,7 @@ public class HomeFragment extends Fragment {
             loadRecentActivities();
         }
     }
+
     private void setupSearchBar(View view) {
         if (searchLayout == null || edtSearch == null) return;
 
@@ -184,6 +191,7 @@ public class HomeFragment extends Fragment {
             return false;
         });
     }
+
     private void loadQuickAccess() {
         int oldSize = quickAccessList.size();
         if (oldSize > 0) {
@@ -223,9 +231,7 @@ public class HomeFragment extends Fragment {
         if (token == null || token.isEmpty()) {
             int oldSize = recentList.size();
             recentList.clear();
-            if (oldSize > 0) {
-                recentAdapter.notifyItemRangeRemoved(0, oldSize);
-            }
+            if (oldSize > 0) recentAdapter.notifyItemRangeRemoved(0, oldSize);
             updateRecentState();
             return;
         }
@@ -236,9 +242,7 @@ public class HomeFragment extends Fragment {
             public void onResponse(@NonNull Call<List<RecentItem>> call, @NonNull Response<List<RecentItem>> response) {
                 int oldSize = recentList.size();
                 recentList.clear();
-                if (oldSize > 0) {
-                    recentAdapter.notifyItemRangeRemoved(0, oldSize);
-                }
+                if (oldSize > 0) recentAdapter.notifyItemRangeRemoved(0, oldSize);
 
                 if (response.isSuccessful() && response.body() != null) {
                     recentList.addAll(response.body());
@@ -251,26 +255,52 @@ public class HomeFragment extends Fragment {
             public void onFailure(@NonNull Call<List<RecentItem>> call, @NonNull Throwable t) {
                 int oldSize = recentList.size();
                 recentList.clear();
-                if (oldSize > 0) {
-                    recentAdapter.notifyItemRangeRemoved(0, oldSize);
-                }
+                if (oldSize > 0) recentAdapter.notifyItemRangeRemoved(0, oldSize);
                 updateRecentState();
             }
         });
+    }
+
+    private void setupPieChart(int done, int inProgress, int test, int todo) {
+        ArrayList<PieEntry> entries = new ArrayList<>();
+        entries.add(new PieEntry(done, "Done"));
+        entries.add(new PieEntry(inProgress, "In Progress"));
+        entries.add(new PieEntry(test, "Test"));
+        entries.add(new PieEntry(todo, "To Do"));
+
+        PieDataSet dataSet = new PieDataSet(entries, "");
+        dataSet.setColors(
+                Color.parseColor("#0FADFF"),
+                Color.parseColor("#EFEB3B"),
+                Color.parseColor("#48FB98"),
+                Color.parseColor("#A855F7")
+        );
+        dataSet.setDrawValues(false);
+
+        PieData data = new PieData(dataSet);
+        pieChart.setData(data);
+        pieChart.getLegend().setEnabled(false);
+        pieChart.getDescription().setEnabled(false);
+        pieChart.setDrawEntryLabels(false);
+        pieChart.invalidate();
+        pieChart.animateY(1000);
     }
 
     private void updateProgressCard(DashboardOverview data) {
         int totalTasks = data.getMyTasks();
         int doneTasks = data.getCompletedTasks();
         int inProgress = data.getInProgressTasks();
+        int testTasks = 5;
+        int todoTasks = Math.max(totalTasks - doneTasks - inProgress - testTasks, 0);
+
         double progress = totalTasks > 0 ? (doneTasks * 100.0 / totalTasks) : 0;
 
-        progressBar.setProgress((int) progress);
         tvProgressPercent.setText(getString(R.string.progress_percent, progress));
         tvDoneTasks.setText(getString(R.string.tasks_label, doneTasks));
         tvInProgressTasks.setText(getString(R.string.tasks_label, inProgress));
-        tvTestTasks.setText(getString(R.string.tasks_label, 5));
-        tvTodoTasks.setText(getString(R.string.tasks_label, Math.max(totalTasks - doneTasks - inProgress, 0)));
+        tvTestTasks.setText(getString(R.string.tasks_label, testTasks));
+        tvTodoTasks.setText(getString(R.string.tasks_label, todoTasks));
+        setupPieChart(doneTasks, inProgress, testTasks, todoTasks);
     }
 
     private void updateRecentState() {
@@ -280,15 +310,18 @@ public class HomeFragment extends Fragment {
         tvRecentEmpty.setVisibility(hasItems ? View.GONE : View.VISIBLE);
     }
 
-
-    //test
     private void updateProgressCardMock() {
-        progressBar.setProgress(40);
+        int doneTasks = 12;
+        int inProgress = 5;
+        int testTasks = 5;
+        int todoTasks = 8;
+
         tvProgressPercent.setText(getString(R.string.progress_percent, 40f));
-        tvDoneTasks.setText(getString(R.string.tasks_label, 12));
-        tvInProgressTasks.setText(getString(R.string.tasks_label, 5));
-        tvTestTasks.setText(getString(R.string.tasks_label, 5));
-        tvTodoTasks.setText(getString(R.string.tasks_label, 8));
+        tvDoneTasks.setText(getString(R.string.tasks_label, doneTasks));
+        tvInProgressTasks.setText(getString(R.string.tasks_label, inProgress));
+        tvTestTasks.setText(getString(R.string.tasks_label, testTasks));
+        tvTodoTasks.setText(getString(R.string.tasks_label, todoTasks));
+        setupPieChart(doneTasks, inProgress, testTasks, todoTasks);
     }
 
     private void loadRecentMock() {
