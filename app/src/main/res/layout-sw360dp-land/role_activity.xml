@@ -10,15 +10,22 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/home_bg_main">
+        android:layout_height="match_parent"
+        android:minHeight="430dp"
+        android:background="@drawable/home_bg_main"
+        android:padding="16dp">
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideSplit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.43" />
 
         <TextView
             android:id="@+id/tvScreenTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="24dp"
-            android:layout_marginTop="12dp"
             android:text="Role"
             android:textColor="#7AA2FF"
             android:textSize="18sp"
@@ -29,14 +36,13 @@
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/topBar"
             android:layout_width="0dp"
-            android:layout_height="64dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="6dp"
-            android:layout_marginEnd="16dp"
+            android:layout_height="60dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="14dp"
             app:cardBackgroundColor="#1A1D26"
-            app:cardCornerRadius="18dp"
+            app:cardCornerRadius="15dp"
             app:cardElevation="0dp"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/guideSplit"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tvScreenTitle">
 
@@ -45,13 +51,13 @@
                 android:layout_height="match_parent"
                 android:background="@drawable/pro_background"
                 android:backgroundTint="#1A1D26"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp">
+                android:paddingStart="14dp"
+                android:paddingEnd="14dp">
 
                 <ImageView
                     android:id="@+id/btnBack"
-                    android:layout_width="28dp"
-                    android:layout_height="28dp"
+                    android:layout_width="26dp"
+                    android:layout_height="26dp"
                     android:contentDescription="Back"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -65,7 +71,7 @@
                     android:layout_height="wrap_content"
                     android:text="Chỉnh sửa quyền"
                     android:textColor="#F3F6FA"
-                    android:textSize="20sp"
+                    android:textSize="18sp"
                     android:textStyle="bold"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -74,8 +80,8 @@
 
                 <ImageView
                     android:id="@+id/btnSave"
-                    android:layout_width="28dp"
-                    android:layout_height="28dp"
+                    android:layout_width="26dp"
+                    android:layout_height="26dp"
                     android:contentDescription="Save"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -89,13 +95,12 @@
             android:id="@+id/cardUser"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="18dp"
-            android:layout_marginEnd="16dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginEnd="14dp"
             app:cardBackgroundColor="#1A1D26"
-            app:cardCornerRadius="18dp"
+            app:cardCornerRadius="15dp"
             app:cardElevation="0dp"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/guideSplit"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/topBar">
 
@@ -104,14 +109,14 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/login_input_text"
                 android:backgroundTint="#1A1D26"
-                android:padding="18dp">
+                android:padding="16dp">
 
                 <com.google.android.material.card.MaterialCardView
                     android:id="@+id/cardAvatar"
-                    android:layout_width="86dp"
-                    android:layout_height="86dp"
+                    android:layout_width="72dp"
+                    android:layout_height="72dp"
                     app:cardBackgroundColor="#202431"
-                    app:cardCornerRadius="43dp"
+                    app:cardCornerRadius="36dp"
                     app:cardElevation="0dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -124,19 +129,19 @@
                         android:layout_height="match_parent">
 
                         <ImageView
-                            android:layout_width="50dp"
-                            android:layout_height="50dp"
+                            android:layout_width="42dp"
+                            android:layout_height="42dp"
                             android:layout_gravity="center"
                             android:contentDescription="Avatar"
                             app:srcCompat="@drawable/ic_avatar"
                             app:tint="#E5E7EB" />
 
                         <View
-                            android:layout_width="14dp"
-                            android:layout_height="14dp"
+                            android:layout_width="12dp"
+                            android:layout_height="12dp"
                             android:layout_gravity="bottom|end"
-                            android:layout_marginEnd="4dp"
-                            android:layout_marginBottom="4dp"
+                            android:layout_marginEnd="5dp"
+                            android:layout_marginBottom="5dp"
                             android:background="@drawable/account_online_dot" />
                     </FrameLayout>
                 </com.google.android.material.card.MaterialCardView>
@@ -145,10 +150,10 @@
                     android:id="@+id/tvName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="14dp"
+                    android:layout_marginTop="10dp"
                     android:text="Đăng Nguyễn"
                     android:textColor="#F3F6FA"
-                    android:textSize="22sp"
+                    android:textSize="20sp"
                     android:textStyle="bold"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -161,7 +166,7 @@
                     android:layout_marginTop="4dp"
                     android:text="dang.nguyen@company.com"
                     android:textColor="#9CA3AF"
-                    android:textSize="14sp"
+                    android:textSize="13sp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/tvName" />
@@ -169,10 +174,10 @@
                 <com.google.android.material.card.MaterialCardView
                     android:id="@+id/cardBadge"
                     android:layout_width="wrap_content"
-                    android:layout_height="32dp"
-                    android:layout_marginTop="12dp"
+                    android:layout_height="30dp"
+                    android:layout_marginTop="10dp"
                     app:cardBackgroundColor="#17233A"
-                    app:cardCornerRadius="16dp"
+                    app:cardCornerRadius="15dp"
                     app:cardElevation="0dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -185,12 +190,12 @@
                         android:layout_height="match_parent"
                         android:gravity="center"
                         android:orientation="horizontal"
-                        android:paddingStart="14dp"
-                        android:paddingEnd="14dp">
+                        android:paddingStart="12dp"
+                        android:paddingEnd="12dp">
 
                         <ImageView
-                            android:layout_width="14dp"
-                            android:layout_height="14dp"
+                            android:layout_width="13dp"
+                            android:layout_height="13dp"
                             android:contentDescription="Badge"
                             app:srcCompat="@drawable/role_ic_check"
                             app:tint="#6EA8FF" />
@@ -201,7 +206,7 @@
                             android:layout_marginStart="6dp"
                             android:text="Người dùng hệ thống"
                             android:textColor="#6EA8FF"
-                            android:textSize="13sp"
+                            android:textSize="12sp"
                             android:textStyle="bold" />
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
@@ -211,17 +216,17 @@
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/cardStatus"
             android:layout_width="0dp"
-            android:layout_height="92dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="8dp"
+            android:layout_height="80dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginEnd="6dp"
             app:cardBackgroundColor="#1A1D26"
-            app:cardCornerRadius="16dp"
+            app:cardCornerRadius="15dp"
             app:cardElevation="0dp"
             app:layout_constraintEnd_toStartOf="@id/cardJoined"
+            app:layout_constraintHorizontal_chainStyle="spread"
+            app:layout_constraintHorizontal_weight="1"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/cardUser"
-            app:layout_constraintHorizontal_weight="1">
+            app:layout_constraintTop_toBottomOf="@id/cardUser">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -229,19 +234,19 @@
                 android:background="@drawable/pro_background"
                 android:backgroundTint="#1A1D26"
                 android:orientation="vertical"
-                android:padding="14dp">
+                android:padding="12dp">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="TRẠNG THÁI"
                     android:textColor="#9CA3AF"
-                    android:textSize="11sp" />
+                    android:textSize="10sp" />
 
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
+                    android:layout_marginTop="8dp"
                     android:gravity="center_vertical"
                     android:orientation="horizontal">
 
@@ -256,7 +261,7 @@
                         android:layout_height="wrap_content"
                         android:text="Đang hoạt động"
                         android:textColor="#F3F6FA"
-                        android:textSize="16sp"
+                        android:textSize="14sp"
                         android:textStyle="bold" />
                 </LinearLayout>
             </LinearLayout>
@@ -265,17 +270,17 @@
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/cardJoined"
             android:layout_width="0dp"
-            android:layout_height="92dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="16dp"
+            android:layout_height="80dp"
+            android:layout_marginStart="6dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginEnd="14dp"
             app:cardBackgroundColor="#1A1D26"
-            app:cardCornerRadius="16dp"
+            app:cardCornerRadius="15dp"
             app:cardElevation="0dp"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/guideSplit"
+            app:layout_constraintHorizontal_weight="1"
             app:layout_constraintStart_toEndOf="@id/cardStatus"
-            app:layout_constraintTop_toBottomOf="@id/cardUser"
-            app:layout_constraintHorizontal_weight="1">
+            app:layout_constraintTop_toBottomOf="@id/cardUser">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -283,25 +288,25 @@
                 android:background="@drawable/pro_background"
                 android:backgroundTint="#1A1D26"
                 android:orientation="vertical"
-                android:padding="14dp">
+                android:padding="12dp">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="THAM GIA TỪ"
                     android:textColor="#9CA3AF"
-                    android:textSize="11sp" />
+                    android:textSize="10sp" />
 
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
+                    android:layout_marginTop="8dp"
                     android:gravity="center_vertical"
                     android:orientation="horizontal">
 
                     <ImageView
-                        android:layout_width="16dp"
-                        android:layout_height="16dp"
+                        android:layout_width="15dp"
+                        android:layout_height="15dp"
                         android:layout_marginEnd="8dp"
                         android:contentDescription="Calendar"
                         app:srcCompat="@drawable/role_ic_date"
@@ -312,7 +317,7 @@
                         android:layout_height="wrap_content"
                         android:text="12/05/2023"
                         android:textColor="#F3F6FA"
-                        android:textSize="16sp"
+                        android:textSize="14sp"
                         android:textStyle="bold" />
                 </LinearLayout>
             </LinearLayout>
@@ -322,27 +327,24 @@
             android:id="@+id/tvSectionTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="24dp"
-            android:layout_marginTop="20dp"
             android:text="PHÂN QUYỀN VAI TRÒ"
             android:textColor="#9CA3AF"
             android:textSize="12sp"
             android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/cardStatus" />
+            app:layout_constraintStart_toStartOf="@id/guideSplit"
+            app:layout_constraintTop_toTopOf="@id/topBar" />
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/cardAdmin"
             android:layout_width="0dp"
-            android:layout_height="92dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="12dp"
-            android:layout_marginEnd="16dp"
+            android:layout_height="80dp"
+            android:layout_marginStart="14dp"
+            android:layout_marginTop="9dp"
             app:cardBackgroundColor="#1A1D26"
-            app:cardCornerRadius="16dp"
+            app:cardCornerRadius="15dp"
             app:cardElevation="0dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toStartOf="@id/guideSplit"
             app:layout_constraintTop_toBottomOf="@id/tvSectionTitle"
             app:strokeColor="#2A2F3A"
             app:strokeWidth="1dp">
@@ -352,22 +354,22 @@
                 android:layout_height="match_parent"
                 android:background="@drawable/pro_background"
                 android:backgroundTint="#1A1D26"
-                android:padding="14dp">
+                android:padding="12dp">
 
                 <com.google.android.material.card.MaterialCardView
                     android:id="@+id/iconAdmin"
-                    android:layout_width="46dp"
-                    android:layout_height="46dp"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
                     app:cardBackgroundColor="#2A1B22"
-                    app:cardCornerRadius="12dp"
+                    app:cardCornerRadius="10dp"
                     app:cardElevation="0dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent">
 
                     <ImageView
-                        android:layout_width="22dp"
-                        android:layout_height="22dp"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
                         android:layout_gravity="center"
                         android:contentDescription="Admin"
                         app:srcCompat="@drawable/role_ic_admin"
@@ -381,7 +383,7 @@
                     android:layout_marginStart="12dp"
                     android:text="Quản trị viên (Admin)"
                     android:textColor="#F3F6FA"
-                    android:textSize="16sp"
+                    android:textSize="14sp"
                     android:textStyle="bold"
                     app:layout_constraintEnd_toStartOf="@id/radioAdmin"
                     app:layout_constraintStart_toEndOf="@id/iconAdmin"
@@ -392,9 +394,10 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="12dp"
+                    android:layout_marginTop="4dp"
                     android:text="Toàn quyền truy cập và quản lý hệ thống"
                     android:textColor="#9CA3AF"
-                    android:textSize="13sp"
+                    android:textSize="12sp"
                     app:layout_constraintEnd_toStartOf="@id/radioAdmin"
                     app:layout_constraintStart_toEndOf="@id/iconAdmin"
                     app:layout_constraintTop_toBottomOf="@id/tvAdminTitle" />
@@ -413,15 +416,14 @@
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/cardMember"
             android:layout_width="0dp"
-            android:layout_height="92dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="12dp"
-            android:layout_marginEnd="16dp"
+            android:layout_height="80dp"
+            android:layout_marginStart="14dp"
+            android:layout_marginTop="9dp"
             app:cardBackgroundColor="#17233A"
-            app:cardCornerRadius="16dp"
+            app:cardCornerRadius="15dp"
             app:cardElevation="0dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toStartOf="@id/guideSplit"
             app:layout_constraintTop_toBottomOf="@id/cardAdmin"
             app:strokeColor="#3B82F6"
             app:strokeWidth="1.5dp">
@@ -431,22 +433,22 @@
                 android:layout_height="match_parent"
                 android:background="@drawable/bg_account_icon_dark"
                 android:backgroundTint="#17233A"
-                android:padding="14dp">
+                android:padding="12dp">
 
                 <com.google.android.material.card.MaterialCardView
                     android:id="@+id/iconMember"
-                    android:layout_width="46dp"
-                    android:layout_height="46dp"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
                     app:cardBackgroundColor="#1E3A5F"
-                    app:cardCornerRadius="12dp"
+                    app:cardCornerRadius="10dp"
                     app:cardElevation="0dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent">
 
                     <ImageView
-                        android:layout_width="22dp"
-                        android:layout_height="22dp"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
                         android:layout_gravity="center"
                         android:contentDescription="Member"
                         app:srcCompat="@drawable/ic_avatar"
@@ -460,7 +462,7 @@
                     android:layout_marginStart="12dp"
                     android:text="Thành viên (Member)"
                     android:textColor="#7AA2FF"
-                    android:textSize="16sp"
+                    android:textSize="14sp"
                     android:textStyle="bold"
                     app:layout_constraintEnd_toStartOf="@id/radioMember"
                     app:layout_constraintStart_toEndOf="@id/iconMember"
@@ -471,9 +473,10 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="12dp"
+                    android:layout_marginTop="4dp"
                     android:text="Có thể xem và chỉnh sửa nội dung cá nhân"
                     android:textColor="#9CA3AF"
-                    android:textSize="13sp"
+                    android:textSize="12sp"
                     app:layout_constraintEnd_toStartOf="@id/radioMember"
                     app:layout_constraintStart_toEndOf="@id/iconMember"
                     app:layout_constraintTop_toBottomOf="@id/tvMemberTitle" />
@@ -492,15 +495,14 @@
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/cardOwner"
             android:layout_width="0dp"
-            android:layout_height="92dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="12dp"
-            android:layout_marginEnd="16dp"
+            android:layout_height="80dp"
+            android:layout_marginStart="14dp"
+            android:layout_marginTop="9dp"
             app:cardBackgroundColor="#1A1D26"
-            app:cardCornerRadius="16dp"
+            app:cardCornerRadius="15dp"
             app:cardElevation="0dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toStartOf="@id/guideSplit"
             app:layout_constraintTop_toBottomOf="@id/cardMember"
             app:strokeColor="#2A2F3A"
             app:strokeWidth="1dp">
@@ -510,22 +512,22 @@
                 android:layout_height="match_parent"
                 android:background="@drawable/pro_background"
                 android:backgroundTint="#1A1D26"
-                android:padding="14dp">
+                android:padding="12dp">
 
                 <com.google.android.material.card.MaterialCardView
                     android:id="@+id/iconOwner"
-                    android:layout_width="46dp"
-                    android:layout_height="46dp"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
                     app:cardBackgroundColor="#2A2416"
-                    app:cardCornerRadius="12dp"
+                    app:cardCornerRadius="10dp"
                     app:cardElevation="0dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent">
 
                     <ImageView
-                        android:layout_width="22dp"
-                        android:layout_height="22dp"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
                         android:layout_gravity="center"
                         android:contentDescription="Owner"
                         app:srcCompat="@drawable/role_ic_admin"
@@ -539,7 +541,7 @@
                     android:layout_marginStart="12dp"
                     android:text="Owner"
                     android:textColor="#F3F6FA"
-                    android:textSize="16sp"
+                    android:textSize="14sp"
                     android:textStyle="bold"
                     app:layout_constraintEnd_toStartOf="@id/radioOwner"
                     app:layout_constraintStart_toEndOf="@id/iconOwner"
@@ -550,9 +552,10 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="12dp"
+                    android:layout_marginTop="4dp"
                     android:text="Toàn quyền sở hữu và quản lý dự án"
                     android:textColor="#9CA3AF"
-                    android:textSize="13sp"
+                    android:textSize="12sp"
                     app:layout_constraintEnd_toStartOf="@id/radioOwner"
                     app:layout_constraintStart_toEndOf="@id/iconOwner"
                     app:layout_constraintTop_toBottomOf="@id/tvOwnerTitle" />
@@ -571,17 +574,14 @@
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/cardDelete"
             android:layout_width="0dp"
-            android:layout_height="92dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="12dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginBottom="20dp"
+            android:layout_height="80dp"
+            android:layout_marginStart="14dp"
+            android:layout_marginTop="9dp"
             app:cardBackgroundColor="#261A1D"
-            app:cardCornerRadius="16dp"
+            app:cardCornerRadius="15dp"
             app:cardElevation="0dp"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toStartOf="@id/guideSplit"
             app:layout_constraintTop_toBottomOf="@id/cardOwner"
             app:strokeColor="#FF6B6B"
             app:strokeWidth="1dp">
@@ -589,22 +589,22 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:padding="14dp">
+                android:padding="12dp">
 
                 <com.google.android.material.card.MaterialCardView
                     android:id="@+id/iconDelete"
-                    android:layout_width="46dp"
-                    android:layout_height="46dp"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
                     app:cardBackgroundColor="#FF6B6B"
-                    app:cardCornerRadius="12dp"
+                    app:cardCornerRadius="10dp"
                     app:cardElevation="0dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent">
 
                     <ImageView
-                        android:layout_width="22dp"
-                        android:layout_height="22dp"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
                         android:layout_gravity="center"
                         android:contentDescription="Delete"
                         app:srcCompat="@drawable/account_logout"
@@ -618,7 +618,7 @@
                     android:layout_marginStart="12dp"
                     android:text="Xóa thành viên"
                     android:textColor="#F3F6FA"
-                    android:textSize="16sp"
+                    android:textSize="14sp"
                     android:textStyle="bold"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@id/iconDelete"
@@ -629,9 +629,10 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="12dp"
+                    android:layout_marginTop="4dp"
                     android:text="Hành động này sẽ xóa thành viên khỏi dự án"
                     android:textColor="#9CA3AF"
-                    android:textSize="13sp"
+                    android:textSize="12sp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@id/iconDelete"
                     app:layout_constraintTop_toBottomOf="@id/tvDeleteTitle" />

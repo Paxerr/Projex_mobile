@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
+import com.example.projex_mobile.fragments.AccountFragment;
 import com.example.projex_mobile.fragments.HomeFragment;
 import com.example.projex_mobile.fragments.NotificationFragment;
 import com.example.projex_mobile.fragments.SpaceListFragment;
@@ -16,9 +17,9 @@ import com.example.projex_mobile.fragments.TaskFragment;
 
 public class HomeActivity extends AppCompatActivity {
 
-    private LinearLayout navHome, navSpaces, navNotifications, navTask;
-    private ImageView ivHome, ivSpaces, ivNotifications, ivTask;
-    private TextView tvHome, tvSpaces, tvNotifications, tvTask;
+    private LinearLayout navHome, navSpaces, navNotifications, navTask, navUser;
+    private ImageView ivHome, ivSpaces, ivNotifications, ivTask, ivUser;
+    private TextView tvHome, tvSpaces, tvNotifications, tvTask, tvUser;
 
     private static final int ACTIVE_COLOR = 0xFF85ADFF;
     private static final int INACTIVE_COLOR = 0xFF6B7280;
@@ -52,16 +53,19 @@ public class HomeActivity extends AppCompatActivity {
         navSpaces = findViewById(R.id.nav_spaces);
         navNotifications = findViewById(R.id.nav_notifications);
         navTask = findViewById(R.id.nav_tasks);
+        navUser = findViewById(R.id.nav_user);
 
         ivHome = findViewById(R.id.iv_home);
         ivSpaces = findViewById(R.id.iv_spaces);
         ivNotifications = findViewById(R.id.iv_notifications);
         ivTask = findViewById(R.id.iv_tasks);
+        ivUser = findViewById(R.id.iv_user);
 
         tvHome = findViewById(R.id.tv_home);
         tvSpaces = findViewById(R.id.tv_spaces);
         tvNotifications = findViewById(R.id.tv_notifications);
         tvTask = findViewById(R.id.tv_tasks);
+        tvUser = findViewById(R.id.tv_user);
     }
 
     private void setupNavigation() {
@@ -69,6 +73,7 @@ public class HomeActivity extends AppCompatActivity {
         navSpaces.setOnClickListener(v -> showSpaces());
         navNotifications.setOnClickListener(v -> showNotifications());
         navTask.setOnClickListener(v -> showTask());
+        navUser.setOnClickListener(v -> showUser());
     }
 
     private void showHome() {
@@ -91,6 +96,11 @@ public class HomeActivity extends AppCompatActivity {
         showFragmentByTab(selectedTabId);
     }
 
+    private void showUser() {
+        selectedTabId = R.id.nav_user;
+        showFragmentByTab(selectedTabId);
+    }
+
     private void showFragmentByTab(int tabId) {
         Fragment fragment;
 
@@ -100,6 +110,8 @@ public class HomeActivity extends AppCompatActivity {
             fragment = new NotificationFragment();
         } else if (tabId == R.id.nav_tasks) {
             fragment = new TaskFragment();
+        } else if (tabId == R.id.nav_user) {
+            fragment = new AccountFragment();
         } else {
             fragment = new HomeFragment();
         }
@@ -120,9 +132,29 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     private void setSelectedNav(int selectedId) {
-        int[] ids = {R.id.nav_home, R.id.nav_spaces, R.id.nav_notifications, R.id.nav_tasks};
-        ImageView[] icons = {ivHome, ivSpaces, ivNotifications, ivTask};
-        TextView[] texts = {tvHome, tvSpaces, tvNotifications, tvTask};
+        int[] ids = {
+                R.id.nav_home,
+                R.id.nav_spaces,
+                R.id.nav_notifications,
+                R.id.nav_tasks,
+                R.id.nav_user
+        };
+
+        ImageView[] icons = {
+                ivHome,
+                ivSpaces,
+                ivNotifications,
+                ivTask,
+                ivUser
+        };
+
+        TextView[] texts = {
+                tvHome,
+                tvSpaces,
+                tvNotifications,
+                tvTask,
+                tvUser
+        };
 
         for (int i = 0; i < ids.length; i++) {
             int color = ids[i] == selectedId ? ACTIVE_COLOR : INACTIVE_COLOR;
