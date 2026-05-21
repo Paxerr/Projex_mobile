@@ -7,6 +7,7 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 import com.example.projex_mobile.fragments.HomeFragment;
 import com.example.projex_mobile.fragments.NotificationFragment;
@@ -15,12 +16,15 @@ import com.example.projex_mobile.fragments.TaskFragment;
 
 public class HomeActivity extends AppCompatActivity {
 
-    private LinearLayout navHome, navSpaces, navNotifications,navTask;
-    private ImageView ivHome, ivSpaces, ivNotifications,ivTask;
-    private TextView tvHome, tvSpaces, tvNotifications,tvTask;
+    private LinearLayout navHome, navSpaces, navNotifications, navTask;
+    private ImageView ivHome, ivSpaces, ivNotifications, ivTask;
+    private TextView tvHome, tvSpaces, tvNotifications, tvTask;
 
     private static final int ACTIVE_COLOR = 0xFF85ADFF;
     private static final int INACTIVE_COLOR = 0xFF6B7280;
+    private static final String KEY_SELECTED_TAB = "key_selected_tab";
+
+    private int selectedTabId = R.id.nav_home;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,9 +34,17 @@ public class HomeActivity extends AppCompatActivity {
         initViews();
         setupNavigation();
 
-        if (savedInstanceState == null) {
-            showHome();
+        if (savedInstanceState != null) {
+            selectedTabId = savedInstanceState.getInt(KEY_SELECTED_TAB, R.id.nav_home);
         }
+
+        showFragmentByTab(selectedTabId);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putInt(KEY_SELECTED_TAB, selectedTabId);
+        super.onSaveInstanceState(outState);
     }
 
     private void initViews() {
@@ -60,36 +72,57 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     private void showHome() {
-        replaceFragment(new HomeFragment());
-        setSelectedNav(R.id.nav_home);
+        selectedTabId = R.id.nav_home;
+        showFragmentByTab(selectedTabId);
     }
 
     private void showSpaces() {
-        replaceFragment(new SpaceListFragment());
-        setSelectedNav(R.id.nav_spaces);
+        selectedTabId = R.id.nav_spaces;
+        showFragmentByTab(selectedTabId);
     }
 
     private void showNotifications() {
-        replaceFragment(new NotificationFragment());
-        setSelectedNav(R.id.nav_notifications);
+        selectedTabId = R.id.nav_notifications;
+        showFragmentByTab(selectedTabId);
     }
 
     private void showTask() {
-        replaceFragment(new TaskFragment());
-        setSelectedNav(R.id.nav_tasks);
+        selectedTabId = R.id.nav_tasks;
+        showFragmentByTab(selectedTabId);
     }
 
-    private void replaceFragment(Fragment fragment) {
-        getSupportFragmentManager()
-                .beginTransaction()
+    private void showFragmentByTab(int tabId) {
+        Fragment fragment;
+
+        if (tabId == R.id.nav_spaces) {
+            fragment = new SpaceListFragment();
+        } else if (tabId == R.id.nav_notifications) {
+            fragment = new NotificationFragment();
+        } else if (tabId == R.id.nav_tasks) {
+            fragment = new TaskFragment();
+        } else {
+            fragment = new HomeFragment();
+        }
+
+        FragmentManager fm = getSupportFragmentManager();
+        Fragment current = fm.findFragmentById(R.id.frame_container);
+
+        if (current != null && current.getClass().equals(fragment.getClass())) {
+            setSelectedNav(tabId);
+            return;
+        }
+
+        fm.beginTransaction()
                 .replace(R.id.frame_container, fragment)
                 .commit();
+
+        setSelectedNav(tabId);
     }
 
     private void setSelectedNav(int selectedId) {
-        int[] ids = {R.id.nav_home, R.id.nav_spaces, R.id.nav_notifications,R.id.nav_tasks};
-        ImageView[] icons = {ivHome, ivSpaces, ivNotifications,ivTask};
-        TextView[] texts = {tvHome, tvSpaces, tvNotifications,tvTask};
+        int[] ids = {R.id.nav_home, R.id.nav_spaces, R.id.nav_notifications, R.id.nav_tasks};
+        ImageView[] icons = {ivHome, ivSpaces, ivNotifications, ivTask};
+        TextView[] texts = {tvHome, tvSpaces, tvNotifications, tvTask};
 
         for (int i = 0; i < ids.length; i++) {
             int color = ids[i] == selectedId ? ACTIVE_COLOR : INACTIVE_COLOR;
