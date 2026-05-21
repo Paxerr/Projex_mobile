@@ -18,10 +18,10 @@ android:layout_height="match_parent">
 
         <ImageView
             android:id="@+id/logo"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
             android:layout_marginStart="8dp"
-            android:src="@drawable/ic_logo"
+            android:src="@drawable/login_logo_pj_rm_bg"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -61,44 +61,6 @@ android:layout_height="match_parent">
             android:paddingTop="32dp"
             android:paddingHorizontal="24dp"
             android:orientation="vertical">
-            <LinearLayout
-
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:layout_marginBottom="6dp"
-                >
-
-                <TextView
-                    android:id="@+id/overview"
-                    android:layout_width="0dp"
-                    android:layout_height="40dp"
-                    android:layout_weight="1"
-                    android:text="Tổng quan"
-                    android:textColor="#FFFFFF"
-                    android:textSize="16sp"
-                    android:textStyle="bold"
-                    android:layout_marginEnd="16dp"
-                    android:clickable="true"
-                    android:background="@drawable/pro_background"
-                    android:gravity="center"
-                    />
-
-
-                <TextView
-                    android:id="@+id/btnpro_task"
-                    android:layout_width="0dp"
-                    android:layout_height="40dp"
-                    android:layout_weight="1"
-                    android:text="Task"
-                    android:textColor="#FFFFFF"
-                    android:textSize="16sp"
-                    android:textStyle="bold"
-                    android:clickable="true"
-                    android:background="@drawable/pro_background"
-                    android:gravity="center"/>
-            </LinearLayout>
             <TextView
 
                 android:textColor="#FFFFFF"
@@ -382,6 +344,40 @@ android:layout_height="match_parent">
                         android:textStyle="bold"/>
                 </LinearLayout>
 
+                <LinearLayout
+                    android:id="@+id/btnpro_task"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:background="@drawable/pro_background"
+                    android:padding="16dp"
+                    android:layout_marginEnd="12dp">
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/ic_protask"
+                        android:layout_marginBottom="6dp"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Project task"
+                        android:textColor="#ABABAB"
+                        android:textSize="10sp"
+                        android:textStyle="bold"
+                        android:layout_marginBottom="2dp"/>
+                    <TextView
+
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Task"
+                        android:textColor="#FFFFFF"
+                        android:textSize="18sp"
+                        android:textStyle="bold"/>
+                </LinearLayout>
+
                 <!-- TEAM SIZE -->
                 <LinearLayout
                     android:id="@+id/btnteam"
@@ -417,6 +413,7 @@ android:layout_height="match_parent">
                         android:textSize="18sp"
                         android:textStyle="bold"/>
                 </LinearLayout>
+
 
             </LinearLayout>
             <LinearLayout

@@ -18,18 +18,21 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingTop="20dp">
 
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginHorizontal="8dp"
+            android:layout_marginBottom="8dp"
             android:layout_weight="1"
-            android:paddingStart="8dp"
-            android:text="TASK"
+            android:paddingLeft="2dp"
+            android:text="Task"
             android:textColor="#FFFFFF"
-            android:textSize="28sp"
+            android:textSize="24sp"
             android:textStyle="bold" />
-
     </LinearLayout>
 
     <ScrollView
@@ -37,16 +40,10 @@
         android:layout_height="0dp"
         android:layout_weight="1">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingTop="32dp"
-                android:paddingHorizontal="24dp"
                 android:orientation="vertical">
 
                 <LinearLayout
@@ -55,15 +52,7 @@
                     android:layout_marginBottom="16dp"
                     android:orientation="vertical">
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Tất cả công việc"
-                        android:textColor="#FFFFFF"
-                        android:textSize="36sp"
-                        android:textStyle="bold"
-                        android:layout_marginBottom="8dp"/>
-
+                    
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -72,32 +61,13 @@
                         android:textSize="16sp"
                         android:layout_marginBottom="16dp"/>
 
-                    <LinearLayout
+                    <include
+                        android:id="@+id/searchBar"
+                        layout="@layout/layout_search_bar"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:background="@drawable/pro_background"
-                        android:paddingVertical="8dp"
-                        android:paddingHorizontal="16dp"
-                        android:orientation="horizontal"
-                        android:layout_marginBottom="16dp">
-
-                        <ImageView
-                            android:layout_width="25dp"
-                            android:layout_height="25dp"
-                            android:layout_marginEnd="16dp"
-                            android:layout_marginTop="8dp"
-                            android:src="@drawable/ic_search"/>
-
-                        <EditText
-                            android:id="@+id/search_bartext"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:hint="Tìm kiếm công việc..."
-                            android:textColorHint="#ABABAB"
-                            android:textSize="14sp"
-                            android:textColor="#FFFFFF"/>
-                    </LinearLayout>
-
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="16dp"
+                        />
                     <HorizontalScrollView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
@@ -169,7 +139,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"/>
 
-            </LinearLayout>
+
 
         </LinearLayout>
 
