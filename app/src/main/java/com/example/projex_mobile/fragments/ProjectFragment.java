@@ -21,10 +21,6 @@ import java.util.ArrayList;
 
 public class ProjectFragment extends Fragment {
 
-    public ProjectFragment() {
-        super(R.layout.space_list_fragment);
-    }
-
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container,
@@ -50,7 +46,7 @@ public class ProjectFragment extends Fragment {
             requireActivity()
                     .getSupportFragmentManager()
                     .beginTransaction()
-                    .replace(R.id.fragment_container, new ProTaskFragment())
+                    .replace(R.id.frame_container, new ProTaskFragment())
                     .addToBackStack(null)
                     .commit();
         });
