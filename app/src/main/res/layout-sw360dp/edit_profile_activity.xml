@@ -12,7 +12,7 @@
         android:layout_width="44dp"
         android:layout_height="44dp"
         android:visibility="invisible"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toStartOf="@id/tilName"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
@@ -24,8 +24,8 @@
         android:textSize="20sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@id/btnBack"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="@id/tilName"
+        app:layout_constraintStart_toStartOf="@id/tilName"
         app:layout_constraintTop_toTopOf="@id/btnBack" />
 
     <com.google.android.material.card.MaterialCardView
@@ -36,8 +36,8 @@
         app:cardBackgroundColor="#1C1C1C"
         app:cardCornerRadius="28dp"
         app:cardElevation="0dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="@id/tilName"
+        app:layout_constraintStart_toStartOf="@id/tilName"
         app:layout_constraintTop_toBottomOf="@id/btnBack"
         app:strokeColor="#2A77FF"
         app:strokeWidth="2dp">
@@ -84,7 +84,7 @@
         android:textColor="#5E6A7A"
         android:textSize="11sp"
         android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toStartOf="@id/tilName"
         app:layout_constraintTop_toBottomOf="@id/cardAvatar" />
 
     <com.google.android.material.textfield.TextInputLayout
@@ -102,7 +102,8 @@
         app:hintEnabled="false"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tvNameLabel">
+        app:layout_constraintTop_toBottomOf="@id/tvNameLabel"
+        app:layout_constraintWidth_max="420dp">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/etName"
@@ -131,7 +132,7 @@
         android:textColor="#5E6A7A"
         android:textSize="11sp"
         android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toStartOf="@id/tilEmail"
         app:layout_constraintTop_toBottomOf="@id/tilName" />
 
     <com.google.android.material.textfield.TextInputLayout
@@ -149,7 +150,8 @@
         app:hintEnabled="false"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tvEmailLabel">
+        app:layout_constraintTop_toBottomOf="@id/tvEmailLabel"
+        app:layout_constraintWidth_max="420dp">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/etEmail"
@@ -180,7 +182,7 @@
         android:textColor="#5E6A7A"
         android:textSize="11sp"
         android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toStartOf="@id/tilPhone"
         app:layout_constraintTop_toBottomOf="@id/tilEmail" />
 
     <com.google.android.material.textfield.TextInputLayout
@@ -198,7 +200,8 @@
         app:hintEnabled="false"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tvPhoneLabel">
+        app:layout_constraintTop_toBottomOf="@id/tvPhoneLabel"
+        app:layout_constraintWidth_max="420dp">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/etPhone"
@@ -222,7 +225,7 @@
         android:id="@+id/btnSave"
         android:layout_width="0dp"
         android:layout_height="56dp"
-        android:layout_marginTop="46dp"
+        android:layout_marginTop="42dp"
         android:text="Lưu thay đổi"
         android:textAllCaps="false"
         android:textColor="#FFFFFF"
@@ -230,8 +233,8 @@
         android:textStyle="bold"
         app:backgroundTint="#2A6EF1"
         app:cornerRadius="18dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="@id/tilPhone"
+        app:layout_constraintStart_toStartOf="@id/tilPhone"
         app:layout_constraintTop_toBottomOf="@id/tilPhone" />
 
     <com.google.android.material.button.MaterialButton
@@ -246,8 +249,8 @@
         android:textStyle="bold"
         app:backgroundTint="#000000"
         app:cornerRadius="18dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="@id/btnSave"
+        app:layout_constraintStart_toStartOf="@id/btnSave"
         app:layout_constraintTop_toBottomOf="@id/btnSave"
         app:strokeColor="#263245"
         app:strokeWidth="1dp" />

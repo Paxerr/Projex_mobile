@@ -5,12 +5,19 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/home_bg_main"
-    android:padding="20dp">
+    android:padding="16dp">
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideContentSplit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.38" />
 
     <View
         android:id="@+id/btnBack"
-        android:layout_width="44dp"
-        android:layout_height="44dp"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
         android:visibility="invisible"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -21,22 +28,22 @@
         android:layout_height="wrap_content"
         android:text="Chỉnh sửa hồ sơ"
         android:textColor="#FFFFFF"
-        android:textSize="20sp"
+        android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@id/btnBack"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/guideContentSplit"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@id/btnBack" />
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/cardAvatar"
-        android:layout_width="110dp"
-        android:layout_height="110dp"
-        android:layout_marginTop="34dp"
+        android:layout_width="104dp"
+        android:layout_height="104dp"
+        android:layout_marginTop="28dp"
         app:cardBackgroundColor="#1C1C1C"
-        app:cardCornerRadius="28dp"
+        app:cardCornerRadius="26dp"
         app:cardElevation="0dp"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/guideContentSplit"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/btnBack"
         app:strokeColor="#2A77FF"
@@ -49,7 +56,7 @@
             android:gravity="center"
             android:text="NVA"
             android:textColor="#2A77FF"
-            android:textSize="28sp"
+            android:textSize="27sp"
             android:textStyle="bold" />
     </com.google.android.material.card.MaterialCardView>
 
@@ -78,60 +85,62 @@
         android:id="@+id/tvNameLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
+        android:layout_marginStart="20dp"
         android:letterSpacing="0.18"
         android:text="HỌ VÀ TÊN"
         android:textColor="#5E6A7A"
-        android:textSize="11sp"
+        android:textSize="10sp"
         android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/cardAvatar" />
+        app:layout_constraintStart_toEndOf="@id/guideContentSplit"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/tilName"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="5dp"
         app:boxBackgroundMode="none"
-        app:boxCornerRadiusBottomEnd="18dp"
-        app:boxCornerRadiusBottomStart="18dp"
-        app:boxCornerRadiusTopEnd="18dp"
-        app:boxCornerRadiusTopStart="18dp"
+        app:boxCornerRadiusBottomEnd="16dp"
+        app:boxCornerRadiusBottomStart="16dp"
+        app:boxCornerRadiusTopEnd="16dp"
+        app:boxCornerRadiusTopStart="16dp"
         app:boxStrokeColor="#263245"
         app:hintEnabled="false"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tvNameLabel">
+        app:layout_constraintStart_toStartOf="@id/tvNameLabel"
+        app:layout_constraintTop_toBottomOf="@id/tvNameLabel"
+        app:layout_constraintWidth_max="420dp"
+        app:layout_constraintHorizontal_bias="0">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/etName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/login_input_text"
-            android:minHeight="58dp"
+            android:minHeight="48dp"
             android:gravity="center_vertical"
             android:hint="Nguyễn Văn A"
             android:paddingStart="14dp"
-            android:paddingTop="16dp"
+            android:paddingTop="10dp"
             android:paddingEnd="14dp"
-            android:paddingBottom="16dp"
+            android:paddingBottom="10dp"
             android:textColor="#FFFFFF"
             android:textColorHint="#B7BCC7"
-            android:textSize="15sp" />
+            android:textSize="14sp" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <TextView
         android:id="@+id/tvEmailLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="18dp"
+        android:layout_marginTop="9dp"
         android:letterSpacing="0.18"
         android:text="EMAIL LIÊN HỆ"
         android:textColor="#5E6A7A"
-        android:textSize="11sp"
+        android:textSize="10sp"
         android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toStartOf="@id/tilEmail"
         app:layout_constraintTop_toBottomOf="@id/tilName" />
 
     <com.google.android.material.textfield.TextInputLayout
@@ -139,48 +148,50 @@
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="5dp"
         app:boxBackgroundMode="none"
-        app:boxCornerRadiusBottomEnd="18dp"
-        app:boxCornerRadiusBottomStart="18dp"
-        app:boxCornerRadiusTopEnd="18dp"
-        app:boxCornerRadiusTopStart="18dp"
+        app:boxCornerRadiusBottomEnd="16dp"
+        app:boxCornerRadiusBottomStart="16dp"
+        app:boxCornerRadiusTopEnd="16dp"
+        app:boxCornerRadiusTopStart="16dp"
         app:boxStrokeColor="#263245"
         app:hintEnabled="false"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tvEmailLabel">
+        app:layout_constraintStart_toStartOf="@id/tilName"
+        app:layout_constraintTop_toBottomOf="@id/tvEmailLabel"
+        app:layout_constraintWidth_max="420dp"
+        app:layout_constraintHorizontal_bias="0">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/etEmail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/login_input_text"
-            android:minHeight="58dp"
+            android:minHeight="48dp"
             android:drawableStart="@drawable/account_change_password"
-            android:drawablePadding="12dp"
+            android:drawablePadding="10dp"
             android:gravity="center_vertical"
             android:hint="a.nguyen@gmail.com"
             android:paddingStart="14dp"
-            android:paddingTop="16dp"
+            android:paddingTop="10dp"
             android:paddingEnd="14dp"
-            android:paddingBottom="16dp"
+            android:paddingBottom="10dp"
             android:textColor="#FFFFFF"
             android:textColorHint="#B7BCC7"
-            android:textSize="15sp" />
+            android:textSize="14sp" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <TextView
         android:id="@+id/tvPhoneLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="18dp"
+        android:layout_marginTop="9dp"
         android:letterSpacing="0.18"
         android:text="SỐ ĐIỆN THOẠI"
         android:textColor="#5E6A7A"
-        android:textSize="11sp"
+        android:textSize="10sp"
         android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toStartOf="@id/tilPhone"
         app:layout_constraintTop_toBottomOf="@id/tilEmail" />
 
     <com.google.android.material.textfield.TextInputLayout
@@ -188,67 +199,70 @@
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="5dp"
         app:boxBackgroundMode="none"
-        app:boxCornerRadiusBottomEnd="18dp"
-        app:boxCornerRadiusBottomStart="18dp"
-        app:boxCornerRadiusTopEnd="18dp"
-        app:boxCornerRadiusTopStart="18dp"
+        app:boxCornerRadiusBottomEnd="16dp"
+        app:boxCornerRadiusBottomStart="16dp"
+        app:boxCornerRadiusTopEnd="16dp"
+        app:boxCornerRadiusTopStart="16dp"
         app:boxStrokeColor="#263245"
         app:hintEnabled="false"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tvPhoneLabel">
+        app:layout_constraintStart_toStartOf="@id/tilName"
+        app:layout_constraintTop_toBottomOf="@id/tvPhoneLabel"
+        app:layout_constraintWidth_max="420dp"
+        app:layout_constraintHorizontal_bias="0">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/etPhone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/login_input_text"
-            android:minHeight="58dp"
-            android:drawablePadding="12dp"
+            android:minHeight="48dp"
+            android:drawablePadding="10dp"
             android:gravity="center_vertical"
             android:hint="+84 901 234 567"
             android:paddingStart="14dp"
-            android:paddingTop="16dp"
+            android:paddingTop="10dp"
             android:paddingEnd="14dp"
-            android:paddingBottom="16dp"
+            android:paddingBottom="10dp"
             android:textColor="#FFFFFF"
             android:textColorHint="#B7BCC7"
-            android:textSize="15sp" />
+            android:textSize="14sp" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnSave"
         android:layout_width="0dp"
-        android:layout_height="56dp"
-        android:layout_marginTop="46dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="14dp"
+        android:layout_marginEnd="5dp"
         android:text="Lưu thay đổi"
         android:textAllCaps="false"
         android:textColor="#FFFFFF"
-        android:textSize="16sp"
+        android:textSize="14sp"
         android:textStyle="bold"
         app:backgroundTint="#2A6EF1"
-        app:cornerRadius="18dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:cornerRadius="16dp"
+        app:layout_constraintEnd_toStartOf="@id/btnCancel"
+        app:layout_constraintStart_toStartOf="@id/tilPhone"
         app:layout_constraintTop_toBottomOf="@id/tilPhone" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnCancel"
         android:layout_width="0dp"
-        android:layout_height="56dp"
-        android:layout_marginTop="10dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="5dp"
         android:text="Hủy bỏ"
         android:textAllCaps="false"
         android:textColor="#8B93A3"
-        android:textSize="16sp"
+        android:textSize="14sp"
         android:textStyle="bold"
         app:backgroundTint="#000000"
-        app:cornerRadius="18dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/btnSave"
+        app:cornerRadius="16dp"
+        app:layout_constraintEnd_toEndOf="@id/tilPhone"
+        app:layout_constraintStart_toEndOf="@id/btnSave"
+        app:layout_constraintTop_toTopOf="@id/btnSave"
         app:strokeColor="#263245"
         app:strokeWidth="1dp" />
 

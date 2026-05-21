@@ -14,21 +14,24 @@
         android:theme="@style/Theme.Projex_mobile">
 
         <!--Khai báo các acti-->
-        <activity android:name=".TeamActivity"/>
+
 
         <activity android:name=".ProjectActivity"/>
         <activity android:name=".ProTaskActivity"/>
         <activity android:name=".TaskActivity"/>
         <activity android:name=".AddTaskActivity"/>
-        <activity android:name=".ThemThanhVienActivity" />
 
         <activity
             android:name=".SpaceCreateActivity"
             android:exported="false" />
 
+        <activity android:name=".EditProfileActivity" />
+        <activity android:name=".RoleActivity" />
+
+
 <!--        acti start-->
         <activity
-            android:name=".AccountActivity"
+                android:name=".TeamActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
