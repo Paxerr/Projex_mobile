@@ -26,17 +26,16 @@
 
         <ImageView
             android:id="@+id/iv_home"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
             android:contentDescription="@null"
-            android:src="@drawable/ic_home"
+            android:src="@drawable/account_ic_home"
             app:tint="#6B7280" />
 
         <TextView
             android:id="@+id/tv_home"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
             android:text="HOME"
             android:textColor="#6B7280"
             android:textSize="10sp"
@@ -57,17 +56,16 @@
 
         <ImageView
             android:id="@+id/iv_spaces"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
             android:contentDescription="@null"
-            android:src="@drawable/ic_spaces"
+            android:src="@drawable/ic_space"
             app:tint="#6B7280" />
 
         <TextView
             android:id="@+id/tv_spaces"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
             android:text="SPACES"
             android:textColor="#6B7280"
             android:textSize="10sp"
@@ -88,17 +86,16 @@
 
         <ImageView
             android:id="@+id/iv_tasks"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
             android:contentDescription="@null"
-            android:src="@drawable/ic_tasks"
+            android:src="@drawable/ic_task"
             app:tint="#6B7280" />
 
         <TextView
             android:id="@+id/tv_tasks"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
             android:text="TASKS"
             android:textColor="#6B7280"
             android:textSize="10sp"
@@ -119,17 +116,16 @@
 
         <ImageView
             android:id="@+id/iv_notifications"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
             android:contentDescription="@null"
-            android:src="@drawable/ic_notification"
+            android:src="@drawable/ic_nofication"
             app:tint="#6B7280" />
 
         <TextView
             android:id="@+id/tv_notifications"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
             android:text="NOTIFICATION"
             android:textColor="#6B7280"
             android:textSize="10sp"
@@ -150,17 +146,16 @@
 
         <ImageView
             android:id="@+id/iv_user"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
             android:contentDescription="@null"
-            android:src="@drawable/ic_user"
+            android:src="@drawable/ic_avatar"
             app:tint="#6B7280" />
 
         <TextView
             android:id="@+id/tv_user"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
             android:text="USER"
             android:textColor="#6B7280"
             android:textSize="10sp"
