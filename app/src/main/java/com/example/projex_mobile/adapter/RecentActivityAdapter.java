@@ -1,5 +1,6 @@
 package com.example.projex_mobile.adapter;
 
+import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -39,11 +40,17 @@ public class RecentActivityAdapter extends RecyclerView.Adapter<RecentActivityAd
         holder.tvTicket.setText(item.getTicketCode());
         holder.tvTime.setText(item.getTimeAgo());
 
-        holder.tvAvatar.setText(item.getAvatarText() != null && !item.getAvatarText().isEmpty()
-                ? item.getAvatarText()
-                : "NA");
+        String initials = item.getAvatarText();
+        if (initials == null || initials.trim().isEmpty()) {
+            initials = item.getTitle() != null && !item.getTitle().trim().isEmpty()
+                    ? String.valueOf(item.getTitle().trim().charAt(0)).toUpperCase()
+                    : "NA";
+        }
+        holder.tvAvatar.setText(initials);
 
-        setAvatarStyle(holder.tvAvatar, item.getAvatarText());
+        String status = item.getStatus();
+        holder.tvStatus.setText(getDisplayStatus(status));
+        holder.tvStatus.setBackgroundTintList(ColorStateList.valueOf(getStatusColor(status)));
     }
 
     @Override
@@ -51,28 +58,23 @@ public class RecentActivityAdapter extends RecyclerView.Adapter<RecentActivityAd
         return items != null ? items.size() : 0;
     }
 
-    private void setAvatarStyle(TextView avatarView, String initials) {
-        if (initials != null && !initials.isEmpty()) {
-            int color = getAvatarColor(initials.hashCode());
-            avatarView.setBackgroundTintList(android.content.res.ColorStateList.valueOf(color));
-            avatarView.setText(initials);
-        } else {
-            avatarView.setBackgroundTintList(android.content.res.ColorStateList.valueOf(Color.parseColor("#6B7280")));
-            avatarView.setText("NA");
-        }
+    private String getDisplayStatus(String status) {
+        if (status == null) return "Unknown";
+        if ("InProgress".equalsIgnoreCase(status)) return "In Progress";
+        if ("ToDo".equalsIgnoreCase(status)) return "To Do";
+        return status;
     }
 
-    private int getAvatarColor(int seed) {
-        int[] colors = {
-                Color.parseColor("#FF6B6B"), Color.parseColor("#4ECDC4"),
-                Color.parseColor("#45B7D1"), Color.parseColor("#96CEB4"),
-                Color.parseColor("#FECA57"), Color.parseColor("#FF9FF3")
-        };
-        return colors[Math.abs(seed) % colors.length];
+    private int getStatusColor(String status) {
+        if ("InProgress".equalsIgnoreCase(status)) return Color.parseColor("#F4B740");
+        if ("Test".equalsIgnoreCase(status)) return Color.parseColor("#A855F7");
+        if ("Done".equalsIgnoreCase(status)) return Color.parseColor("#0FADFF");
+        if ("ToDo".equalsIgnoreCase(status)) return Color.parseColor("#22C55E");
+        return Color.parseColor("#6B7280");
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView tvAvatar, tvTitle, tvMessage, tvTicket, tvTime;
+        TextView tvAvatar, tvTitle, tvMessage, tvTicket, tvTime, tvStatus;
 
         ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -81,6 +83,7 @@ public class RecentActivityAdapter extends RecyclerView.Adapter<RecentActivityAd
             tvMessage = itemView.findViewById(R.id.tvMessage);
             tvTicket = itemView.findViewById(R.id.tvTicket);
             tvTime = itemView.findViewById(R.id.tvTime);
+            tvStatus = itemView.findViewById(R.id.tvStatus);
         }
     }
 }

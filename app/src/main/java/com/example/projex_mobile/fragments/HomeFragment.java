@@ -178,8 +178,13 @@ public class HomeFragment extends Fragment {
         });
 
         edtSearch.addTextChangedListener(new TextWatcher() {
-            @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-            @Override public void afterTextChanged(Editable s) {}
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
@@ -352,6 +357,33 @@ public class HomeFragment extends Fragment {
         item1.setTimeAgo("2h ago");
         item1.setStatus("InProgress");
         recentList.add(item1);
+
+        RecentItem item2 = new RecentItem();
+        item2.setTitle("Vẽ UseCase");
+        item2.setMessage("TAnh updated a story");
+        item2.setTicketCode("GGSHOP-3");
+        item2.setAvatarText("TA");
+        item2.setTimeAgo("11h ago");
+        item2.setStatus("Test");
+        recentList.add(item2);
+
+        RecentItem item3 = new RecentItem();
+        item3.setTitle("Phân tích thiết kế");
+        item3.setMessage("Quat updated a story");
+        item3.setTicketCode("GGSHOP-3");
+        item3.setAvatarText("QU");
+        item3.setTimeAgo("1d ago");
+        item3.setStatus("Done");
+        recentList.add(item3);
+
+        RecentItem item4 = new RecentItem();
+        item4.setTitle("Vẽ Activity diagram");
+        item4.setMessage("Dang updated a story");
+        item4.setTicketCode("GGSHOP-3");
+        item4.setAvatarText("DG");
+        item4.setTimeAgo("4d ago");
+        item4.setStatus("Todo");
+        recentList.add(item4);
 
         recentAdapter.notifyItemRangeInserted(0, recentList.size());
         updateRecentState();

@@ -53,22 +53,6 @@ public class RecentItem {
         this.avatarText = avatarText;
     }
 
-    public boolean isRead() {
-        return isRead;
-    }
-
-    public void setRead(boolean read) {
-        isRead = read;
-    }
-
-    public String getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(String createdAt) {
-        this.createdAt = createdAt;
-    }
-
     public String getTimeAgo() {
         return timeAgo;
     }
@@ -84,4 +68,6 @@ public class RecentItem {
     public void setStatus(String status) {
         this.status = status;
     }
+
+
 }

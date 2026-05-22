@@ -38,7 +38,7 @@ public class QuickAccessAdapter extends RecyclerView.Adapter<QuickAccessAdapter.
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         int layoutRes = (viewType == TYPE_LANDSCAPE)
-                ? R.layout.home_quick_access
+                ? R.layout.home_quick_access_land
                 : R.layout.home_quick_access;
 
         View view = LayoutInflater.from(parent.getContext())
