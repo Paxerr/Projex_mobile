@@ -18,8 +18,8 @@ android:layout_height="match_parent">
 
         <ImageView
             android:id="@+id/logo"
-            android:layout_width="56dp"
-            android:layout_height="56dp"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
             android:layout_marginStart="8dp"
             android:src="@drawable/login_logo_pj_rm_bg"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -33,7 +33,7 @@ android:layout_height="match_parent">
             android:layout_marginStart="8dp"
             android:text="GGshop"
             android:textColor="#FFF"
-            android:textSize="28sp"
+            android:textSize="24sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@id/logo"
@@ -58,26 +58,26 @@ android:layout_height="match_parent">
 
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingTop="32dp"
+            android:paddingTop="8dp"
             android:paddingHorizontal="24dp"
             android:orientation="vertical">
             <TextView
 
                 android:textColor="#FFFFFF"
-                android:textSize="32sp"
+                android:textSize="24sp"
                 android:textStyle="bold"
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
                 android:text="Tổng quan dự án"
-                android:layout_marginBottom="20dp"
-                android:layout_marginTop="20dp"
+                android:layout_marginBottom="16dp"
+                android:layout_marginTop="0dp"
                 />
             <LinearLayout
 
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/pro_background"
-                android:paddingTop="40dp"
+                android:paddingTop="24dp"
                 android:paddingHorizontal="24dp"
                 android:layout_marginBottom="16dp"
                 android:orientation="vertical"
@@ -96,7 +96,7 @@ android:layout_height="match_parent">
                         android:layout_height="wrap_content"
                         android:text="Tổng quan trạng thái"
                         android:textColor="#FFFFFF"
-                        android:textSize="18sp"
+                        android:textSize="16sp"
                         android:textStyle="bold"
                         android:layout_marginBottom="4dp"/>
 
@@ -330,7 +330,7 @@ android:layout_height="match_parent">
                         android:layout_height="wrap_content"
                         android:text="Time Left"
                         android:textColor="#ABABAB"
-                        android:textSize="10sp"
+                        android:textSize="12sp"
                         android:textStyle="bold"
                         android:layout_marginBottom="2dp"/>
 
@@ -340,7 +340,7 @@ android:layout_height="match_parent">
                         android:layout_height="wrap_content"
                         android:text="14 Days"
                         android:textColor="#FFFFFF"
-                        android:textSize="18sp"
+                        android:textSize="16sp"
                         android:textStyle="bold"/>
                 </LinearLayout>
 
@@ -365,7 +365,7 @@ android:layout_height="match_parent">
                         android:layout_height="wrap_content"
                         android:text="Project task"
                         android:textColor="#ABABAB"
-                        android:textSize="10sp"
+                        android:textSize="12sp"
                         android:textStyle="bold"
                         android:layout_marginBottom="2dp"/>
                     <TextView
@@ -374,7 +374,7 @@ android:layout_height="match_parent">
                         android:layout_height="wrap_content"
                         android:text="Task"
                         android:textColor="#FFFFFF"
-                        android:textSize="18sp"
+                        android:textSize="16sp"
                         android:textStyle="bold"/>
                 </LinearLayout>
 
@@ -400,7 +400,7 @@ android:layout_height="match_parent">
                         android:layout_height="wrap_content"
                         android:text="Team Size"
                         android:textColor="#ABABAB"
-                        android:textSize="10sp"
+                        android:textSize="12sp"
                         android:textStyle="bold"
                         android:layout_marginBottom="2dp"/>
 
@@ -410,7 +410,7 @@ android:layout_height="match_parent">
                         android:layout_height="wrap_content"
                         android:text="8 People"
                         android:textColor="#FFFFFF"
-                        android:textSize="18sp"
+                        android:textSize="16sp"
                         android:textStyle="bold"/>
                 </LinearLayout>
 
@@ -436,7 +436,7 @@ android:layout_height="match_parent">
                         android:layout_height="wrap_content"
                         android:text="Cập nhật gần đây"
                         android:textColor="#FFFFFF"
-                        android:textSize="18sp"
+                        android:textSize="16sp"
                         android:textStyle="bold"/>
 
                     <View
