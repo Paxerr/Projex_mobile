@@ -34,7 +34,8 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="@id/btnBack"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="1.0" />
+            app:layout_constraintVertical_bias="1.0"
+            />
 
         <TextView
             android:id="@+id/txtProject"
@@ -42,7 +43,7 @@
             android:layout_height="wrap_content"
             android:text="GGshop"
             android:textColor="#FFF"
-            android:textSize="28sp"
+            android:textSize="24sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
 
@@ -106,7 +107,7 @@
                         android:layout_height="wrap_content"
                         android:text="Công việc"
                         android:textColor="#FFFFFF"
-                        android:textSize="36sp"
+                        android:textSize="24sp"
                         android:textStyle="bold"
                         android:layout_marginBottom="8dp"/>
 
