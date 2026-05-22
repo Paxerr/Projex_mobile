@@ -51,10 +51,6 @@ public class SpaceListFragment extends Fragment implements ProjectAdapter.OnProj
 
     private ActivityResultLauncher<Intent> createSpaceLauncher;
 
-    public SpaceListFragment() {
-        super(R.layout.space_list_fragment);
-    }
-
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -270,7 +266,7 @@ public class SpaceListFragment extends Fragment implements ProjectAdapter.OnProj
         requireActivity()
                 .getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.fragment_container, fragment)
+                .replace(R.id.frame_container, fragment)
                 .addToBackStack(null)
                 .commit();
     }

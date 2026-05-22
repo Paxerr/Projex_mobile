@@ -10,7 +10,7 @@
     android:overScrollMode="never"
     android:scrollbars="none"
     android:paddingStart="16dp"
-    android:paddingTop="32dp"
+    android:paddingTop="18dp"
     android:paddingEnd="16dp"
     android:paddingBottom="24dp">
 
@@ -30,9 +30,9 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="8dp"
-                android:layout_marginBottom="8dp"
                 android:layout_weight="1"
-                android:paddingLeft="2dp"
+                android:paddingLeft="4dp"
+                android:layout_marginTop="3dp"
                 android:text="Thông báo"
                 android:textColor="#FFFFFF"
                 android:textSize="24sp"
