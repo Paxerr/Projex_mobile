@@ -119,8 +119,21 @@ public class HomeFragment extends Fragment {
     }
 
     private void setupRecyclerViews() {
-        rvQuickAccess.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false));
-        quickAccessAdapter = new QuickAccessAdapter(quickAccessList);
+        int orientation = getResources().getConfiguration().orientation;
+        int swDp = getResources().getConfiguration().smallestScreenWidthDp;
+
+        boolean isTablet = swDp >= 600;
+        boolean useVerticalQuickAccess = isTablet && orientation == android.content.res.Configuration.ORIENTATION_LANDSCAPE;
+
+        rvQuickAccess.setLayoutManager(
+                new LinearLayoutManager(
+                        requireContext(),
+                        useVerticalQuickAccess ? LinearLayoutManager.VERTICAL : LinearLayoutManager.HORIZONTAL,
+                        false
+                )
+        );
+
+        quickAccessAdapter = new QuickAccessAdapter(quickAccessList, useVerticalQuickAccess ? 1 : 0);
         rvQuickAccess.setAdapter(quickAccessAdapter);
 
         rvRecentActivity.setLayoutManager(new LinearLayoutManager(requireContext()));
