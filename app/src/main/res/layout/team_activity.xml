@@ -93,7 +93,7 @@
         android:layout_marginTop="24dp"
         android:text="2 người"
         android:textColor="#9CA3AF"
-        android:textSize="13sp"
+        android:textSize="12sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/cl_search" />
 
@@ -121,7 +121,7 @@
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@android:color/transparent"
+                    android:background="@drawable/home_bg_card"
                     android:padding="16dp">
 
                     <com.google.android.material.imageview.ShapeableImageView
@@ -140,6 +140,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="12dp"
+                        android:textSize="14sp"
                         android:text="Đăng Nguyễn"
                         android:textColor="#F3F6FA"
                         android:textStyle="bold"
