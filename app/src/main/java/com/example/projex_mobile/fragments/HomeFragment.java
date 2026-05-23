@@ -1,6 +1,7 @@
 package com.example.projex_mobile.fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Rect;
@@ -9,6 +10,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -23,6 +25,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.projex_mobile.R;
+import com.example.projex_mobile.TeamActivity;
 import com.example.projex_mobile.adapter.QuickAccessAdapter;
 import com.example.projex_mobile.adapter.RecentActivityAdapter;
 import com.example.projex_mobile.api.ApiService;
@@ -87,7 +90,6 @@ public class HomeFragment extends Fragment {
         setupSearchBar(view);
         setupRecyclerViews();
         loadData();
-
     }
 
     @Override
@@ -136,9 +138,50 @@ public class HomeFragment extends Fragment {
         quickAccessAdapter = new QuickAccessAdapter(quickAccessList, useVerticalQuickAccess ? 1 : 0);
         rvQuickAccess.setAdapter(quickAccessAdapter);
 
+        // THÊM MỚI: Bấm vào khung Team trong QuickAccess thì mở TeamActivity
+        setupQuickAccessTeamClick();
+
         rvRecentActivity.setLayoutManager(new LinearLayoutManager(requireContext()));
         recentAdapter = new RecentActivityAdapter(recentList);
         rvRecentActivity.setAdapter(recentAdapter);
+    }
+
+    // THÊM MỚI: Chỉ bắt click item Team, không sửa QuickAccessAdapter
+    private void setupQuickAccessTeamClick() {
+        GestureDetector gestureDetector = new GestureDetector(
+                requireContext(),
+                new GestureDetector.SimpleOnGestureListener() {
+                    @Override
+                    public boolean onSingleTapUp(MotionEvent e) {
+                        return true;
+                    }
+                }
+        );
+
+        rvQuickAccess.addOnItemTouchListener(new RecyclerView.SimpleOnItemTouchListener() {
+            @Override
+            public boolean onInterceptTouchEvent(@NonNull RecyclerView rv, @NonNull MotionEvent e) {
+                View child = rv.findChildViewUnder(e.getX(), e.getY());
+
+                if (child != null && gestureDetector.onTouchEvent(e)) {
+                    int position = rv.getChildAdapterPosition(child);
+
+                    // Team đang là item thứ 4 trong quickAccessList, tức position = 3
+                    if (position == 3) {
+                        openTeamActivity();
+                        return true;
+                    }
+                }
+
+                return false;
+            }
+        });
+    }
+
+    // THÊM MỚI: Hàm mở TeamActivity
+    private void openTeamActivity() {
+        Intent intent = new Intent(requireContext(), TeamActivity.class);
+        startActivity(intent);
     }
 
     private void loadData() {

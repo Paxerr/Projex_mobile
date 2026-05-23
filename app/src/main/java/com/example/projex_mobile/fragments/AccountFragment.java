@@ -19,7 +19,6 @@ import androidx.fragment.app.Fragment;
 
 import com.example.projex_mobile.EditProfileActivity;
 import com.example.projex_mobile.R;
-import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 
 import java.util.Locale;
@@ -92,11 +91,15 @@ public class AccountFragment extends Fragment {
     }
 
     private void handleEvents(View view) {
-        MaterialCardView btnBack = view.findViewById(R.id.btnBack);
-        MaterialCardView btnEditProfile = view.findViewById(R.id.btnEditProfile);
+        // Vì XML mới đã bỏ MaterialCardView,
+        // nên các nút/khung chỉ cần bắt kiểu View là chạy được.
+        View btnBack = view.findViewById(R.id.btnBack);
+        View btnEditProfile = view.findViewById(R.id.btnEditProfile);
         ImageView icEditProfile = view.findViewById(R.id.icEditProfile);
-        MaterialCardView cardChangePassword = view.findViewById(R.id.cardChangePassword);
-        MaterialCardView cardLogout = view.findViewById(R.id.cardLogout);
+
+        View cardChangePassword = view.findViewById(R.id.cardChangePassword);
+        View cardLogout = view.findViewById(R.id.cardLogout);
+
         SwitchMaterial switchNotifications = view.findViewById(R.id.switchNotifications);
 
         if (btnBack != null) {
