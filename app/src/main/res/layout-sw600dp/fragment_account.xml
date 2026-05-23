@@ -6,64 +6,45 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/home_bg_main"
-    tools:context=".fragments.AccountFragment"
-    tools:deviceHeight="360dp"
-    tools:deviceWidth="800dp">
+    tools:context=".fragments.AccountFragment">
 
     <TextView
         android:id="@+id/tvScreenTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="10dp"
+        android:visibility="gone"
         android:textColor="#57A7FF"
-        android:textSize="16sp"
+        android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.core.widget.NestedScrollView
         android:id="@+id/accountScrollView"
-        android:layout_width="0dp"
+        android:layout_width="520dp"
         android:layout_height="0dp"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="4dp"
-        android:layout_marginEnd="24dp"
-        android:layout_marginBottom="10dp"
         android:clipToPadding="false"
-        android:fillViewport="true"
+        android:fillViewport="false"
         android:overScrollMode="never"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvScreenTitle">
+        app:layout_constraintTop_toTopOf="parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/contentArea"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:minHeight="300dp"
-            android:paddingBottom="10dp">
+            android:paddingTop="48dp"
+            android:paddingBottom="32dp">
 
-            <com.google.android.material.card.MaterialCardView
+            <View
                 android:id="@+id/btnBack"
-                android:layout_width="38dp"
-                android:layout_height="38dp"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
                 android:visibility="gone"
-                app:cardBackgroundColor="#1A1A1A"
-                app:cardCornerRadius="19dp"
-                app:cardElevation="0dp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
-
-                <ImageView
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:layout_gravity="center"
-                    android:contentDescription="Back"
-                    app:srcCompat="@drawable/ic_back"
-                    app:tint="#FFFFFF" />
-            </com.google.android.material.card.MaterialCardView>
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/tvHeader"
@@ -78,46 +59,37 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/btnEditProfile" />
 
-            <com.google.android.material.card.MaterialCardView
+            <FrameLayout
                 android:id="@+id/btnEditProfile"
-                android:layout_width="38dp"
-                android:layout_height="38dp"
+                android:layout_width="46dp"
+                android:layout_height="46dp"
+                android:background="@drawable/home_bg_card"
+                android:backgroundTint="#171B27"
                 android:clickable="true"
                 android:focusable="true"
                 android:foreground="?attr/selectableItemBackgroundBorderless"
-                app:cardBackgroundColor="#1A1A1A"
-                app:cardCornerRadius="19dp"
-                app:cardElevation="0dp"
+                android:padding="12dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
                 <ImageView
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
+                    android:id="@+id/icEditProfile"
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
                     android:layout_gravity="center"
-                    android:clickable="false"
-                    android:focusable="false"
                     android:contentDescription="Edit profile"
                     app:srcCompat="@drawable/account_ic_edit"
                     app:tint="#4A8CFF" />
-            </com.google.android.material.card.MaterialCardView>
+            </FrameLayout>
 
-            <androidx.constraintlayout.widget.Guideline
-                android:id="@+id/guidelineStatsStart"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                app:layout_constraintGuide_percent="0.40" />
-
-            <com.google.android.material.card.MaterialCardView
+            <FrameLayout
                 android:id="@+id/cardAvatar"
-                android:layout_width="76dp"
-                android:layout_height="76dp"
-                android:layout_marginTop="8dp"
-                app:cardBackgroundColor="#2A9EB9"
-                app:cardCornerRadius="20dp"
-                app:cardElevation="0dp"
-                app:layout_constraintEnd_toStartOf="@+id/guidelineStatsStart"
+                android:layout_width="104dp"
+                android:layout_height="104dp"
+                android:layout_marginTop="24dp"
+                android:background="@drawable/home_bg_card"
+                android:backgroundTint="#2EA9C5"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/btnEditProfile">
 
@@ -128,71 +100,61 @@
                     android:gravity="center"
                     android:text="TD"
                     android:textColor="#FFFFFF"
-                    android:textSize="26sp"
+                    android:textSize="36sp"
                     android:textStyle="bold" />
-            </com.google.android.material.card.MaterialCardView>
+            </FrameLayout>
 
             <View
                 android:id="@+id/viewOnlineDot"
-                android:layout_width="14dp"
-                android:layout_height="14dp"
+                android:layout_width="22dp"
+                android:layout_height="22dp"
                 android:background="@drawable/account_online_dot"
                 app:layout_constraintBottom_toBottomOf="@+id/cardAvatar"
                 app:layout_constraintEnd_toEndOf="@+id/cardAvatar" />
 
             <TextView
                 android:id="@+id/tvFullName"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="8dp"
-                android:ellipsize="end"
-                android:gravity="center"
-                android:maxLines="1"
+                android:layout_marginTop="16dp"
                 android:text="Tiến Đạt Đinh"
                 android:textColor="#FFFFFF"
-                android:textSize="19sp"
+                android:textSize="25sp"
                 android:textStyle="bold"
-                app:layout_constraintEnd_toStartOf="@+id/guidelineStatsStart"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/cardAvatar" />
 
             <TextView
                 android:id="@+id/tvEmail"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="2dp"
-                android:layout_marginEnd="8dp"
-                android:ellipsize="end"
-                android:gravity="center"
-                android:maxLines="1"
+                android:layout_marginTop="8dp"
                 android:text="dinhtiendat2105@gmail.com"
-                android:textColor="#8C909A"
-                android:textSize="12sp"
-                app:layout_constraintEnd_toStartOf="@+id/guidelineStatsStart"
+                android:textColor="#9CA3AF"
+                android:textSize="14sp"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tvFullName" />
 
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/cardTasks"
+            <LinearLayout
+                android:id="@+id/statsContainer"
                 android:layout_width="0dp"
-                android:layout_height="58dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="12dp"
-                android:layout_marginEnd="4dp"
-                app:cardBackgroundColor="#17191F"
-                app:cardCornerRadius="14dp"
-                app:cardElevation="0dp"
-                app:layout_constraintEnd_toStartOf="@+id/cardProjects"
-                app:layout_constraintHorizontal_chainStyle="spread"
-                app:layout_constraintStart_toStartOf="@+id/guidelineStatsStart"
-                app:layout_constraintTop_toBottomOf="@+id/btnEditProfile">
+                android:layout_height="80dp"
+                android:layout_marginTop="32dp"
+                android:gravity="center"
+                android:orientation="horizontal"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tvEmail">
 
                 <LinearLayout
-                    android:layout_width="match_parent"
+                    android:id="@+id/cardTasks"
+                    android:layout_width="0dp"
                     android:layout_height="match_parent"
+                    android:layout_marginEnd="8dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/home_bg_card"
                     android:gravity="center"
                     android:orientation="vertical">
 
@@ -202,37 +164,27 @@
                         android:layout_height="wrap_content"
                         android:text="24"
                         android:textColor="#FFFFFF"
-                        android:textSize="19sp"
+                        android:textSize="23sp"
                         android:textStyle="bold" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="2dp"
+                        android:layout_marginTop="4dp"
                         android:text="TASKS"
-                        android:textColor="#6E778A"
-                        android:textSize="9sp"
+                        android:textColor="#9CA3AF"
+                        android:textSize="10sp"
                         android:textStyle="bold" />
                 </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
-
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/cardProjects"
-                android:layout_width="0dp"
-                android:layout_height="58dp"
-                android:layout_marginStart="4dp"
-                android:layout_marginEnd="4dp"
-                app:cardBackgroundColor="#17191F"
-                app:cardCornerRadius="14dp"
-                app:cardElevation="0dp"
-                app:layout_constraintBottom_toBottomOf="@+id/cardTasks"
-                app:layout_constraintEnd_toStartOf="@+id/cardOnTime"
-                app:layout_constraintStart_toEndOf="@+id/cardTasks"
-                app:layout_constraintTop_toTopOf="@+id/cardTasks">
 
                 <LinearLayout
-                    android:layout_width="match_parent"
+                    android:id="@+id/cardProjects"
+                    android:layout_width="0dp"
                     android:layout_height="match_parent"
+                    android:layout_marginStart="4dp"
+                    android:layout_marginEnd="4dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/home_bg_card"
                     android:gravity="center"
                     android:orientation="vertical">
 
@@ -242,36 +194,26 @@
                         android:layout_height="wrap_content"
                         android:text="12"
                         android:textColor="#FFFFFF"
-                        android:textSize="19sp"
+                        android:textSize="23sp"
                         android:textStyle="bold" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="2dp"
+                        android:layout_marginTop="4dp"
                         android:text="PROJECTS"
-                        android:textColor="#6E778A"
-                        android:textSize="9sp"
+                        android:textColor="#9CA3AF"
+                        android:textSize="10sp"
                         android:textStyle="bold" />
                 </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
-
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/cardOnTime"
-                android:layout_width="0dp"
-                android:layout_height="58dp"
-                android:layout_marginStart="4dp"
-                app:cardBackgroundColor="#17191F"
-                app:cardCornerRadius="14dp"
-                app:cardElevation="0dp"
-                app:layout_constraintBottom_toBottomOf="@+id/cardTasks"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/cardProjects"
-                app:layout_constraintTop_toTopOf="@+id/cardTasks">
 
                 <LinearLayout
-                    android:layout_width="match_parent"
+                    android:id="@+id/cardOnTime"
+                    android:layout_width="0dp"
                     android:layout_height="match_parent"
+                    android:layout_marginStart="8dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/home_bg_card"
                     android:gravity="center"
                     android:orientation="vertical">
 
@@ -281,222 +223,181 @@
                         android:layout_height="wrap_content"
                         android:text="98%"
                         android:textColor="#FFFFFF"
-                        android:textSize="19sp"
+                        android:textSize="23sp"
                         android:textStyle="bold" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="2dp"
+                        android:layout_marginTop="4dp"
                         android:text="ON TIME"
-                        android:textColor="#6E778A"
-                        android:textSize="9sp"
+                        android:textColor="#9CA3AF"
+                        android:textSize="10sp"
                         android:textStyle="bold" />
                 </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
+            </LinearLayout>
 
             <TextView
                 android:id="@+id/tvSystemSettings"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="10dp"
-                android:letterSpacing="0.25"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="32dp"
+                android:letterSpacing="0.16"
                 android:text="CÀI ĐẶT HỆ THỐNG"
-                android:textColor="#48505E"
-                android:textSize="10sp"
+                android:textColor="#6B7280"
+                android:textSize="11sp"
                 android:textStyle="bold"
-                app:layout_constraintStart_toStartOf="@+id/guidelineStatsStart"
-                app:layout_constraintTop_toBottomOf="@+id/cardTasks" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/statsContainer" />
 
-            <com.google.android.material.card.MaterialCardView
+            <LinearLayout
                 android:id="@+id/cardNotifications"
                 android:layout_width="0dp"
-                android:layout_height="54dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="7dp"
-                app:cardBackgroundColor="#17191F"
-                app:cardCornerRadius="15dp"
-                app:cardElevation="0dp"
+                android:layout_height="72dp"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/home_bg_card"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="@+id/guidelineStatsStart"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tvSystemSettings">
 
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:paddingStart="12dp"
-                    android:paddingEnd="12dp">
-
-                    <com.google.android.material.card.MaterialCardView
-                        android:id="@+id/iconBellCard"
-                        android:layout_width="34dp"
-                        android:layout_height="34dp"
-                        app:cardBackgroundColor="#202A3C"
-                        app:cardCornerRadius="10dp"
-                        app:cardElevation="0dp"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent">
-
-                        <ImageView
-                            android:layout_width="18dp"
-                            android:layout_height="18dp"
-                            android:layout_gravity="center"
-                            android:contentDescription="Notification"
-                            app:srcCompat="@drawable/account_ic_nofication"
-                            app:tint="#4A8CFF" />
-                    </com.google.android.material.card.MaterialCardView>
-
-                    <TextView
-                        android:id="@+id/tvNotificationText"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="10dp"
-                        android:text="Thông báo đẩy"
-                        android:textColor="#FFFFFF"
-                        android:textSize="14sp"
-                        android:textStyle="bold"
-                        app:layout_constraintBottom_toBottomOf="@+id/iconBellCard"
-                        app:layout_constraintEnd_toStartOf="@+id/switchNotifications"
-                        app:layout_constraintStart_toEndOf="@+id/iconBellCard"
-                        app:layout_constraintTop_toTopOf="@+id/iconBellCard" />
-
-                    <com.google.android.material.switchmaterial.SwitchMaterial
-                        android:id="@+id/switchNotifications"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:checked="true"
-                        app:layout_constraintBottom_toBottomOf="@+id/iconBellCard"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="@+id/iconBellCard" />
-                </androidx.constraintlayout.widget.ConstraintLayout>
-            </com.google.android.material.card.MaterialCardView>
-
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/cardChangePassword"
-                android:layout_width="0dp"
-                android:layout_height="54dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="7dp"
-                app:cardBackgroundColor="#17191F"
-                app:cardCornerRadius="15dp"
-                app:cardElevation="0dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="@+id/guidelineStatsStart"
-                app:layout_constraintTop_toBottomOf="@+id/cardNotifications">
-
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:paddingStart="12dp"
-                    android:paddingEnd="12dp">
-
-                    <com.google.android.material.card.MaterialCardView
-                        android:id="@+id/iconLockCard"
-                        android:layout_width="34dp"
-                        android:layout_height="34dp"
-                        app:cardBackgroundColor="#1C2432"
-                        app:cardCornerRadius="10dp"
-                        app:cardElevation="0dp"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent">
-
-                        <ImageView
-                            android:layout_width="18dp"
-                            android:layout_height="18dp"
-                            android:layout_gravity="center"
-                            android:contentDescription="Lock"
-                            app:srcCompat="@drawable/login_ic_lock"
-                            app:tint="#FFFFFF" />
-                    </com.google.android.material.card.MaterialCardView>
-
-                    <TextView
-                        android:id="@+id/tvChangePassword"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="10dp"
-                        android:text="Đổi mật khẩu"
-                        android:textColor="#FFFFFF"
-                        android:textSize="14sp"
-                        android:textStyle="bold"
-                        app:layout_constraintBottom_toBottomOf="@+id/iconLockCard"
-                        app:layout_constraintEnd_toStartOf="@+id/icChevronRight"
-                        app:layout_constraintStart_toEndOf="@+id/iconLockCard"
-                        app:layout_constraintTop_toTopOf="@+id/iconLockCard" />
+                <FrameLayout
+                    android:id="@+id/iconBellCard"
+                    android:layout_width="44dp"
+                    android:layout_height="44dp"
+                    android:background="@drawable/home_bg_card"
+                    android:backgroundTint="#1D2940">
 
                     <ImageView
-                        android:id="@+id/icChevronRight"
-                        android:layout_width="17dp"
-                        android:layout_height="17dp"
-                        android:contentDescription="Go"
-                        app:layout_constraintBottom_toBottomOf="@+id/iconLockCard"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="@+id/iconLockCard"
-                        app:tint="#687085" />
-                </androidx.constraintlayout.widget.ConstraintLayout>
-            </com.google.android.material.card.MaterialCardView>
+                        android:layout_width="22dp"
+                        android:layout_height="22dp"
+                        android:layout_gravity="center"
+                        android:contentDescription="Notification"
+                        app:srcCompat="@drawable/account_ic_nofication"
+                        app:tint="#4A8CFF" />
+                </FrameLayout>
 
-            <com.google.android.material.card.MaterialCardView
+                <TextView
+                    android:id="@+id/tvNotificationText"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_weight="1"
+                    android:text="Thông báo đẩy"
+                    android:textColor="#FFFFFF"
+                    android:textSize="15sp"
+                    android:textStyle="bold" />
+
+                <com.google.android.material.switchmaterial.SwitchMaterial
+                    android:id="@+id/switchNotifications"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="true" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/cardChangePassword"
+                android:layout_width="0dp"
+                android:layout_height="72dp"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/home_bg_card"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?attr/selectableItemBackground"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/cardNotifications">
+
+                <FrameLayout
+                    android:id="@+id/iconLockCard"
+                    android:layout_width="44dp"
+                    android:layout_height="44dp"
+                    android:background="@drawable/home_bg_card"
+                    android:backgroundTint="#1D2433">
+
+                    <ImageView
+                        android:layout_width="22dp"
+                        android:layout_height="22dp"
+                        android:layout_gravity="center"
+                        android:contentDescription="Lock"
+                        app:srcCompat="@drawable/login_ic_lock"
+                        app:tint="#FFFFFF" />
+                </FrameLayout>
+
+                <TextView
+                    android:id="@+id/tvChangePassword"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_weight="1"
+                    android:text="Đổi mật khẩu"
+                    android:textColor="#FFFFFF"
+                    android:textSize="15sp"
+                    android:textStyle="bold" />
+
+                <ImageView
+                    android:id="@+id/icChevronRight"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:contentDescription="Go"
+                    android:rotation="180"
+                    app:srcCompat="@drawable/ic_back"
+                    app:tint="#687085" />
+            </LinearLayout>
+
+            <LinearLayout
                 android:id="@+id/cardLogout"
                 android:layout_width="0dp"
-                android:layout_height="54dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="7dp"
-                android:layout_marginBottom="10dp"
-                app:cardBackgroundColor="#170909"
-                app:cardCornerRadius="15dp"
-                app:cardElevation="0dp"
-                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_height="72dp"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/home_bg_card"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?attr/selectableItemBackground"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="@+id/guidelineStatsStart"
-                app:layout_constraintTop_toBottomOf="@+id/cardChangePassword"
-                app:strokeColor="#311010"
-                app:strokeWidth="1dp">
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/cardChangePassword">
 
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:paddingStart="12dp"
-                    android:paddingEnd="12dp">
+                <FrameLayout
+                    android:id="@+id/iconLogoutCard"
+                    android:layout_width="44dp"
+                    android:layout_height="44dp"
+                    android:background="@drawable/home_bg_card">
 
-                    <com.google.android.material.card.MaterialCardView
-                        android:id="@+id/iconLogoutCard"
-                        android:layout_width="34dp"
-                        android:layout_height="34dp"
-                        app:cardBackgroundColor="#2B1212"
-                        app:cardCornerRadius="10dp"
-                        app:cardElevation="0dp"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent">
+                    <ImageView
+                        android:layout_width="22dp"
+                        android:layout_height="22dp"
+                        android:layout_gravity="center"
+                        android:contentDescription="Logout"
+                        app:srcCompat="@drawable/account_logout"
+                        app:tint="#FF4D4D" />
+                </FrameLayout>
 
-                        <ImageView
-                            android:layout_width="18dp"
-                            android:layout_height="18dp"
-                            android:layout_gravity="center"
-                            android:contentDescription="Logout"
-                            app:srcCompat="@drawable/account_logout"
-                            app:tint="#FF4D4D" />
-                    </com.google.android.material.card.MaterialCardView>
-
-                    <TextView
-                        android:id="@+id/tvLogout"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="10dp"
-                        android:text="ĐĂNG XUẤT"
-                        android:textColor="#FF4D4D"
-                        android:textSize="14sp"
-                        android:textStyle="bold"
-                        app:layout_constraintBottom_toBottomOf="@+id/iconLogoutCard"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toEndOf="@+id/iconLogoutCard"
-                        app:layout_constraintTop_toTopOf="@+id/iconLogoutCard" />
-                </androidx.constraintlayout.widget.ConstraintLayout>
-            </com.google.android.material.card.MaterialCardView>
+                <TextView
+                    android:id="@+id/tvLogout"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_weight="1"
+                    android:text="ĐĂNG XUẤT"
+                    android:textColor="#FF4D4D"
+                    android:textSize="15sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.core.widget.NestedScrollView>
+
 </androidx.constraintlayout.widget.ConstraintLayout>
