@@ -25,7 +25,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.projex_mobile.R;
-import com.example.projex_mobile.TeamActivity;
+
 import com.example.projex_mobile.adapter.QuickAccessAdapter;
 import com.example.projex_mobile.adapter.RecentActivityAdapter;
 import com.example.projex_mobile.api.ApiService;
@@ -168,7 +168,7 @@ public class HomeFragment extends Fragment {
 
                     // Team đang là item thứ 4 trong quickAccessList, tức position = 3
                     if (position == 3) {
-                        openTeamActivity();
+                        openTeamFragment();
                         return true;
                     }
                 }
@@ -178,10 +178,17 @@ public class HomeFragment extends Fragment {
         });
     }
 
-    // THÊM MỚI: Hàm mở TeamActivity
-    private void openTeamActivity() {
-        Intent intent = new Intent(requireContext(), TeamActivity.class);
-        startActivity(intent);
+    private void openTeamFragment() {
+        try {
+            requireActivity()
+                    .getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.frame_container, new TeamFragment())
+                    .addToBackStack("TeamFragment")
+                    .commit();
+        } catch (Exception e) {
+            Toast.makeText(requireContext(), "Không mở được trang Team", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void loadData() {

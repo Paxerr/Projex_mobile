@@ -69,7 +69,7 @@
                 android:layout_height="wrap_content"
                 android:text="Tài khoản"
                 android:textColor="#B9BDC8"
-                android:textSize="14sp"
+                android:textSize="16sp"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="@+id/btnEditProfile"
                 app:layout_constraintEnd_toEndOf="parent"

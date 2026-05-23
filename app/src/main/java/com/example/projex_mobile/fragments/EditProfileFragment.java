@@ -1,6 +1,5 @@
-package com.example.projex_mobile;
+package com.example.projex_mobile.fragments;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -9,42 +8,69 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 
+import com.example.projex_mobile.R;
 import com.google.android.material.textfield.TextInputEditText;
 
 import java.util.Locale;
 
-public class EditProfileActivity extends AppCompatActivity {
+public class EditProfileFragment extends Fragment {
+
+    public static final String REQUEST_KEY_EDIT_PROFILE = "edit_profile_result";
+    public static final String KEY_NAME = "name";
+    public static final String KEY_EMAIL = "email";
+    public static final String KEY_PHONE = "phone";
 
     private TextView tvAvatar;
     private TextInputEditText etName, etEmail, etPhone;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.edit_profile_activity);
+    public EditProfileFragment() {
+        super(R.layout.fragment_edit_profile);
+    }
 
-        initViews();
+    public static EditProfileFragment newInstance(String name, String email, String phone) {
+        EditProfileFragment fragment = new EditProfileFragment();
+
+        Bundle args = new Bundle();
+        args.putString(KEY_NAME, name);
+        args.putString(KEY_EMAIL, email);
+        args.putString(KEY_PHONE, phone);
+
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        initViews(view);
         receiveDataFromAccount();
-        handleEvents();
+        handleEvents(view);
         handleTextBoxEvents();
     }
 
-    private void initViews() {
-        tvAvatar = findViewById(R.id.tvAvatar);
+    private void initViews(View view) {
+        tvAvatar = view.findViewById(R.id.tvAvatar);
 
-        etName = findViewById(R.id.etName);
-        etEmail = findViewById(R.id.etEmail);
-        etPhone = findViewById(R.id.etPhone);
+        etName = view.findViewById(R.id.etName);
+        etEmail = view.findViewById(R.id.etEmail);
+        etPhone = view.findViewById(R.id.etPhone);
     }
 
     private void receiveDataFromAccount() {
-        Intent intent = getIntent();
+        Bundle args = getArguments();
 
-        String name = intent.getStringExtra("name");
-        String email = intent.getStringExtra("email");
-        String phone = intent.getStringExtra("phone");
+        if (args == null) {
+            return;
+        }
+
+        String name = args.getString(KEY_NAME);
+        String email = args.getString(KEY_EMAIL);
+        String phone = args.getString(KEY_PHONE);
 
         if (name != null) {
             etName.setText(name);
@@ -58,28 +84,25 @@ public class EditProfileActivity extends AppCompatActivity {
         if (phone != null) {
             etPhone.setText(phone);
         }
-
-        // Nếu bạn muốn khóa email không cho sửa thì bỏ comment dòng dưới:
-        // etEmail.setEnabled(false);
     }
 
-    private void handleEvents() {
-        View btnBack = findViewById(R.id.btnBack);
-        View btnChangeAvatar = findViewById(R.id.btnChangeAvatar);
-        View btnSave = findViewById(R.id.btnSave);
-        View btnCancel = findViewById(R.id.btnCancel);
+    private void handleEvents(View view) {
+        View btnBack = view.findViewById(R.id.btnBack);
+        View btnChangeAvatar = view.findViewById(R.id.btnChangeAvatar);
+        View btnSave = view.findViewById(R.id.btnSave);
+        View btnCancel = view.findViewById(R.id.btnCancel);
 
         if (btnBack != null) {
-            btnBack.setOnClickListener(v -> finish());
+            btnBack.setOnClickListener(v -> closeFragment());
         }
 
         if (btnCancel != null) {
-            btnCancel.setOnClickListener(v -> finish());
+            btnCancel.setOnClickListener(v -> closeFragment());
         }
 
         if (btnChangeAvatar != null) {
             btnChangeAvatar.setOnClickListener(v ->
-                    Toast.makeText(this, "Chức năng đổi ảnh đại diện", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), "Chức năng đổi ảnh đại diện", Toast.LENGTH_SHORT).show()
             );
         }
 
@@ -164,13 +187,22 @@ public class EditProfileActivity extends AppCompatActivity {
             return;
         }
 
-        Intent resultIntent = new Intent();
-        resultIntent.putExtra("name", name);
-        resultIntent.putExtra("email", email);
-        resultIntent.putExtra("phone", phone);
+        Bundle result = new Bundle();
+        result.putString(KEY_NAME, name);
+        result.putString(KEY_EMAIL, email);
+        result.putString(KEY_PHONE, phone);
 
-        setResult(RESULT_OK, resultIntent);
-        finish();
+        getParentFragmentManager().setFragmentResult(REQUEST_KEY_EDIT_PROFILE, result);
+
+        Toast.makeText(requireContext(), "Đã cập nhật hồ sơ", Toast.LENGTH_SHORT).show();
+
+        closeFragment();
+    }
+
+    private void closeFragment() {
+        requireActivity()
+                .getSupportFragmentManager()
+                .popBackStack();
     }
 
     private String getText(TextInputEditText editText) {
