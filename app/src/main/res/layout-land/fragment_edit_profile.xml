@@ -69,8 +69,7 @@
                         android:layout_width="80dp"
                         android:layout_height="80dp"
                         android:layout_gravity="center"
-                        android:background="@drawable/home_bg_card"
-                        android:backgroundTint="#161618">
+                        android:background="@drawable/home_bg_avatar">
 
                         <TextView
                             android:id="@+id/tvAvatar"
@@ -78,7 +77,7 @@
                             android:layout_height="match_parent"
                             android:gravity="center"
                             android:text="NVA"
-                            android:textColor="#2F7BFF"
+                            android:textColor="#FFFFFF"
                             android:textSize="20sp"
                             android:textStyle="bold" />
                     </FrameLayout>
@@ -148,6 +147,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="24dp"
+                android:layout_marginTop="12dp"
                 android:layout_weight="1.15"
                 android:orientation="vertical">
 
