@@ -81,13 +81,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="66dp"
                 android:layout_marginTop="10dp"
-                android:background="@drawable/pro_background"
+                android:background="@drawable/team_bg_card"
                 android:hint="Ví dụ: name@company.com"
                 android:inputType="textEmailAddress"
                 android:paddingStart="22dp"
                 android:paddingEnd="22dp"
                 android:singleLine="true"
-                android:textColor="@color/blue"
+                android:textColor="#F3F6FA"
+                android:textColorHint="#9CA3AF"
                 android:textSize="19sp" />
 
             <TextView
@@ -105,7 +106,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="66dp"
                 android:layout_marginTop="10dp"
-                android:background="@drawable/pro_background"
+                android:background="@drawable/team_bg_card"
                 android:clickable="true"
                 android:focusable="true"
                 android:paddingStart="22dp"
@@ -117,6 +118,7 @@
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:text="Member"
+                    android:textColor="#F3F6FA"
                     android:textSize="19sp" />
 
                 <ImageView

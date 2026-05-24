@@ -90,14 +90,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="46dp"
                 android:layout_marginTop="6dp"
-                android:background="@drawable/pro_background"
+                android:background="@drawable/team_bg_card"
                 android:hint="Ví dụ: name@company.com"
                 android:inputType="textEmailAddress"
                 android:paddingStart="16dp"
                 android:paddingEnd="16dp"
                 android:singleLine="true"
-                android:textColor="@color/blue"
-                android:textColorHint="#6B7280"
+                android:textColor="#F3F6FA"
+                android:textColorHint="#9CA3AF"
                 android:textSize="14sp" />
 
             <!-- Label: SELECT ROLE -->
@@ -117,7 +117,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="46dp"
                 android:layout_marginTop="6dp"
-                android:background="@drawable/pro_background"
+                android:background="@drawable/team_bg_card"
                 android:clickable="true"
                 android:focusable="true"
                 android:paddingStart="16dp"
