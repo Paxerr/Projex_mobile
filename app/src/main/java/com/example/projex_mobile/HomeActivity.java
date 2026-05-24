@@ -81,6 +81,15 @@ public class HomeActivity extends AppCompatActivity {
         showFragmentByTab(selectedTabId);
     }
 
+    public void showHomeFromChild() {
+        selectedTabId = R.id.nav_home;
+        getSupportFragmentManager().popBackStackImmediate(
+                null,
+                FragmentManager.POP_BACK_STACK_INCLUSIVE
+        );
+        showFragmentByTab(selectedTabId);
+    }
+
     private void showSpaces() {
         selectedTabId = R.id.nav_spaces;
         showFragmentByTab(selectedTabId);

@@ -9,11 +9,13 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.example.projex_mobile.HomeActivity;
 import com.example.projex_mobile.R;
 import com.example.projex_mobile.ThemThanhVienDialogFragment;
 
 public class TeamFragment extends Fragment {
 
+    private ImageView btnBackHome;
     private ImageView btnAddMember;
     private ImageView btnEditRoleMember1;
     private ImageView btnEditRoleMember2;
@@ -34,12 +36,17 @@ public class TeamFragment extends Fragment {
     }
 
     private void initViews(View view) {
+        btnBackHome = view.findViewById(R.id.btn_menu);
         btnAddMember = view.findViewById(R.id.btn_add_member);
         btnEditRoleMember1 = view.findViewById(R.id.btn_edit_role_member1);
         btnEditRoleMember2 = view.findViewById(R.id.btn_edit_role_member2);
     }
 
     private void handleEvents() {
+        if (btnBackHome != null) {
+            btnBackHome.setOnClickListener(v -> goBackToHome());
+        }
+
         if (btnAddMember != null) {
             btnAddMember.setOnClickListener(v -> openAddMemberScreen());
         }
@@ -66,6 +73,21 @@ public class TeamFragment extends Fragment {
                             "● Đang hoạt động"
                     )
             );
+        }
+    }
+
+    private void goBackToHome() {
+        try {
+            if (requireActivity() instanceof HomeActivity) {
+                ((HomeActivity) requireActivity()).showHomeFromChild();
+                return;
+            }
+
+            requireActivity()
+                    .getSupportFragmentManager()
+                    .popBackStack();
+        } catch (Exception e) {
+            Toast.makeText(requireContext(), "Không quay lại được trang Home", Toast.LENGTH_SHORT).show();
         }
     }
 

@@ -64,7 +64,6 @@ public class ThemThanhVienDialogFragment extends DialogFragment {
         if (edtEmailOrName == null) missing.append(" edtEmailOrName");
         if (tvRole == null) missing.append(" tvRole");
 
-        if (btnSend == null) missing.append(" btnSend");
         if (btnCancel == null) missing.append(" btnCancel");
         if (btnAdd == null) missing.append(" btnAdd");
         if (roleBox == null) missing.append(" roleBox");
@@ -84,7 +83,9 @@ public class ThemThanhVienDialogFragment extends DialogFragment {
 
         View.OnClickListener submit = v -> inviteMember();
         btnAdd.setOnClickListener(submit);
-        btnSend.setOnClickListener(submit);
+        if (btnSend != null) {
+            btnSend.setOnClickListener(submit);
+        }
     }
 
     @Override
@@ -139,7 +140,7 @@ public class ThemThanhVienDialogFragment extends DialogFragment {
 
         Toast.makeText(
                 requireContext(),
-                "Mời " + email + " với role " + role + " thành công",
+                "Thêm người thành công",
                 Toast.LENGTH_SHORT
         ).show();
 
