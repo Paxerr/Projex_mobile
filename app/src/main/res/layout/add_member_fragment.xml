@@ -43,33 +43,11 @@
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
                     android:text="Thêm thành viên"
+                    android:textColor="#FFFFFF"
                     android:textSize="16sp"
                     android:textStyle="bold" />
 
-                <TextView
-                    android:id="@+id/btnSend"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:padding="6dp"
-
-                    android:textColor="#1A73E8"
-                    android:textSize="14sp"
-                    android:textStyle="bold" />
             </RelativeLayout>
-
-            <TextView
-                android:id="@+id/tvMainTitle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="6dp"
-                android:text="Thêm người trong project"
-                android:textColor="@color/text_secondary"
-                android:textSize="18sp"
-                android:textStyle="bold" />
 
             <!-- Label + Input: Tên hoặc email -->
             <TextView
@@ -77,7 +55,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
-                android:text="TÊN HOẶC EMAIL"
+                android:text="Tên hoặc email"
                 android:textColor="#6B7280"
                 android:textSize="12sp"
                 android:textStyle="bold" />
@@ -87,13 +65,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="44dp"
                 android:layout_marginTop="6dp"
-                android:background="@drawable/pro_background"
-                android:hint="Ví dụ: name@company.com"
+                android:background="@drawable/team_bg_card"
+                android:text="Ví dụ: name@company.com"
                 android:inputType="textEmailAddress"
                 android:paddingStart="12dp"
                 android:paddingEnd="12dp"
                 android:singleLine="true"
-                android:textColor="@color/blue" />
+                 />
 
             <!-- Label: SELECT ROLE -->
             <TextView
@@ -112,7 +90,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="44dp"
                 android:layout_marginTop="6dp"
-                android:background="@drawable/pro_background"
+                android:background="@drawable/team_bg_card"
                 android:clickable="true"
                 android:focusable="true"
                 android:paddingStart="12dp"

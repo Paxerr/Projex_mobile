@@ -107,7 +107,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:background="@drawable/home_bg_card"
+                    android:background="@drawable/team_bg_card"
                     android:padding="8dp"
                     android:layout_marginBottom="24dp"
                     android:layout_marginHorizontal="20dp"
@@ -132,7 +132,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:background="@drawable/home_bg_card"
+                    android:background="@drawable/team_bg_card"
                     android:padding="8dp"
 
                     android:paddingHorizontal="16dp"
@@ -156,7 +156,7 @@
 
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/home_bg_card"
+                    android:background="@drawable/team_bg_card"
                     android:padding="8dp"
 
                     android:paddingHorizontal="16dp"

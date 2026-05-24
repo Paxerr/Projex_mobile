@@ -1,8 +1,7 @@
 package com.example.projex_mobile.fragments;
 
-import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
-import android.content.ActivityNotFoundException;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,15 +10,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import com.example.projex_mobile.EditProfileActivity;
+import com.example.projex_mobile.AuthActivity;
 import com.example.projex_mobile.R;
-import com.google.android.material.card.MaterialCardView;
+import com.example.projex_mobile.fragments.AuthFragment.RePasswordFragment;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 
 import java.util.Locale;
@@ -31,26 +28,6 @@ public class AccountFragment extends Fragment {
     private String currentName = "Tiến Đạt Đinh";
     private String currentEmail = "dinhtiendat2105@gmail.com";
     private String currentPhone = "+84 901 234 567";
-
-    private final ActivityResultLauncher<Intent> editProfileLauncher =
-            registerForActivityResult(
-                    new ActivityResultContracts.StartActivityForResult(),
-                    result -> {
-                        if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
-                            Intent data = result.getData();
-
-                            currentName = data.getStringExtra("name");
-                            currentEmail = data.getStringExtra("email");
-                            currentPhone = data.getStringExtra("phone");
-
-                            bindUserData();
-
-                            if (isAdded()) {
-                                Toast.makeText(requireContext(), "Đã cập nhật hồ sơ", Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                    }
-            );
 
     @Nullable
     @Override
@@ -66,9 +43,24 @@ public class AccountFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        listenEditProfileResult();
         initViews(view);
         bindUserData();
         handleEvents(view);
+    }
+
+    private void listenEditProfileResult() {
+        getParentFragmentManager().setFragmentResultListener(
+                EditProfileFragment.REQUEST_KEY_EDIT_PROFILE,
+                getViewLifecycleOwner(),
+                (requestKey, result) -> {
+                    currentName = result.getString(EditProfileFragment.KEY_NAME, currentName);
+                    currentEmail = result.getString(EditProfileFragment.KEY_EMAIL, currentEmail);
+                    currentPhone = result.getString(EditProfileFragment.KEY_PHONE, currentPhone);
+
+                    bindUserData();
+                }
+        );
     }
 
     private void initViews(View view) {
@@ -92,11 +84,13 @@ public class AccountFragment extends Fragment {
     }
 
     private void handleEvents(View view) {
-        MaterialCardView btnBack = view.findViewById(R.id.btnBack);
-        MaterialCardView btnEditProfile = view.findViewById(R.id.btnEditProfile);
+        View btnBack = view.findViewById(R.id.btnBack);
+        View btnEditProfile = view.findViewById(R.id.btnEditProfile);
         ImageView icEditProfile = view.findViewById(R.id.icEditProfile);
-        MaterialCardView cardChangePassword = view.findViewById(R.id.cardChangePassword);
-        MaterialCardView cardLogout = view.findViewById(R.id.cardLogout);
+
+        View cardChangePassword = view.findViewById(R.id.cardChangePassword);
+        View cardLogout = view.findViewById(R.id.cardLogout);
+
         SwitchMaterial switchNotifications = view.findViewById(R.id.switchNotifications);
 
         if (btnBack != null) {
@@ -105,7 +99,7 @@ public class AccountFragment extends Fragment {
                     .popBackStack());
         }
 
-        View.OnClickListener editProfileClickListener = v -> openEditProfileScreen();
+        View.OnClickListener editProfileClickListener = v -> openEditProfileFragment();
 
         if (btnEditProfile != null) {
             btnEditProfile.setOnClickListener(editProfileClickListener);
@@ -126,34 +120,84 @@ public class AccountFragment extends Fragment {
         }
 
         if (cardChangePassword != null) {
-            cardChangePassword.setOnClickListener(v ->
-                    Toast.makeText(requireContext(), "Mở chức năng đổi mật khẩu", Toast.LENGTH_SHORT).show()
-            );
+            cardChangePassword.setOnClickListener(v -> openRePasswordFragment());
         }
 
         if (cardLogout != null) {
-            cardLogout.setOnClickListener(v -> {
-                Toast.makeText(requireContext(), "Đăng xuất thành công", Toast.LENGTH_SHORT).show();
-                requireActivity().finish();
-            });
+            cardLogout.setOnClickListener(v -> logoutAndOpenLogin());
         }
     }
 
     public void onEditProfileClick(View view) {
-        openEditProfileScreen();
+        openEditProfileFragment();
     }
 
-    private void openEditProfileScreen() {
+    private void openEditProfileFragment() {
         try {
-            Intent intent = new Intent(requireContext(), EditProfileActivity.class);
-            intent.putExtra("name", currentName);
-            intent.putExtra("email", currentEmail);
-            intent.putExtra("phone", currentPhone);
-            editProfileLauncher.launch(intent);
-        } catch (ActivityNotFoundException e) {
-            Toast.makeText(requireContext(), "Chưa khai báo EditProfileActivity trong AndroidManifest.xml", Toast.LENGTH_SHORT).show();
+            View parentView = (View) requireView().getParent();
+
+            if (parentView == null || parentView.getId() == View.NO_ID) {
+                Toast.makeText(requireContext(), "Không tìm thấy khung chứa Fragment", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            EditProfileFragment editProfileFragment = EditProfileFragment.newInstance(
+                    currentName,
+                    currentEmail,
+                    currentPhone
+            );
+
+            requireActivity()
+                    .getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(parentView.getId(), editProfileFragment)
+                    .addToBackStack("EditProfileFragment")
+                    .commit();
+
         } catch (Exception e) {
             Toast.makeText(requireContext(), "Không mở được màn chỉnh sửa hồ sơ", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void openRePasswordFragment() {
+        try {
+            View parentView = (View) requireView().getParent();
+
+            if (parentView == null || parentView.getId() == View.NO_ID) {
+                Toast.makeText(requireContext(), "Không tìm thấy khung chứa Fragment", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            requireActivity()
+                    .getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(parentView.getId(), new RePasswordFragment())
+                    .addToBackStack("RePasswordFragment")
+                    .commit();
+
+        } catch (Exception e) {
+            Toast.makeText(requireContext(), "Không mở được trang đổi mật khẩu", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void logoutAndOpenLogin() {
+        try {
+            requireActivity()
+                    .getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
+                    .edit()
+                    .clear()
+                    .apply();
+
+            Toast.makeText(requireContext(), "Đăng xuất thành công", Toast.LENGTH_SHORT).show();
+
+            Intent intent = new Intent(requireContext(), AuthActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+
+            startActivity(intent);
+            requireActivity().finishAffinity();
+
+        } catch (Exception e) {
+            Toast.makeText(requireContext(), "Không thể đăng xuất", Toast.LENGTH_SHORT).show();
         }
     }
 

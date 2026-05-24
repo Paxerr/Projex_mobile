@@ -1,6 +1,7 @@
 package com.example.projex_mobile.fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Rect;
@@ -9,6 +10,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -23,6 +25,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.projex_mobile.R;
+
 import com.example.projex_mobile.adapter.QuickAccessAdapter;
 import com.example.projex_mobile.adapter.RecentActivityAdapter;
 import com.example.projex_mobile.api.ApiService;
@@ -87,7 +90,6 @@ public class HomeFragment extends Fragment {
         setupSearchBar(view);
         setupRecyclerViews();
         loadData();
-
     }
 
     @Override
@@ -119,13 +121,74 @@ public class HomeFragment extends Fragment {
     }
 
     private void setupRecyclerViews() {
-        rvQuickAccess.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false));
-        quickAccessAdapter = new QuickAccessAdapter(quickAccessList);
+        int orientation = getResources().getConfiguration().orientation;
+        int swDp = getResources().getConfiguration().smallestScreenWidthDp;
+
+        boolean isTablet = swDp >= 600;
+        boolean useVerticalQuickAccess = isTablet && orientation == android.content.res.Configuration.ORIENTATION_LANDSCAPE;
+
+        rvQuickAccess.setLayoutManager(
+                new LinearLayoutManager(
+                        requireContext(),
+                        useVerticalQuickAccess ? LinearLayoutManager.VERTICAL : LinearLayoutManager.HORIZONTAL,
+                        false
+                )
+        );
+
+        quickAccessAdapter = new QuickAccessAdapter(quickAccessList, useVerticalQuickAccess ? 1 : 0);
         rvQuickAccess.setAdapter(quickAccessAdapter);
+
+        // THÊM MỚI: Bấm vào khung Team trong QuickAccess thì mở TeamActivity
+        setupQuickAccessTeamClick();
 
         rvRecentActivity.setLayoutManager(new LinearLayoutManager(requireContext()));
         recentAdapter = new RecentActivityAdapter(recentList);
         rvRecentActivity.setAdapter(recentAdapter);
+    }
+
+    // THÊM MỚI: Chỉ bắt click item Team, không sửa QuickAccessAdapter
+    private void setupQuickAccessTeamClick() {
+        GestureDetector gestureDetector = new GestureDetector(
+                requireContext(),
+                new GestureDetector.SimpleOnGestureListener() {
+                    @Override
+                    public boolean onSingleTapUp(MotionEvent e) {
+                        return true;
+                    }
+                }
+        );
+
+        rvQuickAccess.addOnItemTouchListener(new RecyclerView.SimpleOnItemTouchListener() {
+            @Override
+            public boolean onInterceptTouchEvent(@NonNull RecyclerView rv, @NonNull MotionEvent e) {
+                View child = rv.findChildViewUnder(e.getX(), e.getY());
+
+                if (child != null && gestureDetector.onTouchEvent(e)) {
+                    int position = rv.getChildAdapterPosition(child);
+
+                    // Team đang là item thứ 4 trong quickAccessList, tức position = 3
+                    if (position == 3) {
+                        openTeamFragment();
+                        return true;
+                    }
+                }
+
+                return false;
+            }
+        });
+    }
+
+    private void openTeamFragment() {
+        try {
+            requireActivity()
+                    .getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.frame_container, new TeamFragment())
+                    .addToBackStack("TeamFragment")
+                    .commit();
+        } catch (Exception e) {
+            Toast.makeText(requireContext(), "Không mở được trang Team", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void loadData() {
@@ -165,8 +228,13 @@ public class HomeFragment extends Fragment {
         });
 
         edtSearch.addTextChangedListener(new TextWatcher() {
-            @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-            @Override public void afterTextChanged(Editable s) {}
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
@@ -339,6 +407,33 @@ public class HomeFragment extends Fragment {
         item1.setTimeAgo("2h ago");
         item1.setStatus("InProgress");
         recentList.add(item1);
+
+        RecentItem item2 = new RecentItem();
+        item2.setTitle("Vẽ UseCase");
+        item2.setMessage("TAnh updated a story");
+        item2.setTicketCode("GGSHOP-3");
+        item2.setAvatarText("TA");
+        item2.setTimeAgo("11h ago");
+        item2.setStatus("Test");
+        recentList.add(item2);
+
+        RecentItem item3 = new RecentItem();
+        item3.setTitle("Phân tích thiết kế");
+        item3.setMessage("Quat updated a story");
+        item3.setTicketCode("GGSHOP-3");
+        item3.setAvatarText("QU");
+        item3.setTimeAgo("1d ago");
+        item3.setStatus("Done");
+        recentList.add(item3);
+
+        RecentItem item4 = new RecentItem();
+        item4.setTitle("Vẽ Activity diagram");
+        item4.setMessage("Dang updated a story");
+        item4.setTicketCode("GGSHOP-3");
+        item4.setAvatarText("DG");
+        item4.setTimeAgo("4d ago");
+        item4.setStatus("Todo");
+        recentList.add(item4);
 
         recentAdapter.notifyItemRangeInserted(0, recentList.size());
         updateRecentState();
