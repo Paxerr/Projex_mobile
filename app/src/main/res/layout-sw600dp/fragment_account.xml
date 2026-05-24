@@ -35,7 +35,7 @@
             android:id="@+id/contentArea"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingTop="48dp"
+            android:paddingTop="96dp"
             android:paddingBottom="32dp">
 
             <View
@@ -52,7 +52,7 @@
                 android:layout_height="wrap_content"
                 android:text="Tài khoản"
                 android:textColor="#B9BDC8"
-                android:textSize="15sp"
+                android:textSize="24sp"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="@+id/btnEditProfile"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -101,7 +101,8 @@
                     android:text="TD"
                     android:textColor="#FFFFFF"
                     android:textSize="36sp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    android:background="@drawable/home_bg_avatar"/>
             </FrameLayout>
 
             <View

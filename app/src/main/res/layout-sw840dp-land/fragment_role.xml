@@ -88,8 +88,8 @@
                     android:textColor="#FFFFFF"
                     android:textSize="18sp"
                     android:textStyle="bold"
-                    android:background="@drawable/home_bg_card"
-                    android:backgroundTint="#1E2433" />
+                    android:background="@drawable/home_bg_avatar"
+                     />
 
                 <TextView
                     android:id="@+id/tvMemberName"
@@ -99,7 +99,8 @@
                     android:text="Đăng Nguyễn"
                     android:textColor="#FFFFFF"
                     android:textSize="14sp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    />
 
                 <TextView
                     android:id="@+id/tvMemberEmail"

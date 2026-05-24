@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-    File: res/layout-sw840dp-land/fragment_team.xml
+    File: res/layout-sw840dp-land/fragment_team.xml  < LAYOUT 840DP LAND
     Dùng cho TeamFragment.
     Đã bỏ CardView / Material ShapeableImageView / bottom_nav.
     HomeActivity đã có layout_bottom_nav nên Fragment này chỉ chứa nội dung.

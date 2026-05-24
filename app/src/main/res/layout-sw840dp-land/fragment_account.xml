@@ -27,9 +27,9 @@
         android:fillViewport="true"
         android:overScrollMode="never"
         android:paddingStart="48dp"
-        android:paddingTop="32dp"
+        android:paddingTop="40dp"
         android:paddingEnd="48dp"
-        android:paddingBottom="32dp"
+        android:paddingBottom="40dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -53,7 +53,7 @@
 
                 <Space
                     android:layout_width="1dp"
-                    android:layout_height="24dp" />
+                    android:layout_height="16dp" />
 
                 <View
                     android:id="@+id/btnBack"
@@ -67,13 +67,13 @@
                     android:layout_height="wrap_content"
                     android:text="Tài khoản"
                     android:textColor="#B9BDC8"
-                    android:textSize="16sp"
+                    android:textSize="24sp"
                     android:textStyle="bold" />
 
                 <FrameLayout
                     android:id="@+id/cardAvatar"
-                    android:layout_width="112dp"
-                    android:layout_height="112dp"
+                    android:layout_width="120dp"
+                    android:layout_height="120dp"
                     android:layout_marginTop="24dp"
                     android:background="@drawable/home_bg_card"
                     android:backgroundTint="#2EA9C5">
@@ -85,13 +85,13 @@
                         android:gravity="center"
                         android:text="TD"
                         android:textColor="#FFFFFF"
-                        android:textSize="38sp"
+                        android:textSize="40sp"
                         android:textStyle="bold" />
 
                     <View
                         android:id="@+id/viewOnlineDot"
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
                         android:layout_gravity="bottom|end"
                         android:background="@drawable/account_online_dot" />
                 </FrameLayout>
@@ -103,7 +103,7 @@
                     android:layout_marginTop="16dp"
                     android:text="Tiến Đạt Đinh"
                     android:textColor="#FFFFFF"
-                    android:textSize="26sp"
+                    android:textSize="28sp"
                     android:textStyle="bold" />
 
                 <TextView
@@ -113,12 +113,12 @@
                     android:layout_marginTop="8dp"
                     android:text="dinhtiendat2105@gmail.com"
                     android:textColor="#9CA3AF"
-                    android:textSize="15sp" />
+                    android:textSize="16sp" />
 
                 <LinearLayout
                     android:id="@+id/statsContainer"
                     android:layout_width="match_parent"
-                    android:layout_height="88dp"
+                    android:layout_height="104dp"
                     android:layout_marginTop="32dp"
                     android:gravity="center"
                     android:orientation="horizontal">
@@ -127,11 +127,12 @@
                         android:id="@+id/cardTasks"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:layout_marginEnd="12dp"
+                        android:layout_marginEnd="8dp"
                         android:layout_weight="1"
                         android:background="@drawable/home_bg_card"
                         android:gravity="center"
-                        android:orientation="vertical">
+                        android:orientation="vertical"
+                        android:padding="8dp">
 
                         <TextView
                             android:id="@+id/tvTasksValue"
@@ -139,16 +140,16 @@
                             android:layout_height="wrap_content"
                             android:text="24"
                             android:textColor="#FFFFFF"
-                            android:textSize="24sp"
+                            android:textSize="28sp"
                             android:textStyle="bold" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="4dp"
+                            android:layout_marginTop="8dp"
                             android:text="TASKS"
                             android:textColor="#9CA3AF"
-                            android:textSize="10sp"
+                            android:textSize="12sp"
                             android:textStyle="bold" />
                     </LinearLayout>
 
@@ -156,12 +157,13 @@
                         android:id="@+id/cardProjects"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:layout_marginStart="4dp"
-                        android:layout_marginEnd="4dp"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginEnd="8dp"
                         android:layout_weight="1"
                         android:background="@drawable/home_bg_card"
                         android:gravity="center"
-                        android:orientation="vertical">
+                        android:orientation="vertical"
+                        android:padding="8dp">
 
                         <TextView
                             android:id="@+id/tvProjectsValue"
@@ -169,16 +171,16 @@
                             android:layout_height="wrap_content"
                             android:text="12"
                             android:textColor="#FFFFFF"
-                            android:textSize="24sp"
+                            android:textSize="28sp"
                             android:textStyle="bold" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="4dp"
+                            android:layout_marginTop="8dp"
                             android:text="PROJECTS"
                             android:textColor="#9CA3AF"
-                            android:textSize="10sp"
+                            android:textSize="12sp"
                             android:textStyle="bold" />
                     </LinearLayout>
 
@@ -186,11 +188,12 @@
                         android:id="@+id/cardOnTime"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:layout_marginStart="12dp"
+                        android:layout_marginStart="8dp"
                         android:layout_weight="1"
                         android:background="@drawable/home_bg_card"
                         android:gravity="center"
-                        android:orientation="vertical">
+                        android:orientation="vertical"
+                        android:padding="8dp">
 
                         <TextView
                             android:id="@+id/tvOnTimeValue"
@@ -198,16 +201,16 @@
                             android:layout_height="wrap_content"
                             android:text="98%"
                             android:textColor="#FFFFFF"
-                            android:textSize="24sp"
+                            android:textSize="28sp"
                             android:textStyle="bold" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="4dp"
+                            android:layout_marginTop="8dp"
                             android:text="ON TIME"
                             android:textColor="#9CA3AF"
-                            android:textSize="10sp"
+                            android:textSize="12sp"
                             android:textStyle="bold" />
                     </LinearLayout>
                 </LinearLayout>
@@ -223,20 +226,20 @@
 
                 <FrameLayout
                     android:id="@+id/btnEditProfile"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
+                    android:layout_width="56dp"
+                    android:layout_height="56dp"
                     android:layout_gravity="end"
                     android:background="@drawable/home_bg_card"
                     android:backgroundTint="#171B27"
                     android:clickable="true"
                     android:focusable="true"
                     android:foreground="?attr/selectableItemBackgroundBorderless"
-                    android:padding="12dp">
+                    android:padding="16dp">
 
                     <ImageView
                         android:id="@+id/icEditProfile"
-                        android:layout_width="22dp"
-                        android:layout_height="22dp"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
                         android:layout_gravity="center"
                         android:contentDescription="Edit profile"
                         app:srcCompat="@drawable/account_ic_edit"
@@ -252,30 +255,30 @@
                     android:letterSpacing="0.16"
                     android:text="CÀI ĐẶT HỆ THỐNG"
                     android:textColor="#6B7280"
-                    android:textSize="11sp"
+                    android:textSize="12sp"
                     android:textStyle="bold" />
 
                 <LinearLayout
                     android:id="@+id/cardNotifications"
                     android:layout_width="match_parent"
-                    android:layout_height="72dp"
+                    android:layout_height="88dp"
                     android:layout_marginTop="8dp"
                     android:background="@drawable/home_bg_card"
                     android:gravity="center_vertical"
                     android:orientation="horizontal"
-                    android:paddingStart="16dp"
-                    android:paddingEnd="16dp">
+                    android:paddingStart="24dp"
+                    android:paddingEnd="24dp">
 
                     <FrameLayout
                         android:id="@+id/iconBellCard"
-                        android:layout_width="44dp"
-                        android:layout_height="44dp"
+                        android:layout_width="56dp"
+                        android:layout_height="56dp"
                         android:background="@drawable/home_bg_card"
                         android:backgroundTint="#1D2940">
 
                         <ImageView
-                            android:layout_width="22dp"
-                            android:layout_height="22dp"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
                             android:layout_gravity="center"
                             android:contentDescription="Notification"
                             app:srcCompat="@drawable/account_ic_nofication"
@@ -290,7 +293,7 @@
                         android:layout_weight="1"
                         android:text="Thông báo đẩy"
                         android:textColor="#FFFFFF"
-                        android:textSize="15sp"
+                        android:textSize="16sp"
                         android:textStyle="bold" />
 
                     <com.google.android.material.switchmaterial.SwitchMaterial
@@ -303,7 +306,7 @@
                 <LinearLayout
                     android:id="@+id/cardChangePassword"
                     android:layout_width="match_parent"
-                    android:layout_height="72dp"
+                    android:layout_height="88dp"
                     android:layout_marginTop="16dp"
                     android:background="@drawable/home_bg_card"
                     android:clickable="true"
@@ -311,19 +314,19 @@
                     android:foreground="?attr/selectableItemBackground"
                     android:gravity="center_vertical"
                     android:orientation="horizontal"
-                    android:paddingStart="16dp"
-                    android:paddingEnd="16dp">
+                    android:paddingStart="24dp"
+                    android:paddingEnd="24dp">
 
                     <FrameLayout
                         android:id="@+id/iconLockCard"
-                        android:layout_width="44dp"
-                        android:layout_height="44dp"
+                        android:layout_width="56dp"
+                        android:layout_height="56dp"
                         android:background="@drawable/home_bg_card"
                         android:backgroundTint="#1D2433">
 
                         <ImageView
-                            android:layout_width="22dp"
-                            android:layout_height="22dp"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
                             android:layout_gravity="center"
                             android:contentDescription="Lock"
                             app:srcCompat="@drawable/login_ic_lock"
@@ -338,13 +341,13 @@
                         android:layout_weight="1"
                         android:text="Đổi mật khẩu"
                         android:textColor="#FFFFFF"
-                        android:textSize="15sp"
+                        android:textSize="16sp"
                         android:textStyle="bold" />
 
                     <ImageView
                         android:id="@+id/icChevronRight"
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
                         android:contentDescription="Go"
                         android:rotation="180"
                         app:srcCompat="@drawable/ic_back"
@@ -354,7 +357,7 @@
                 <LinearLayout
                     android:id="@+id/cardLogout"
                     android:layout_width="match_parent"
-                    android:layout_height="72dp"
+                    android:layout_height="88dp"
                     android:layout_marginTop="16dp"
                     android:background="@drawable/home_bg_card"
                     android:clickable="true"
@@ -362,18 +365,18 @@
                     android:foreground="?attr/selectableItemBackground"
                     android:gravity="center_vertical"
                     android:orientation="horizontal"
-                    android:paddingStart="16dp"
-                    android:paddingEnd="16dp">
+                    android:paddingStart="24dp"
+                    android:paddingEnd="24dp">
 
                     <FrameLayout
                         android:id="@+id/iconLogoutCard"
-                        android:layout_width="44dp"
-                        android:layout_height="44dp"
+                        android:layout_width="56dp"
+                        android:layout_height="56dp"
                         android:background="@drawable/home_bg_card">
 
                         <ImageView
-                            android:layout_width="22dp"
-                            android:layout_height="22dp"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
                             android:layout_gravity="center"
                             android:contentDescription="Logout"
                             app:srcCompat="@drawable/account_logout"
@@ -388,7 +391,7 @@
                         android:layout_weight="1"
                         android:text="ĐĂNG XUẤT"
                         android:textColor="#FF4D4D"
-                        android:textSize="15sp"
+                        android:textSize="16sp"
                         android:textStyle="bold" />
                 </LinearLayout>
 

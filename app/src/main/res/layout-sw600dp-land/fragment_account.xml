@@ -86,7 +86,8 @@
                         android:text="TD"
                         android:textColor="#FFFFFF"
                         android:textSize="34sp"
-                        android:textStyle="bold" />
+                        android:textStyle="bold"
+                        android:background="@drawable/home_bg_avatar"/>
 
                     <View
                         android:id="@+id/viewOnlineDot"
