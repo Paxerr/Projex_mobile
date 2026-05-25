@@ -6,8 +6,6 @@ public class RecentItem {
     private String message;
     private String ticketCode;
     private String avatarText;
-    private boolean isRead;
-    private String createdAt;
     private String timeAgo;
     private String status;
     public RecentItem() {

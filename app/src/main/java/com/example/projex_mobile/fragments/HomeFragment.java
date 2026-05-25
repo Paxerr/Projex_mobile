@@ -7,7 +7,6 @@ import android.graphics.Rect;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -35,6 +34,9 @@ import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
+
+import org.json.JSONArray;
+import org.json.JSONException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -80,7 +82,7 @@ public class HomeFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        loadData();
+        loadQuickAccess();
     }
 
     private void initViews(View view) {
@@ -93,7 +95,6 @@ public class HomeFragment extends Fragment {
         tvProgressPercent = view.findViewById(R.id.tvProgressPercent);
         tvDoneTasks = view.findViewById(R.id.tvDoneTasks);
         tvInProgressTasks = view.findViewById(R.id.tvInProgressTasks);
-        tvTestTasks = view.findViewById(R.id.tvTestTasks);
         tvTodoTasks = view.findViewById(R.id.tvTodoTasks);
         tvRecentEmpty = view.findViewById(R.id.tvRecentEmpty);
         searchLayout = view.findViewById(R.id.searchLayout);
@@ -115,10 +116,35 @@ public class HomeFragment extends Fragment {
                 )
         );
 
-        quickAccessAdapter = new QuickAccessAdapter(quickAccessList, useVerticalQuickAccess ? 1 : 0);
-        rvQuickAccess.setAdapter(quickAccessAdapter);
+        quickAccessAdapter = new QuickAccessAdapter(quickAccessList, useVerticalQuickAccess ? 1 : 0, item -> {
+            if ("My Tasks".equals(item.getName())) {
+                requireActivity().getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.frame_container, new TaskFragment())
+                        .addToBackStack(null)
+                        .commit();
+            } else if ("Favorite".equals(item.getName())) {
+                requireActivity().getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.frame_container, new SpaceListFragment())
+                        .addToBackStack(null)
+                        .commit();
+            } else {
+                ProjectFragment projectFragment = new ProjectFragment();
+                Bundle bundle = new Bundle();
+                bundle.putInt("project_id", item.getId());
+                bundle.putString("project_name", item.getName());
+                projectFragment.setArguments(bundle);
 
+                requireActivity().getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.frame_container, projectFragment)
+                        .addToBackStack(null)
+                        .commit();
+            }
+        });
+
+        rvQuickAccess.setAdapter(quickAccessAdapter);
         rvRecentActivity.setLayoutManager(new LinearLayoutManager(requireContext()));
+        rvRecentActivity.setNestedScrollingEnabled(false);
+        rvRecentActivity.setHasFixedSize(false);
         recentAdapter = new RecentActivityAdapter(recentList);
         rvRecentActivity.setAdapter(recentAdapter);
     }
@@ -215,10 +241,29 @@ public class HomeFragment extends Fragment {
             quickAccessAdapter.notifyItemRangeRemoved(0, oldSize);
         }
 
-        quickAccessList.add(new QuickAccessItem(1, "My Tasks", R.drawable.home_ic_task, "CÁ NHÂN"));
-        quickAccessList.add(new QuickAccessItem(2, "Projects", R.drawable.ic_document, "DỰ ÁN"));
-        quickAccessList.add(new QuickAccessItem(3, "Reports", R.drawable.ic_attachment, "BÁO CÁO"));
-        quickAccessList.add(new QuickAccessItem(4, "Team", R.drawable.ic_team, "ĐỘI NHÓM"));
+        quickAccessList.add(new QuickAccessItem(991, "My Tasks", R.drawable.home_ic_task, "CÁ NHÂN"));
+
+        SharedPreferences spacePrefs = requireContext().getSharedPreferences("space_prefs", Context.MODE_PRIVATE);
+        List<Integer> favoriteIds = new ArrayList<>();
+        String favJson = spacePrefs.getString("favorite_ids", "[]");
+        try {
+            JSONArray arr = new JSONArray(favJson);
+            for (int i = 0; i < arr.length(); i++) {
+                favoriteIds.add(arr.getInt(i));
+            }
+        } catch (JSONException ignored) {}
+
+        List<QuickAccessItem> allAvailableProjects = new ArrayList<>();
+        allAvailableProjects.add(new QuickAccessItem(1, "GGshop", R.drawable.login_logo_github, "DỰ ÁN"));
+        allAvailableProjects.add(new QuickAccessItem(2, "gg_projex", R.drawable.login_logo_pj_rm_bg, "DỰ ÁN"));
+        allAvailableProjects.add(new QuickAccessItem(3, "GGweb", R.drawable.logo_library_web, "DỰ ÁN"));
+
+        for (QuickAccessItem project : allAvailableProjects) {
+            if (favoriteIds.contains(project.getId())) {
+                quickAccessList.add(project);
+            }
+        }
+
         quickAccessAdapter.notifyItemRangeInserted(0, quickAccessList.size());
     }
 
@@ -277,19 +322,17 @@ public class HomeFragment extends Fragment {
         });
     }
 
-    private void setupPieChart(int done, int inProgress, int test, int todo) {
+    private void setupPieChart(int done, int inProgress, int todo) {
         ArrayList<PieEntry> entries = new ArrayList<>();
         entries.add(new PieEntry(done, "Done"));
         entries.add(new PieEntry(inProgress, "In Progress"));
-        entries.add(new PieEntry(test, "Test"));
         entries.add(new PieEntry(todo, "To Do"));
 
         PieDataSet dataSet = new PieDataSet(entries, "");
         dataSet.setColors(
                 Color.parseColor("#0FADFF"),
                 Color.parseColor("#EFEB3B"),
-                Color.parseColor("#48FB98"),
-                Color.parseColor("#A855F7")
+                Color.parseColor("#48FB98")
         );
         dataSet.setDrawValues(false);
 
@@ -306,17 +349,15 @@ public class HomeFragment extends Fragment {
         int totalTasks = data.getMyTasks();
         int doneTasks = data.getCompletedTasks();
         int inProgress = data.getInProgressTasks();
-        int testTasks = 5;
-        int todoTasks = Math.max(totalTasks - doneTasks - inProgress - testTasks, 0);
+        int todoTasks = Math.max(totalTasks - doneTasks - inProgress, 0);
 
         double progress = totalTasks > 0 ? (doneTasks * 100.0 / totalTasks) : 0;
 
         tvProgressPercent.setText(getString(R.string.progress_percent, progress));
         tvDoneTasks.setText(getString(R.string.tasks_label, doneTasks));
         tvInProgressTasks.setText(getString(R.string.tasks_label, inProgress));
-        tvTestTasks.setText(getString(R.string.tasks_label, testTasks));
         tvTodoTasks.setText(getString(R.string.tasks_label, todoTasks));
-        setupPieChart(doneTasks, inProgress, testTasks, todoTasks);
+        setupPieChart(doneTasks, inProgress, todoTasks);
     }
 
     private void updateRecentState() {
@@ -329,23 +370,17 @@ public class HomeFragment extends Fragment {
     private void updateProgressCardMock() {
         int doneTasks = 12;
         int inProgress = 5;
-        int testTasks = 5;
         int todoTasks = 8;
 
         tvProgressPercent.setText(getString(R.string.progress_percent, 40f));
         tvDoneTasks.setText(getString(R.string.tasks_label, doneTasks));
         tvInProgressTasks.setText(getString(R.string.tasks_label, inProgress));
-        tvTestTasks.setText(getString(R.string.tasks_label, testTasks));
         tvTodoTasks.setText(getString(R.string.tasks_label, todoTasks));
-        setupPieChart(doneTasks, inProgress, testTasks, todoTasks);
+        setupPieChart(doneTasks, inProgress, todoTasks);
     }
 
     private void loadRecentMock() {
-        int oldSize = recentList.size();
         recentList.clear();
-        if (oldSize > 0) {
-            recentAdapter.notifyItemRangeRemoved(0, oldSize);
-        }
 
         RecentItem item1 = new RecentItem();
         item1.setTitle("Vẽ Sequence diagram");
@@ -355,6 +390,15 @@ public class HomeFragment extends Fragment {
         item1.setTimeAgo("2h ago");
         item1.setStatus("InProgress");
         recentList.add(item1);
+
+        RecentItem item2 = new RecentItem();
+        item2.setTitle("Vẽ UseCase");
+        item2.setMessage("TAnh updated a story");
+        item2.setTicketCode("GGSHOP-3");
+        item2.setAvatarText("TA");
+        item2.setTimeAgo("11h ago");
+        item2.setStatus("Done");
+        recentList.add(item2);
 
         RecentItem item3 = new RecentItem();
         item3.setTitle("Phân tích thiết kế");
@@ -374,7 +418,7 @@ public class HomeFragment extends Fragment {
         item4.setStatus("Todo");
         recentList.add(item4);
 
-        recentAdapter.notifyItemRangeInserted(0, recentList.size());
+        recentAdapter.notifyDataSetChanged();
         updateRecentState();
     }
 }
