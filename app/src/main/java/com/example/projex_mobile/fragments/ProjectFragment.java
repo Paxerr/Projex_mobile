@@ -57,15 +57,15 @@ public class ProjectFragment extends Fragment {
         ArrayList<PieEntry> entries = new ArrayList<>();
         entries.add(new PieEntry(40f));
         entries.add(new PieEntry(30f));
-        entries.add(new PieEntry(15f));
-        entries.add(new PieEntry(15f));
+        entries.add(new PieEntry(30f));
+
 
         PieDataSet dataSet = new PieDataSet(entries, "Status");
         dataSet.setColors(
                 Color.parseColor("#0FADFF"),
                 Color.parseColor("#EFEB3B"),
-                Color.parseColor("#48FB98"),
-                Color.parseColor("#A855F7")
+                Color.parseColor("#48FB98")
+
         );
 
         PieData data = new PieData(dataSet);

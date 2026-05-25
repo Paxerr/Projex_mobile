@@ -90,7 +90,6 @@ public class TaskFragment extends Fragment {
 
             popup.getMenu().add("Assigned");
             popup.getMenu().add("InProgress");
-            popup.getMenu().add("To Do");
 
             popup.getMenu().add("Done");
 
