@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-    File: res/layout-sw840dp-land/fragment_team.xml
+    File: res/layout-sw840dp-land/fragment_team.xml  < LAYOUT 840DP LAND
     Dùng cho TeamFragment.
     Đã bỏ CardView / Material ShapeableImageView / bottom_nav.
     HomeActivity đã có layout_bottom_nav nên Fragment này chỉ chứa nội dung.
@@ -22,12 +22,12 @@
         android:id="@+id/btn_menu"
         android:layout_width="42dp"
         android:layout_height="42dp"
-        android:layout_marginTop="24dp"
-        android:contentDescription="Menu"
+        android:layout_marginTop="48dp"
+        android:contentDescription="Quay lại Home"
         android:padding="6dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/team_activity_list"
+        app:srcCompat="@drawable/ic_back"
         app:tint="#85ADFF" />
 
     <TextView
@@ -119,7 +119,7 @@
         android:clipToPadding="false"
         android:fillViewport="false"
         android:overScrollMode="never"
-        android:paddingBottom="96dp"
+        android:paddingBottom="56dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/cl_search"
         app:layout_constraintStart_toStartOf="@+id/cl_search"

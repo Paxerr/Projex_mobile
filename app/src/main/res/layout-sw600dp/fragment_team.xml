@@ -22,12 +22,12 @@
         android:id="@+id/btn_menu"
         android:layout_width="40dp"
         android:layout_height="40dp"
-        android:layout_marginTop="32dp"
-        android:contentDescription="Menu"
+        android:layout_marginTop="68dp"
+        android:contentDescription="Quay lại Home"
         android:padding="6dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/team_activity_list"
+        app:srcCompat="@drawable/ic_back"
         app:tint="#85ADFF" />
 
     <TextView
@@ -119,7 +119,7 @@
         android:clipToPadding="false"
         android:fillViewport="false"
         android:overScrollMode="never"
-        android:paddingBottom="96dp"
+        android:paddingBottom="64dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/cl_search"
         app:layout_constraintStart_toStartOf="@+id/cl_search"

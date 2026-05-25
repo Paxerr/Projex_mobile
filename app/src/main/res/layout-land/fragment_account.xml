@@ -39,7 +39,7 @@
             android:id="@+id/contentArea"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
+            android:gravity="center_vertical"
             android:orientation="horizontal">
 
             <LinearLayout
@@ -50,6 +50,10 @@
                 android:layout_weight="1"
                 android:gravity="center_horizontal"
                 android:orientation="vertical">
+
+                <Space
+                    android:layout_width="1dp"
+                    android:layout_height="14dp" />
 
                 <View
                     android:id="@+id/btnBack"
@@ -63,7 +67,7 @@
                     android:layout_height="wrap_content"
                     android:text="Tài khoản"
                     android:textColor="#B9BDC8"
-                    android:textSize="14sp"
+                    android:textSize="24sp"
                     android:textStyle="bold" />
 
                 <FrameLayout
@@ -71,8 +75,7 @@
                     android:layout_width="80dp"
                     android:layout_height="80dp"
                     android:layout_marginTop="16dp"
-                    android:background="@drawable/home_bg_card"
-                    android:backgroundTint="#2EA9C5">
+                    android:background="@drawable/home_bg_avatar">
 
                     <TextView
                         android:id="@+id/tvAvatarText"
@@ -83,6 +86,7 @@
                         android:textColor="#FFFFFF"
                         android:textSize="30sp"
                         android:textStyle="bold" />
+
 
                     <View
                         android:id="@+id/viewOnlineDot"

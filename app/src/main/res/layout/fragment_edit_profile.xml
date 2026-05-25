@@ -14,8 +14,8 @@
 
     <View
         android:id="@+id/btnBack"
-        android:layout_width="44dp"
-        android:layout_height="44dp"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
         android:visibility="invisible"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -27,8 +27,8 @@
         android:clipToPadding="false"
         android:fillViewport="false"
         android:overScrollMode="never"
-        android:paddingTop="20dp"
-        android:paddingBottom="96dp"
+        android:paddingTop="56dp"
+        android:paddingBottom="32dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -47,23 +47,22 @@
                 android:gravity="center"
                 android:text="Chỉnh sửa hồ sơ"
                 android:textColor="#FFFFFF"
-                android:textSize="18sp"
+                android:textSize="24sp"
                 android:textStyle="bold" />
 
             <FrameLayout
                 android:id="@+id/avatarArea"
-                android:layout_width="92dp"
-                android:layout_height="92dp"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginTop="24dp">
+                android:layout_marginTop="16dp">
 
                 <FrameLayout
                     android:id="@+id/cardAvatar"
-                    android:layout_width="88dp"
-                    android:layout_height="88dp"
+                    android:layout_width="72dp"
+                    android:layout_height="72dp"
                     android:layout_gravity="center"
-                    android:background="@drawable/home_bg_card"
-                    android:backgroundTint="#161618">
+                    android:background="@drawable/home_bg_avatar">
 
                     <TextView
                         android:id="@+id/tvAvatar"
@@ -71,15 +70,15 @@
                         android:layout_height="match_parent"
                         android:gravity="center"
                         android:text="NVA"
-                        android:textColor="#2F7BFF"
-                        android:textSize="22sp"
+                        android:textColor="#FFFFFF"
+                        android:textSize="20sp"
                         android:textStyle="bold" />
                 </FrameLayout>
 
                 <FrameLayout
                     android:id="@+id/btnChangeAvatar"
-                    android:layout_width="28dp"
-                    android:layout_height="28dp"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
                     android:layout_gravity="bottom|end"
                     android:background="@drawable/home_bg_card"
                     android:backgroundTint="#2F6BFF"
@@ -88,8 +87,8 @@
                     android:foreground="?attr/selectableItemBackgroundBorderless">
 
                     <ImageView
-                        android:layout_width="14dp"
-                        android:layout_height="14dp"
+                        android:layout_width="16dp"
+                        android:layout_height="16dp"
                         android:layout_gravity="center"
                         android:contentDescription="Camera"
                         app:srcCompat="@drawable/ic_camera"
@@ -101,7 +100,7 @@
                 android:id="@+id/tvNameLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
+                android:layout_marginTop="16dp"
                 android:letterSpacing="0.18"
                 android:text="HỌ VÀ TÊN"
                 android:textColor="#5E6A7A"
@@ -111,7 +110,7 @@
             <LinearLayout
                 android:id="@+id/nameBox"
                 android:layout_width="match_parent"
-                android:layout_height="54dp"
+                android:layout_height="48dp"
                 android:layout_marginTop="8dp"
                 android:background="@drawable/home_bg_card"
                 android:gravity="center_vertical"
@@ -138,7 +137,7 @@
                 android:id="@+id/tvEmailLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="14dp"
+                android:layout_marginTop="16dp"
                 android:letterSpacing="0.18"
                 android:text="EMAIL LIÊN HỆ"
                 android:textColor="#5E6A7A"
@@ -148,7 +147,7 @@
             <LinearLayout
                 android:id="@+id/emailBox"
                 android:layout_width="match_parent"
-                android:layout_height="54dp"
+                android:layout_height="48dp"
                 android:layout_marginTop="8dp"
                 android:background="@drawable/home_bg_card"
                 android:gravity="center_vertical"
@@ -176,7 +175,7 @@
                 android:id="@+id/tvPhoneLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="14dp"
+                android:layout_marginTop="16dp"
                 android:letterSpacing="0.18"
                 android:text="SỐ ĐIỆN THOẠI"
                 android:textColor="#5E6A7A"
@@ -186,7 +185,7 @@
             <LinearLayout
                 android:id="@+id/phoneBox"
                 android:layout_width="match_parent"
-                android:layout_height="54dp"
+                android:layout_height="48dp"
                 android:layout_marginTop="8dp"
                 android:background="@drawable/home_bg_card"
                 android:gravity="center_vertical"
@@ -214,13 +213,13 @@
                 android:id="@+id/bottomButtonArea"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
+                android:layout_marginTop="16dp"
                 android:orientation="vertical">
 
                 <TextView
                     android:id="@+id/btnSave"
                     android:layout_width="match_parent"
-                    android:layout_height="52dp"
+                    android:layout_height="48dp"
                     android:background="@drawable/home_bg_card"
                     android:backgroundTint="#2F6BFF"
                     android:clickable="true"
@@ -235,8 +234,8 @@
                 <TextView
                     android:id="@+id/btnCancel"
                     android:layout_width="match_parent"
-                    android:layout_height="52dp"
-                    android:layout_marginTop="12dp"
+                    android:layout_height="48dp"
+                    android:layout_marginTop="8dp"
                     android:background="@drawable/home_bg_card"
                     android:clickable="true"
                     android:focusable="true"
