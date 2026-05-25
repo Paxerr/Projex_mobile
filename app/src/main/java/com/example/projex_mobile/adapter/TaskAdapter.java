@@ -135,15 +135,16 @@ public class TaskAdapter
         switch (status) {
 
             case "Done":
-                return Color.parseColor("#0FADFF");
+                return Color.parseColor("#800FADFF");
 
             case "Assigned":
+                return Color.parseColor("#8048FB98");
 
             case "InProgress":
-                return Color.parseColor("#EFEB3B");
+                return Color.parseColor("#80EFEB3B");
 
             case "To do":
-                return Color.parseColor("#48FB98");
+
 
             default:
                 return Color.parseColor("#FF0000");
