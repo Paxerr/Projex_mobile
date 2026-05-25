@@ -78,13 +78,18 @@
                 android:layout_weight="1" />
 
             <TextView
+                android:id="@+id/btnMore"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="4dp"
+                android:layout_marginEnd="8dp"
                 android:text="•••"
                 android:textColor="#6B7280"
                 android:textSize="20sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?attr/selectableItemBackgroundBorderless" />
+
         </LinearLayout>
 
         <TextView
@@ -92,6 +97,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="4dp"
             android:layout_marginTop="24dp"
+            android:layout_marginHorizontal="8dp"
             android:letterSpacing="0.05"
             android:text="THÁNG 3"
             android:textColor="#4B5563"
@@ -102,7 +108,8 @@
             android:id="@+id/rvNotifications"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            android:layout_marginHorizontal="8dp"
+            android:layout_marginTop="14dp"
             android:nestedScrollingEnabled="false"
             android:overScrollMode="never" />
 

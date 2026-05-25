@@ -4,7 +4,10 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.PopupMenu;
 import android.widget.TextView;
+import android.widget.Toast;
+import android.view.ContextThemeWrapper;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -21,13 +24,14 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+
 public class NotificationFragment extends Fragment {
 
     private NotificationAdapter adapter;
     private List<NotificationItem> allItems;
     private List<NotificationItem> unreadItems;
 
-    private TextView btnTatCa, btnChuaDoc;
+    private TextView btnTatCa, btnChuaDoc, btnMore;
 
     public NotificationFragment() {}
 
@@ -46,6 +50,7 @@ public class NotificationFragment extends Fragment {
         RecyclerView rvNotifications = view.findViewById(R.id.rvNotifications);
         btnTatCa = view.findViewById(R.id.btnTatCa);
         btnChuaDoc = view.findViewById(R.id.btnChuaDoc);
+        btnMore = view.findViewById(R.id.btnMore);
 
         if (allItems == null) {
             allItems = createMockData();
@@ -69,6 +74,57 @@ public class NotificationFragment extends Fragment {
             setActive(btnChuaDoc, btnTatCa);
             adapter.setData(new ArrayList<>(unreadItems));
         });
+
+        btnMore.setOnClickListener(this::showPopupMenu);
+    }
+
+    private void showPopupMenu(View anchor) {
+        ContextThemeWrapper wrapper = new ContextThemeWrapper(requireContext(), R.style.CustomPopupMenuStyle);
+        androidx.appcompat.widget.PopupMenu popupMenu = new androidx.appcompat.widget.PopupMenu(wrapper, anchor);
+        popupMenu.inflate(R.menu.menu_notification);
+        popupMenu.setOnMenuItemClickListener(item -> {
+            int id = item.getItemId();
+
+            if (id == R.id.action_mark_all_read) {
+                markAllAsRead();
+                return true;
+            }
+
+            if (id == R.id.action_delete_read) {
+                deleteReadNotifications();
+                return true;
+            }
+
+            return false;
+        });
+        popupMenu.show();
+    }
+
+    private void markAllAsRead() {
+        for (NotificationItem item : allItems) {
+            item.isUnread = false;
+        }
+
+        unreadItems = filterUnread(allItems);
+        adapter.setData(new ArrayList<>(allItems));
+        setActive(btnTatCa, btnChuaDoc);
+        Toast.makeText(requireContext(), "Đã đánh dấu tất cả là đã đọc", Toast.LENGTH_SHORT).show();
+    }
+
+    private void deleteReadNotifications() {
+        List<NotificationItem> remaining = new ArrayList<>();
+        for (NotificationItem item : allItems) {
+            if (item.isUnread) {
+                remaining.add(item);
+            }
+        }
+
+        allItems = sortUnreadFirst(remaining);
+        unreadItems = filterUnread(allItems);
+
+        adapter.setData(new ArrayList<>(allItems));
+        setActive(btnTatCa, btnChuaDoc);
+        Toast.makeText(requireContext(), "Đã xóa tất cả thông báo đã đọc", Toast.LENGTH_SHORT).show();
     }
 
     private List<NotificationItem> createMockData() {
