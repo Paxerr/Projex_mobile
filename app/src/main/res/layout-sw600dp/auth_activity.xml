@@ -2,108 +2,157 @@
 
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/Auth"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/login_bg"
-    android:id="@+id/Auth"
-    android:padding="24dp">
+    android:background="@drawable/login_bg">
 
-    <LinearLayout
-        android:id="@+id/authContent"
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/authScroll"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:padding="24dp">
+        android:fillViewport="true">
 
-        <LinearLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/authContent"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:minHeight="700dp"
+            android:paddingStart="32dp"
+            android:paddingTop="32dp"
+            android:paddingEnd="32dp"
+            android:paddingBottom="32dp">
 
-            <LinearLayout
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guideStart"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center_vertical"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.1" />
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guideEnd"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.9" />
+
+            <LinearLayout
+                android:id="@+id/logoRow"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:layout_marginRight="16dp"
-                android:layout_marginBottom="16dp">
+                android:gravity="center_vertical"
+                app:layout_constraintEnd_toStartOf="@id/guideEnd"
+                app:layout_constraintStart_toEndOf="@id/guideStart"
+                app:layout_constraintTop_toTopOf="parent">
 
                 <ImageView
-                    android:layout_width="100dp"
-                    android:layout_height="100dp"
+                    android:id="@+id/logo"
+                    android:layout_width="82dp"
+                    android:layout_height="82dp"
+                    android:adjustViewBounds="true"
+                    android:scaleType="fitCenter"
                     android:src="@drawable/login_logo_pj_rm_bg" />
 
                 <TextView
+                    android:id="@+id/txtRo"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="RO"
                     android:textColor="#FFFFFF"
-                    android:textSize="48sp"
+                    android:textSize="40sp"
                     android:textStyle="bold" />
 
                 <TextView
+                    android:id="@+id/txtJex"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="JEX"
                     android:textColor="#3B82F6"
-                    android:textSize="48sp"
+                    android:textSize="40sp"
                     android:textStyle="bold" />
+
             </LinearLayout>
 
             <TextView
-                android:layout_width="wrap_content"
+                android:id="@+id/txtWelcome"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="24dp"
                 android:text="Chào mừng trở lại!"
                 android:textColor="#FFFFFF"
-                android:textSize="32sp"
-                android:textStyle="bold" />
+                android:textSize="28sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toStartOf="@id/guideEnd"
+                app:layout_constraintStart_toEndOf="@id/guideStart"
+                app:layout_constraintTop_toBottomOf="@id/logoRow" />
 
             <TextView
-                android:layout_width="wrap_content"
+                android:id="@+id/txtDescription"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
                 android:text="Đăng nhập hoặc đăng ký để quản lý các dự án của bạn."
                 android:textColor="#9CA3AF"
-                android:textSize="24sp" />
-        </LinearLayout>
+                android:textSize="16sp"
+                app:layout_constraintEnd_toStartOf="@id/guideEnd"
+                app:layout_constraintStart_toEndOf="@id/guideStart"
+                app:layout_constraintTop_toBottomOf="@id/txtWelcome" />
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="500dp"
-            android:layout_marginTop="16dp">
-
-            <androidx.viewpager2.widget.ViewPager2
-                android:id="@+id/viewPager"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:background="@drawable/login_input_view"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent" />
-
-            <com.google.android.material.tabs.TabLayout
-                android:id="@+id/tabLayout"
-                android:layout_width="400dp"
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/authCard"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:background="@android:color/transparent"
-                android:backgroundTint="@null"
-                android:elevation="0dp"
-                android:padding="4dp"
+                android:layout_marginTop="32dp"
+                android:minHeight="500dp"
+                app:layout_constraintEnd_toStartOf="@id/guideEnd"
+                app:layout_constraintStart_toEndOf="@id/guideStart"
+                app:layout_constraintTop_toBottomOf="@id/txtDescription">
 
-                app:layout_constraintEnd_toEndOf="@id/viewPager"
-                app:layout_constraintStart_toStartOf="@id/viewPager"
-                app:layout_constraintTop_toTopOf="@id/viewPager"
+                <androidx.viewpager2.widget.ViewPager2
+                    android:id="@+id/viewPager"
+                    android:layout_width="0dp"
+                    android:layout_height="500dp"
+                    android:background="@drawable/login_input_view"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-                app:tabMode="fixed"
-                app:tabGravity="fill"
+                <com.google.android.material.tabs.TabLayout
+                    android:id="@+id/tabLayout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="60dp"
+                    android:background="@android:color/transparent"
+                    android:backgroundTint="@null"
+                    android:elevation="0dp"
+                    android:padding="4dp"
 
-                app:tabIndicator="@android:color/transparent"
-                app:tabIndicatorHeight="0dp"
-                app:tabRippleColor="@android:color/transparent"
-                app:tabSelectedTextColor="#000000"
-                app:tabTextAppearance="@style/Custom_login_tab"
-                app:tabTextColor="#939297"/>
+                    app:layout_constraintEnd_toEndOf="@id/viewPager"
+                    app:layout_constraintStart_toStartOf="@id/viewPager"
+                    app:layout_constraintTop_toTopOf="@id/viewPager"
+
+                    app:tabMode="scrollable"
+                    app:tabGravity="center"
+                    app:tabMinWidth="0dp"
+                    app:tabMaxWidth="0dp"
+                    app:tabPaddingStart="24dp"
+                    app:tabPaddingEnd="24dp"
+
+                    app:tabIndicator="@android:color/transparent"
+                    app:tabIndicatorHeight="0dp"
+                    app:tabIndicatorAnimationDuration="0"
+                    app:tabRippleColor="@android:color/transparent"
+
+                    app:tabSelectedTextColor="#000000"
+                    app:tabTextAppearance="@style/Custom_login_tab"
+                    app:tabTextColor="#939297" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
         </androidx.constraintlayout.widget.ConstraintLayout>
-    </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/authOverlayContainer"
