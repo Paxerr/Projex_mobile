@@ -8,11 +8,9 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-
-
     android:paddingStart="16dp"
+    android:paddingTop="18dp"
     android:paddingEnd="16dp"
-    android:paddingTop="32dp"
     android:paddingBottom="24dp">
 
     <LinearLayout
@@ -26,9 +24,9 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="8dp"
-            android:layout_marginBottom="8dp"
             android:layout_weight="1"
-            android:paddingLeft="2dp"
+            android:layout_marginTop="3dp"
+            android:paddingLeft="4dp"
             android:text="Task"
             android:textColor="#FFFFFF"
             android:textSize="24sp"
@@ -43,19 +41,21 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingTop="32dp"
+                android:paddingTop="16dp"
                 android:orientation="vertical">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="16dp"
+                    android:layout_marginHorizontal="8dp"
                     android:orientation="vertical">
 
                     
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:paddingLeft="4dp"
                         android:text="Quản lý hiệu quả các nhiệm vụ cá nhân"
                         android:textColor="#ABABAB"
                         android:textSize="16sp"
@@ -75,13 +75,15 @@
                         <LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:orientation="horizontal">
+                            android:orientation="horizontal"
+                            android:layout_marginTop="4dp">
 
                             <LinearLayout
+                                android:id="@+id/btnAllTask"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:background="@drawable/pro_background"
-                                android:paddingVertical="11dp"
+                                android:paddingVertical="12dp"
                                 android:paddingHorizontal="16dp"
                                 android:layout_marginEnd="12dp"
                                 android:orientation="horizontal"
@@ -104,29 +106,29 @@
 
                             <LinearLayout
                                 android:id="@+id/btnStatus"
-                                android:layout_width="wrap_content"
+                                android:layout_width="127dp"
                                 android:layout_height="wrap_content"
-                                android:background="@drawable/pro_background"
-                                android:paddingVertical="12dp"
-                                android:paddingHorizontal="26dp"
                                 android:layout_marginEnd="12dp"
-                                android:orientation="horizontal"
+                                android:background="@drawable/pro_background"
+                                android:clickable="true"
                                 android:gravity="center_vertical"
-                                android:clickable="true">
+                                android:orientation="horizontal"
+                                android:paddingHorizontal="26dp"
+                                android:paddingVertical="12dp">
 
                                 <TextView
                                     android:id="@+id/textStatus"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
+                                    android:layout_marginEnd="8dp"
                                     android:text="Trạng thái"
                                     android:textColor="#FFFFFF"
-                                    android:textSize="12sp"
-                                    android:layout_marginEnd="8dp"/>
+                                    android:textSize="12sp" />
 
                                 <ImageView
                                     android:layout_width="15dp"
                                     android:layout_height="14dp"
-                                    android:src="@drawable/ic_drop"/>
+                                    android:src="@drawable/ic_drop" />
                             </LinearLayout>
 
                         </LinearLayout>
@@ -136,6 +138,7 @@
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rvTask"
+                    android:layout_marginHorizontal="8dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"/>
 
