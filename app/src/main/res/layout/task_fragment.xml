@@ -83,7 +83,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:background="@drawable/pro_background"
-                                android:paddingVertical="11dp"
+                                android:paddingVertical="12dp"
                                 android:paddingHorizontal="16dp"
                                 android:layout_marginEnd="12dp"
                                 android:orientation="horizontal"
@@ -106,29 +106,29 @@
 
                             <LinearLayout
                                 android:id="@+id/btnStatus"
-                                android:layout_width="wrap_content"
+                                android:layout_width="127dp"
                                 android:layout_height="wrap_content"
-                                android:background="@drawable/pro_background"
-                                android:paddingVertical="12dp"
-                                android:paddingHorizontal="26dp"
                                 android:layout_marginEnd="12dp"
-                                android:orientation="horizontal"
+                                android:background="@drawable/pro_background"
+                                android:clickable="true"
                                 android:gravity="center_vertical"
-                                android:clickable="true">
+                                android:orientation="horizontal"
+                                android:paddingHorizontal="26dp"
+                                android:paddingVertical="12dp">
 
                                 <TextView
                                     android:id="@+id/textStatus"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
+                                    android:layout_marginEnd="8dp"
                                     android:text="Trạng thái"
                                     android:textColor="#FFFFFF"
-                                    android:textSize="12sp"
-                                    android:layout_marginEnd="8dp"/>
+                                    android:textSize="12sp" />
 
                                 <ImageView
                                     android:layout_width="15dp"
                                     android:layout_height="14dp"
-                                    android:src="@drawable/ic_drop"/>
+                                    android:src="@drawable/ic_drop" />
                             </LinearLayout>
 
                         </LinearLayout>

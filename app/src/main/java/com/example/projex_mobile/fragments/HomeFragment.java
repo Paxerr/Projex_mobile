@@ -88,7 +88,7 @@ public class HomeFragment extends Fragment {
         rvQuickAccess = view.findViewById(R.id.rvQuickAccess);
         rvRecentActivity = view.findViewById(R.id.rvRecentActivity);
         recentLabel = view.findViewById(R.id.recentLabel);
-        quickAccessSection = view.findViewById(R.id.quickAccessSection);
+        quickAccessSection = view.findViewById(R.id.quickAccessSession);
         pieChart = view.findViewById(R.id.pieChart);
         tvProgressPercent = view.findViewById(R.id.tvProgressPercent);
         tvDoneTasks = view.findViewById(R.id.tvDoneTasks);
