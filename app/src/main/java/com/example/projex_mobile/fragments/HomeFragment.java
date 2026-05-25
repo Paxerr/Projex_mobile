@@ -1,13 +1,10 @@
 package com.example.projex_mobile.fragments;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.GestureDetector;
@@ -25,7 +22,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.projex_mobile.R;
-
 import com.example.projex_mobile.adapter.QuickAccessAdapter;
 import com.example.projex_mobile.adapter.RecentActivityAdapter;
 import com.example.projex_mobile.api.ApiService;
@@ -50,10 +46,11 @@ import retrofit2.Response;
 public class HomeFragment extends Fragment {
 
     private TextView tvUserName, tvProgressPercent, tvDoneTasks, tvInProgressTasks, tvTestTasks, tvTodoTasks;
-    private TextView tvRecentEmpty;
+    private TextView tvRecentEmpty, tvViewAll;
     private RecyclerView rvQuickAccess, rvRecentActivity;
     private PieChart pieChart;
     private View recentLabel;
+    private View quickAccessSection;
     private TextInputLayout searchLayout;
     private TextInputEditText edtSearch;
 
@@ -63,20 +60,7 @@ public class HomeFragment extends Fragment {
     private final List<RecentItem> recentList = new ArrayList<>();
     private String token;
     private static final boolean IS_MOCK_MODE = true;
-
-    private final Handler handler = new Handler(Looper.getMainLooper());
-    private final Runnable refreshRunnable = new Runnable() {
-        @Override
-        public void run() {
-            if (IS_MOCK_MODE) {
-                updateProgressCardMock();
-            } else {
-                loadDashboardOverview();
-                loadRecentActivities();
-            }
-            handler.postDelayed(this, 5000);
-        }
-    };
+    private boolean isQuickAccessExpanded = true;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -89,6 +73,7 @@ public class HomeFragment extends Fragment {
         initViews(view);
         setupSearchBar(view);
         setupRecyclerViews();
+        setupQuickAccessToggle();
         loadData();
     }
 
@@ -98,17 +83,12 @@ public class HomeFragment extends Fragment {
         loadData();
     }
 
-    @Override
-    public void onPause() {
-        super.onPause();
-        handler.removeCallbacksAndMessages(null);
-    }
-
     private void initViews(View view) {
         tvUserName = view.findViewById(R.id.tvUserName);
         rvQuickAccess = view.findViewById(R.id.rvQuickAccess);
         rvRecentActivity = view.findViewById(R.id.rvRecentActivity);
         recentLabel = view.findViewById(R.id.recentLabel);
+        quickAccessSection = view.findViewById(R.id.quickAccessSection);
         pieChart = view.findViewById(R.id.pieChart);
         tvProgressPercent = view.findViewById(R.id.tvProgressPercent);
         tvDoneTasks = view.findViewById(R.id.tvDoneTasks);
@@ -118,12 +98,12 @@ public class HomeFragment extends Fragment {
         tvRecentEmpty = view.findViewById(R.id.tvRecentEmpty);
         searchLayout = view.findViewById(R.id.searchLayout);
         edtSearch = view.findViewById(R.id.edtSearch);
+        tvViewAll = view.findViewById(R.id.tvViewAll);
     }
 
     private void setupRecyclerViews() {
         int orientation = getResources().getConfiguration().orientation;
         int swDp = getResources().getConfiguration().smallestScreenWidthDp;
-
         boolean isTablet = swDp >= 600;
         boolean useVerticalQuickAccess = isTablet && orientation == android.content.res.Configuration.ORIENTATION_LANDSCAPE;
 
@@ -137,8 +117,6 @@ public class HomeFragment extends Fragment {
 
         quickAccessAdapter = new QuickAccessAdapter(quickAccessList, useVerticalQuickAccess ? 1 : 0);
         rvQuickAccess.setAdapter(quickAccessAdapter);
-
-        // THÊM MỚI: Bấm vào khung Team trong QuickAccess thì mở TeamActivity
         setupQuickAccessTeamClick();
 
         rvRecentActivity.setLayoutManager(new LinearLayoutManager(requireContext()));
@@ -146,13 +124,29 @@ public class HomeFragment extends Fragment {
         rvRecentActivity.setAdapter(recentAdapter);
     }
 
-    // THÊM MỚI: Chỉ bắt click item Team, không sửa QuickAccessAdapter
+    private void setupQuickAccessToggle() {
+        updateQuickAccessState();
+        tvViewAll.setOnClickListener(v -> {
+            isQuickAccessExpanded = !isQuickAccessExpanded;
+            updateQuickAccessState();
+        });
+    }
+
+    private void updateQuickAccessState() {
+        tvViewAll.setText("XEM TẤT CẢ");
+        tvViewAll.setTextColor(Color.parseColor(isQuickAccessExpanded ? "#85ADFF" : "#6B7280"));
+        rvQuickAccess.setVisibility(isQuickAccessExpanded ? View.VISIBLE : View.GONE);
+        if (quickAccessSection != null) {
+            quickAccessSection.requestLayout();
+        }
+    }
+
     private void setupQuickAccessTeamClick() {
         GestureDetector gestureDetector = new GestureDetector(
                 requireContext(),
                 new GestureDetector.SimpleOnGestureListener() {
                     @Override
-                    public boolean onSingleTapUp(MotionEvent e) {
+                    public boolean onSingleTapUp(@NonNull MotionEvent e) {
                         return true;
                     }
                 }
@@ -162,17 +156,13 @@ public class HomeFragment extends Fragment {
             @Override
             public boolean onInterceptTouchEvent(@NonNull RecyclerView rv, @NonNull MotionEvent e) {
                 View child = rv.findChildViewUnder(e.getX(), e.getY());
-
                 if (child != null && gestureDetector.onTouchEvent(e)) {
                     int position = rv.getChildAdapterPosition(child);
-
-                    // Team đang là item thứ 4 trong quickAccessList, tức position = 3
                     if (position == 3) {
                         openTeamFragment();
                         return true;
                     }
                 }
-
                 return false;
             }
         });
@@ -197,7 +187,6 @@ public class HomeFragment extends Fragment {
         String userName = prefs.getString("user_name", "David");
 
         tvUserName.setText(userName);
-
         loadQuickAccess();
         updateProgressCardMock();
 
@@ -407,15 +396,6 @@ public class HomeFragment extends Fragment {
         item1.setTimeAgo("2h ago");
         item1.setStatus("InProgress");
         recentList.add(item1);
-
-        RecentItem item2 = new RecentItem();
-        item2.setTitle("Vẽ UseCase");
-        item2.setMessage("TAnh updated a story");
-        item2.setTicketCode("GGSHOP-3");
-        item2.setAvatarText("TA");
-        item2.setTimeAgo("11h ago");
-        item2.setStatus("Test");
-        recentList.add(item2);
 
         RecentItem item3 = new RecentItem();
         item3.setTitle("Phân tích thiết kế");
