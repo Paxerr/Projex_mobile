@@ -21,7 +21,7 @@
 
     <androidx.core.widget.NestedScrollView
         android:id="@+id/accountScrollView"
-        android:layout_width="680dp"
+        android:layout_width="840dp"
         android:layout_height="0dp"
         android:clipToPadding="false"
         android:fillViewport="false"
