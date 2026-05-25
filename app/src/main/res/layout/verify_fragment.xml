@@ -1,31 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/VerifyOTP"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/login_bg"
     android:fillViewport="true">
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/verifyContent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="24dp">
+        android:minHeight="640dp"
+        android:paddingStart="24dp"
+        android:paddingTop="32dp"
+        android:paddingEnd="24dp"
+        android:paddingBottom="32dp">
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:id="@+id/logoRow"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
             android:gravity="center_vertical"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
             <ImageView
-                android:layout_width="70dp"
-                android:layout_height="70dp"
+                android:id="@+id/logo"
+                android:layout_width="64dp"
+                android:layout_height="64dp"
+                android:adjustViewBounds="true"
+                android:scaleType="fitCenter"
                 android:src="@drawable/login_logo_pj_rm_bg" />
 
             <TextView
+                android:id="@+id/txtRo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="RO"
@@ -34,124 +47,147 @@
                 android:textStyle="bold" />
 
             <TextView
+                android:id="@+id/txtJex"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="JEX"
                 android:textColor="#3B82F6"
                 android:textSize="34sp"
                 android:textStyle="bold" />
+
         </LinearLayout>
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="Mã xác thực"
-            android:textColor="#FFFFFF"
-            android:textSize="24sp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Nhập mã xác thực được gửi đến hòm thư email."
-            android:textColor="#9CA3AF"
-            android:textSize="16sp" />
-
-        <!-- OTP BOXES -->
-        <LinearLayout
-            android:layout_width="match_parent"
+            android:id="@+id/txtTitle"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
-            android:gravity="center"
-            android:orientation="horizontal">
+            android:text="Mã xác thực"
+            android:textColor="#FFFFFF"
+            android:textSize="26sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/logoRow" />
+
+        <TextView
+            android:id="@+id/txtSubtitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="Nhập mã xác thực được gửi đến hòm thư email."
+            android:textColor="#9CA3AF"
+            android:textSize="15sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/txtTitle" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/otpContainer"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/txtSubtitle">
 
             <EditText
                 android:id="@+id/otp1"
                 android:layout_width="0dp"
-                android:layout_height="56dp"
-                android:layout_marginEnd="8dp"
-                android:layout_weight="1"
+                android:layout_height="58dp"
                 android:background="@drawable/login_input_text"
                 android:gravity="center"
                 android:inputType="number"
                 android:maxLength="1"
                 android:textColor="#FFFFFF"
-                android:textSize="22sp" />
+                android:textSize="22sp"
+
+                app:layout_constraintWidth_percent="0.22"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <EditText
                 android:id="@+id/otp2"
                 android:layout_width="0dp"
-                android:layout_height="56dp"
-                android:layout_marginEnd="8dp"
-                android:layout_weight="1"
+                android:layout_height="58dp"
                 android:background="@drawable/login_input_text"
                 android:gravity="center"
                 android:inputType="number"
                 android:maxLength="1"
                 android:textColor="#FFFFFF"
-                android:textSize="22sp" />
+                android:textSize="22sp"
+
+                app:layout_constraintWidth_percent="0.22"
+                app:layout_constraintStart_toEndOf="@id/otp1"
+                app:layout_constraintEnd_toStartOf="@id/otp3"
+                app:layout_constraintTop_toTopOf="@id/otp1"
+                android:layout_marginHorizontal="6dp" />
 
             <EditText
                 android:id="@+id/otp3"
                 android:layout_width="0dp"
-                android:layout_height="56dp"
-                android:layout_marginEnd="8dp"
-                android:layout_weight="1"
+                android:layout_height="58dp"
                 android:background="@drawable/login_input_text"
                 android:gravity="center"
                 android:inputType="number"
                 android:maxLength="1"
                 android:textColor="#FFFFFF"
-                android:textSize="22sp" />
+                android:textSize="22sp"
+
+                app:layout_constraintWidth_percent="0.22"
+                app:layout_constraintStart_toEndOf="@id/otp2"
+                app:layout_constraintEnd_toStartOf="@id/otp4"
+                app:layout_constraintTop_toTopOf="@id/otp1"
+                android:layout_marginHorizontal="6dp" />
 
             <EditText
                 android:id="@+id/otp4"
                 android:layout_width="0dp"
-                android:layout_height="56dp"
-                android:layout_weight="1"
+                android:layout_height="58dp"
                 android:background="@drawable/login_input_text"
                 android:gravity="center"
                 android:inputType="number"
                 android:maxLength="1"
                 android:textColor="#FFFFFF"
-                android:textSize="22sp" />
+                android:textSize="22sp"
 
-        </LinearLayout>
+                app:layout_constraintWidth_percent="0.22"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/otp1" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:orientation="horizontal">
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <Button
-                android:id="@+id/btnBack"
-                android:layout_width="0dp"
-                android:layout_height="56dp"
-                android:layout_gravity="center"
-                android:layout_weight="1"
-                android:background="@drawable/login_bg_btn_register"
-                android:text="Quay Lại"
-                android:textAllCaps="false"
-                android:textColor="#FFFFFF"
-                android:textSize="16sp"
-                app:backgroundTint="@null" />
+        <Button
+            android:id="@+id/btnBack"
+            android:layout_width="0dp"
+            android:layout_height="56dp"
+            android:layout_marginTop="32dp"
+            android:layout_marginEnd="8dp"
+            android:background="@drawable/login_bg_btn_register"
+            android:text="Quay lại"
+            android:textAllCaps="false"
+            android:textColor="#FFFFFF"
+            android:textSize="16sp"
+            app:backgroundTint="@null"
+            app:layout_constraintEnd_toStartOf="@id/btnVerify"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/otpContainer" />
 
-            <Button
-                android:id="@+id/btnVerify"
-                android:layout_width="0dp"
-                android:layout_height="56dp"
-                android:layout_gravity="center"
-                android:layout_marginStart="16dp"
-                android:layout_weight="1"
-                android:background="@drawable/login_bg_btn_login"
-                android:text="Xác Thực"
-                android:textAllCaps="false"
-                android:textColor="#FFFFFF"
-                android:textSize="16sp"
-                app:backgroundTint="@null" />
+        <Button
+            android:id="@+id/btnVerify"
+            android:layout_width="0dp"
+            android:layout_height="56dp"
+            android:layout_marginStart="8dp"
+            android:background="@drawable/login_bg_btn_login"
+            android:text="Xác thực"
+            android:textAllCaps="false"
+            android:textColor="#FFFFFF"
+            android:textSize="16sp"
+            app:backgroundTint="@null"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/btnBack"
+            app:layout_constraintTop_toTopOf="@id/btnBack" />
 
-        </LinearLayout>
-    </LinearLayout>
-</ScrollView>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.core.widget.NestedScrollView>
