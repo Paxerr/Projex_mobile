@@ -18,15 +18,21 @@ import java.util.List;
 
 public class QuickAccessAdapter extends RecyclerView.Adapter<QuickAccessAdapter.ViewHolder> {
 
+    public interface OnItemClickListener {
+        void onItemClick(QuickAccessItem item);
+    }
+
     private static final int TYPE_PORTRAIT = 0;
     private static final int TYPE_LANDSCAPE = 1;
 
     private final List<QuickAccessItem> items;
     private final int layoutMode;
+    private final OnItemClickListener listener;
 
-    public QuickAccessAdapter(List<QuickAccessItem> items, int layoutMode) {
+    public QuickAccessAdapter(List<QuickAccessItem> items, int layoutMode, OnItemClickListener listener) {
         this.items = items;
         this.layoutMode = layoutMode;
+        this.listener = listener;
     }
 
     @Override
@@ -54,26 +60,21 @@ public class QuickAccessAdapter extends RecyclerView.Adapter<QuickAccessAdapter.
         holder.tvName.setText(item.getName());
         holder.tvLabel.setText(item.getLabel());
 
-        int tintColor;
         switch (item.getName()) {
             case "My Tasks":
-                tintColor = Color.parseColor("#4A80FF");
+                holder.ivIcon.setImageTintList(ColorStateList.valueOf(Color.parseColor("#4A80FF")));
                 break;
-            case "Projects":
-                tintColor = Color.parseColor("#FFECB3");
-                break;
-            case "Reports":
-                tintColor = Color.parseColor("#7C4DFF");
-                break;
-            case "Team":
-                tintColor = Color.parseColor("#4ECDC4");
-                break;
+
             default:
-                tintColor = Color.parseColor("#4A80FF");
+                holder.ivIcon.setImageTintList(null);
                 break;
         }
 
-        holder.ivIcon.setImageTintList(ColorStateList.valueOf(tintColor));
+        holder.itemView.setOnClickListener(v -> {
+            if (listener != null) {
+                listener.onItemClick(item);
+            }
+        });
     }
 
     @Override

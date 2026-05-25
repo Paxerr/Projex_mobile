@@ -67,7 +67,6 @@ public class RecentActivityAdapter extends RecyclerView.Adapter<RecentActivityAd
 
     private int getStatusColor(String status) {
         if ("InProgress".equalsIgnoreCase(status)) return Color.parseColor("#F4B740");
-        if ("Test".equalsIgnoreCase(status)) return Color.parseColor("#A855F7");
         if ("Done".equalsIgnoreCase(status)) return Color.parseColor("#0FADFF");
         if ("ToDo".equalsIgnoreCase(status)) return Color.parseColor("#22C55E");
         return Color.parseColor("#6B7280");
