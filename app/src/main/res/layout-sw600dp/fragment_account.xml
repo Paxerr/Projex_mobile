@@ -21,7 +21,7 @@
 
     <androidx.core.widget.NestedScrollView
         android:id="@+id/accountScrollView"
-        android:layout_width="700dp"
+        android:layout_width="540dp"
         android:layout_height="0dp"
         android:clipToPadding="false"
         android:fillViewport="false"
@@ -35,8 +35,8 @@
             android:id="@+id/contentArea"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingTop="96dp"
-            android:paddingBottom="32dp">
+            android:paddingTop="32dp"
+            android:paddingBottom="120dp">
 
             <View
                 android:id="@+id/btnBack"

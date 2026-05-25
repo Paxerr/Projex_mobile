@@ -117,7 +117,6 @@ public class HomeFragment extends Fragment {
 
         quickAccessAdapter = new QuickAccessAdapter(quickAccessList, useVerticalQuickAccess ? 1 : 0);
         rvQuickAccess.setAdapter(quickAccessAdapter);
-        setupQuickAccessTeamClick();
 
         rvRecentActivity.setLayoutManager(new LinearLayoutManager(requireContext()));
         recentAdapter = new RecentActivityAdapter(recentList);
@@ -138,46 +137,6 @@ public class HomeFragment extends Fragment {
         rvQuickAccess.setVisibility(isQuickAccessExpanded ? View.VISIBLE : View.GONE);
         if (quickAccessSection != null) {
             quickAccessSection.requestLayout();
-        }
-    }
-
-    private void setupQuickAccessTeamClick() {
-        GestureDetector gestureDetector = new GestureDetector(
-                requireContext(),
-                new GestureDetector.SimpleOnGestureListener() {
-                    @Override
-                    public boolean onSingleTapUp(@NonNull MotionEvent e) {
-                        return true;
-                    }
-                }
-        );
-
-        rvQuickAccess.addOnItemTouchListener(new RecyclerView.SimpleOnItemTouchListener() {
-            @Override
-            public boolean onInterceptTouchEvent(@NonNull RecyclerView rv, @NonNull MotionEvent e) {
-                View child = rv.findChildViewUnder(e.getX(), e.getY());
-                if (child != null && gestureDetector.onTouchEvent(e)) {
-                    int position = rv.getChildAdapterPosition(child);
-                    if (position == 3) {
-                        openTeamFragment();
-                        return true;
-                    }
-                }
-                return false;
-            }
-        });
-    }
-
-    private void openTeamFragment() {
-        try {
-            requireActivity()
-                    .getSupportFragmentManager()
-                    .beginTransaction()
-                    .replace(R.id.frame_container, new TeamFragment())
-                    .addToBackStack("TeamFragment")
-                    .commit();
-        } catch (Exception e) {
-            Toast.makeText(requireContext(), "Không mở được trang Team", Toast.LENGTH_SHORT).show();
         }
     }
 
