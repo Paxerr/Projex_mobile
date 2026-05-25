@@ -68,7 +68,7 @@ public class ProTaskFragment extends Fragment {
 
             PopupMenu popup = new PopupMenu(requireContext(), btnStatus);
 
-            popup.getMenu().add("TO DO");
+            popup.getMenu().add("Assigned");
             popup.getMenu().add("In Progress");
             popup.getMenu().add("Done");
 
@@ -79,7 +79,7 @@ public class ProTaskFragment extends Fragment {
                 switch (item.getTitle().toString()) {
 
                     case "TO DO":
-                        status.setText("TO DO");
+                        status.setText("Assigned");
                         break;
 
                     case "In Progress":
