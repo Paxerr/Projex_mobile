@@ -2,6 +2,7 @@ package com.example.projex_mobile.api;
 
 import com.example.projex_mobile.objects.DashboardOverview;
 import com.example.projex_mobile.objects.RecentItem;
+import com.example.projex_mobile.objects.TaskResponse;
 import com.google.gson.JsonObject;
 import java.util.List;
 import java.util.Map;
@@ -24,4 +25,8 @@ public interface ApiService {
     @GET("api/dashboard/my-tasks")
     Call<List<RecentItem>> getMyTasks(@Header("Authorization") String token);
 
+    @GET("api/tasks/assigned")
+    Call<TaskResponse> getAssignedTasks(
+            @Header("Authorization") String token
+    );
 }

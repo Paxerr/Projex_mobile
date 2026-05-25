@@ -1,15 +1,26 @@
 package com.example.projex_mobile.objects;
 
+import com.google.gson.annotations.SerializedName;
+
 // Project.java
 public class Project {
+    @SerializedName("id")
     private int Id;
+    @SerializedName("name")
     private String Name;
+    @SerializedName("description")
     private String Description;
+    @SerializedName("ownerId")
     private int OwnerId;
+    @SerializedName("status")
     private String Status;
+    @SerializedName("startDate")
     private String StartDate;
+    @SerializedName("endDate")
     private String EndDate;
+    @SerializedName("createdAt")
     private String CreatedAt;
+    @SerializedName("updatedAt")
     private String UpdatedAt;
 
     public Project() {}
