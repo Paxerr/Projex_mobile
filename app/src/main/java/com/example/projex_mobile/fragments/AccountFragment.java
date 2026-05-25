@@ -16,7 +16,6 @@ import androidx.fragment.app.Fragment;
 
 import com.example.projex_mobile.AuthActivity;
 import com.example.projex_mobile.R;
-import com.example.projex_mobile.fragments.AuthFragment.RePasswordFragment;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 
 import java.util.Locale;
@@ -171,8 +170,8 @@ public class AccountFragment extends Fragment {
             requireActivity()
                     .getSupportFragmentManager()
                     .beginTransaction()
-                    .replace(parentView.getId(), new RePasswordFragment())
-                    .addToBackStack("RePasswordFragment")
+                    .replace(parentView.getId(), new ResetPasswordFragment())
+                    .addToBackStack("ResetPasswordFragment")
                     .commit();
 
         } catch (Exception e) {
