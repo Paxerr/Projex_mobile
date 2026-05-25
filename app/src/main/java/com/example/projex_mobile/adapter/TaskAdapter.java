@@ -1,12 +1,12 @@
 package com.example.projex_mobile.adapter;
 
+import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.projex_mobile.R;
@@ -14,7 +14,8 @@ import com.example.projex_mobile.objects.Task;
 
 import java.util.List;
 
-public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
+public class TaskAdapter
+        extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
 
     private List<Task> list;
 
@@ -22,67 +23,137 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
         this.list = list;
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder
+            extends RecyclerView.ViewHolder {
 
-        TextView txtTitle, txtStatus;
+        TextView txtTitle;
+        TextView txtStatus;
+        TextView txtProjectName;
 
-        public ViewHolder(@NonNull View itemView) {
+        public ViewHolder(View itemView) {
             super(itemView);
 
-            txtTitle = itemView.findViewById(R.id.txtTitle);
-            txtStatus = itemView.findViewById(R.id.txtStatus);
+            txtTitle =
+                    itemView.findViewById(R.id.txtTitle);
+
+            txtStatus =
+                    itemView.findViewById(R.id.txtStatus);
+
+            txtProjectName =
+                    itemView.findViewById(
+                            R.id.txtProjectName
+                    );
         }
     }
 
-    @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(
+            ViewGroup parent,
+            int viewType
+    ) {
 
-        View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_task, parent, false);
+        View view = LayoutInflater
+                .from(parent.getContext())
+                .inflate(
+                        R.layout.item_task,
+                        parent,
+                        false
+                );
 
         return new ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+    public void onBindViewHolder(
+            ViewHolder holder,
+            int position
+    ) {
+
+        if (list == null
+                || position >= list.size()) {
+            return;
+        }
 
         Task task = list.get(position);
 
-        // set dữ liệu
-        holder.txtTitle.setText(task.getTitle());
-        holder.txtStatus.setText(task.getStatus());
+        if (task == null) {
+            return;
+        }
 
-        // đổi màu status
-        String status = task.getStatus();
+        holder.txtTitle.setText(
+                task.getTitle() != null
+                        ? task.getTitle()
+                        : "No Title"
+        );
+
+        holder.txtStatus.setText(
+                task.getStatus() != null
+                        ? task.getStatus()
+                        : "Unknown"
+        );
+
+        if (task.getProject() != null
+                && task.getProject().getName() != null) {
+
+            holder.txtProjectName.setText(
+                    task.getProject().getName()
+
+            );
+            holder.txtProjectName.setTextColor(Color.parseColor("#80FFFFFF"));
+
+
+
+        } else {
+
+            holder.txtProjectName.setText(
+                    "No Project"
+            );
+        }
+
+        // Giữ nguyên màu text
+        holder.txtStatus.setTextColor(Color.WHITE);
+
+        // Đổi màu ô chứa status
+        holder.txtStatus.setBackgroundTintList(
+                ColorStateList.valueOf(
+                        getStatusBackgroundColor(
+                                task.getStatus()
+                        )
+                )
+        );
+    }
+
+    // Hàm đổi màu background status
+    private int getStatusBackgroundColor(
+            String status
+    ) {
 
         if (status == null) {
-            holder.txtStatus.setTextColor(Color.GRAY);
-            return;
+            return Color.parseColor("#6B7280");
         }
 
         switch (status) {
 
             case "Done":
-                holder.txtStatus.setTextColor(Color.GREEN);
-                break;
+                return Color.parseColor("#0FADFF");
+
+            case "Assigned":
 
             case "InProgress":
-                holder.txtStatus.setTextColor(Color.YELLOW);
-                break;
+                return Color.parseColor("#EFEB3B");
 
-            case "Pending":
-                holder.txtStatus.setTextColor(Color.RED);
-                break;
+            case "To do":
+                return Color.parseColor("#48FB98");
 
             default:
-                holder.txtStatus.setTextColor(Color.GRAY);
-                break;
+                return Color.parseColor("#FF0000");
         }
+
     }
 
     @Override
     public int getItemCount() {
-        return list != null ? list.size() : 0;
+
+        return list == null ? 0 : list.size();
     }
 }

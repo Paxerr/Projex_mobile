@@ -1,9 +1,15 @@
 package com.example.projex_mobile.fragments;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.TextView;
@@ -14,15 +20,36 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.projex_mobile.R;
 import com.example.projex_mobile.adapter.TaskAdapter;
+import com.example.projex_mobile.api.ApiService;
+import com.example.projex_mobile.api.RetrofitClient;
 import com.example.projex_mobile.objects.Task;
+import com.example.projex_mobile.objects.TaskResponse;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class TaskFragment extends Fragment {
 
-    public TaskFragment() {
+    private RecyclerView rvTask;
 
+    private TaskAdapter adapter;
+
+    private List<Task> originalList =
+            new ArrayList<>();
+
+    private List<Task> filteredList =
+            new ArrayList<>();
+
+    private String selectedStatus = "All";
+
+    private EditText edtSearch;
+
+
+    public TaskFragment() {
     }
 
     @Override
@@ -36,10 +63,23 @@ public class TaskFragment extends Fragment {
                 false
         );
 
+        rvTask = view.findViewById(R.id.rvTask);
 
+        rvTask.setLayoutManager(
+                new LinearLayoutManager(requireContext())
+        );
 
-        LinearLayout btnStatus =
-                view.findViewById(R.id.btnStatus);
+        adapter =
+                new TaskAdapter(filteredList);
+
+        rvTask.setAdapter(adapter);
+
+        edtSearch = view.findViewById(R.id.edtSearch);
+        LinearLayout btnAllTask = view.findViewById(R.id.btnAllTask);
+
+        LinearLayout btnStatus = view.findViewById(R.id.btnStatus);
+
+        TextView textStatus = view.findViewById(R.id.textStatus);
 
         btnStatus.setOnClickListener(v -> {
 
@@ -47,69 +87,157 @@ public class TaskFragment extends Fragment {
                     new PopupMenu(requireContext(),
                             btnStatus);
 
-            popup.getMenu().add("TO DO");
-            popup.getMenu().add("In Progress");
-            popup.getMenu().add("Done");
 
-            TextView status =
-                    view.findViewById(R.id.textStatus);
+            popup.getMenu().add("Assigned");
+            popup.getMenu().add("InProgress");
+            popup.getMenu().add("To Do");
+
+            popup.getMenu().add("Done");
 
             popup.setOnMenuItemClickListener(item -> {
 
-                switch (item.getTitle().toString()) {
+                selectedStatus =
+                        item.getTitle().toString();
 
-                    case "TO DO":
+                textStatus.setText(selectedStatus);
 
-                        status.setText("TO DO");
-                        break;
-
-                    case "In Progress":
-
-                        status.setText("In Progress");
-                        break;
-
-                    case "Done":
-
-                        status.setText("Done");
-                        break;
-                }
+                filterTasks();
 
                 return true;
             });
 
             popup.show();
         });
+        btnAllTask.setOnClickListener(v -> {
 
-        RecyclerView rvTask =
-                view.findViewById(R.id.rvTask);
+            selectedStatus = "All";
 
-        List<Task> list = new ArrayList<>();
+            textStatus.setText("Trạng thái");
 
-        Task t1 = new Task();
-        t1.setTitle("Thiết kế UI");
-        t1.setStatus("Todo");
+            edtSearch.setText("");
 
-        Task t2 = new Task();
-        t2.setTitle("Build API");
-        t2.setStatus("InProgress");
+            filterTasks();
+        });
 
-        Task t3 = new Task();
-        t3.setTitle("Test");
-        t3.setStatus("Done");
 
-        list.add(t1);
-        list.add(t2);
-        list.add(t3);
+        edtSearch.addTextChangedListener(
+                new TextWatcher() {
 
-        TaskAdapter adapter =
-                new TaskAdapter(list);
+                    @Override
+                    public void beforeTextChanged(
+                            CharSequence s,
+                            int start,
+                            int count,
+                            int after
+                    ) {
+                    }
 
-        rvTask.setLayoutManager(
-                new LinearLayoutManager(requireContext())
-        );
+                    @Override
+                    public void onTextChanged(
+                            CharSequence s,
+                            int start,
+                            int before,
+                            int count
+                    ) {
 
-        rvTask.setAdapter(adapter);
+                        filterTasks();
+                    }
+
+                    @Override
+                    public void afterTextChanged(
+                            Editable s
+                    ) {
+                    }
+                });
+
+        loadTasks();
 
         return view;
+    }
+
+    private void loadTasks() {
+
+        SharedPreferences prefs =
+                requireActivity().getSharedPreferences(
+                        "user_prefs",
+                        Context.MODE_PRIVATE
+                );
+
+        String token =
+                prefs.getString("token", "");
+
+        ApiService apiService =
+                RetrofitClient.getApiService(null);
+
+        apiService.getAssignedTasks(token)
+                .enqueue(new Callback<TaskResponse>() {
+
+                    @Override
+                    public void onResponse(
+                            Call<TaskResponse> call,
+                            Response<TaskResponse> response
+                    ) {
+
+                        if (response.isSuccessful()
+                                && response.body() != null
+                                && response.body().getItems() != null) {
+
+                            originalList =
+                                    response.body().getItems();
+
+                            filterTasks();
+
+                        } else {
+
+                            Log.e("TASK_API",
+                                    "Response Error");
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(
+                            Call<TaskResponse> call,
+                            Throwable t
+                    ) {
+
+                        Log.e("TASK_API",
+                                t.getMessage());
+                    }
+                });
+    }
+
+    private void filterTasks() {
+
+        filteredList.clear();
+
+        String keyword =
+                edtSearch.getText()
+                        .toString()
+                        .trim()
+                        .toLowerCase();
+
+        for (Task task : originalList) {
+
+            boolean matchSearch =
+                    task.getTitle() != null
+                            && task.getTitle()
+                            .toLowerCase()
+                            .contains(keyword);
+
+            boolean matchStatus =
+                    selectedStatus.equals("All")
+                            || (
+                            task.getStatus() != null
+                                    && task.getStatus()
+                                    .equalsIgnoreCase(selectedStatus)
+                    );
+
+            if (matchSearch && matchStatus) {
+
+                filteredList.add(task);
+            }
+        }
+
+        adapter.notifyDataSetChanged();
     }
 }
