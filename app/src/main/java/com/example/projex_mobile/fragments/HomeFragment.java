@@ -326,7 +326,7 @@ public class HomeFragment extends Fragment {
         ArrayList<PieEntry> entries = new ArrayList<>();
         entries.add(new PieEntry(done, "Done"));
         entries.add(new PieEntry(inProgress, "In Progress"));
-        entries.add(new PieEntry(todo, "To Do"));
+        entries.add(new PieEntry(todo, "Assigned"));
 
         PieDataSet dataSet = new PieDataSet(entries, "");
         dataSet.setColors(
@@ -415,7 +415,7 @@ public class HomeFragment extends Fragment {
         item4.setTicketCode("GGSHOP-3");
         item4.setAvatarText("DG");
         item4.setTimeAgo("4d ago");
-        item4.setStatus("Todo");
+        item4.setStatus("Assigned");
         recentList.add(item4);
 
         recentAdapter.notifyDataSetChanged();
