@@ -61,15 +61,14 @@ public class RecentActivityAdapter extends RecyclerView.Adapter<RecentActivityAd
     private String getDisplayStatus(String status) {
         if (status == null) return "Unknown";
         if ("InProgress".equalsIgnoreCase(status)) return "In Progress";
-        if ("ToDo".equalsIgnoreCase(status)) return "To Do";
+        if ("Assigned".equalsIgnoreCase(status)) return "Assigned";
         return status;
     }
 
     private int getStatusColor(String status) {
         if ("InProgress".equalsIgnoreCase(status)) return Color.parseColor("#F4B740");
-        if ("Test".equalsIgnoreCase(status)) return Color.parseColor("#A855F7");
         if ("Done".equalsIgnoreCase(status)) return Color.parseColor("#0FADFF");
-        if ("ToDo".equalsIgnoreCase(status)) return Color.parseColor("#22C55E");
+        if ("Assigned".equalsIgnoreCase(status)) return Color.parseColor("#22C55E");
         return Color.parseColor("#6B7280");
     }
 

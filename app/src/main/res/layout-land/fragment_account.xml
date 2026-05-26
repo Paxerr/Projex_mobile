@@ -39,7 +39,7 @@
             android:id="@+id/contentArea"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center_vertical"
+            android:gravity="top"
             android:orientation="horizontal">
 
             <LinearLayout
@@ -224,12 +224,14 @@
                     android:layout_width="44dp"
                     android:layout_height="44dp"
                     android:layout_gravity="end"
+                    android:layout_marginTop="14dp"
                     android:background="@drawable/home_bg_card"
                     android:backgroundTint="#171B27"
                     android:clickable="true"
                     android:focusable="true"
                     android:foreground="?attr/selectableItemBackgroundBorderless"
-                    android:padding="10dp">
+                    android:padding="10dp"
+                    >
 
                     <ImageView
                         android:id="@+id/icEditProfile"
@@ -246,7 +248,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
-                    android:layout_marginTop="16dp"
+                    android:layout_marginTop="2dp"
                     android:letterSpacing="0.16"
                     android:text="CÀI ĐẶT HỆ THỐNG"
                     android:textColor="#6B7280"

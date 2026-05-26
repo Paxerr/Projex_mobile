@@ -52,6 +52,16 @@ public class ProjectFragment extends Fragment {
                     .commit();
         });
 
+        LinearLayout btnTeam = view.findViewById(R.id.btnteam);
+        btnTeam.setOnClickListener(v -> {
+            requireActivity()
+                    .getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.frame_container, new TeamFragment())
+                    .addToBackStack(null)
+                    .commit();
+        });
+
         PieChart pieChart = view.findViewById(R.id.pieChart);
 
         ArrayList<PieEntry> entries = new ArrayList<>();
