@@ -1,5 +1,6 @@
 package com.example.projex_mobile.fragments;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -25,13 +26,24 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.projex_mobile.R;
 import com.example.projex_mobile.SpaceCreateActivity;
 import com.example.projex_mobile.adapter.ProjectAdapter;
+import com.example.projex_mobile.api.ApiService;
+import com.example.projex_mobile.api.RetrofitClient;
 import com.example.projex_mobile.objects.ProjectItem;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class SpaceListFragment extends Fragment implements ProjectAdapter.OnProjectClickListener {
 
@@ -48,6 +60,7 @@ public class SpaceListFragment extends Fragment implements ProjectAdapter.OnProj
     private List<Integer> favoriteIds = new ArrayList<>();
     private int recentProjectId = -1;
     private String currentTab = "ALL";
+    private String token;
 
     private ActivityResultLauncher<Intent> createSpaceLauncher;
 
@@ -60,8 +73,11 @@ public class SpaceListFragment extends Fragment implements ProjectAdapter.OnProj
                 result -> {
                     if (result.getResultCode() == android.app.Activity.RESULT_OK && result.getData() != null) {
                         String name = result.getData().getStringExtra("space_name");
+                        String code = result.getData().getStringExtra("space_code");
+                        String desc = result.getData().getStringExtra("space_desc");
+
                         if (name != null && !name.trim().isEmpty()) {
-                            addNewProjectFromCreateResult(result.getData());
+                            createProject(name, code, desc);
                         }
                     }
                 }
@@ -74,7 +90,9 @@ public class SpaceListFragment extends Fragment implements ProjectAdapter.OnProj
                              @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.space_list_fragment, container, false);
 
-        prefs = requireContext().getSharedPreferences("space_prefs", 0);
+        prefs = requireContext().getSharedPreferences("space_prefs", Context.MODE_PRIVATE);
+        SharedPreferences userPrefs = requireContext().getSharedPreferences("user_prefs", Context.MODE_PRIVATE);
+        token = userPrefs.getString("token", "");
 
         rvProjects = view.findViewById(R.id.rvProjects);
         edtSearch = view.findViewById(R.id.edtSearch);
@@ -87,8 +105,7 @@ public class SpaceListFragment extends Fragment implements ProjectAdapter.OnProj
         loadPrefs();
         setupRecyclerView();
         setupListeners();
-        loadMockData();
-        applyFilter();
+        loadProjectsFromApi();
 
         return view;
     }
@@ -135,36 +152,119 @@ public class SpaceListFragment extends Fragment implements ProjectAdapter.OnProj
         createSpaceLauncher.launch(intent);
     }
 
-    private void addNewProjectFromCreateResult(Intent data) {
-        String name = data.getStringExtra("space_name");
-        String managerName = data.getStringExtra("manager_name");
-        String desc = data.getStringExtra("space_desc");
+    private void loadProjectsFromApi() {
+        if (token == null || token.isEmpty()) {
+            Toast.makeText(requireContext(), "Thiếu token đăng nhập", Toast.LENGTH_SHORT).show();
+            return;
+        }
 
-        int newId = allProjects.isEmpty() ? 1 : allProjects.get(allProjects.size() - 1).getId() + 1;
-
-        ProjectItem newItem = new ProjectItem(
-                newId,
-                name != null ? name.trim() : "",
-                "Active",
+        ApiService apiService = RetrofitClient.getApiService(token);
+        apiService.getProjects(
+                token,
                 1,
-                false,
-                R.drawable.ic_logo
-        );
+                100,
+                null,
+                null,
+                null,
+                null
+        ).enqueue(new Callback<JsonObject>() {
+            @Override
+            public void onResponse(@NonNull Call<JsonObject> call, @NonNull Response<JsonObject> response) {
+                if (!isAdded()) return;
 
-        allProjects.add(0, newItem);
-        recentProjectId = newId;
-        saveRecent(newId);
-        currentTab = "ALL";
-        updateTabUI();
-        applyFilter();
+                if (!response.isSuccessful() || response.body() == null) {
+                    Toast.makeText(requireContext(), "Không tải được danh sách project", Toast.LENGTH_SHORT).show();
+                    return;
+                }
 
-        Toast.makeText(requireContext(), "Đã tạo không gian: " + newItem.getName(), Toast.LENGTH_SHORT).show();
+                parseProjectsResponse(response.body());
+                applyFilter();
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<JsonObject> call, @NonNull Throwable t) {
+                if (isAdded()) {
+                    Toast.makeText(requireContext(), "Lỗi kết nối: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
     }
 
-    private void loadMockData() {
-        allProjects.add(new ProjectItem(1, "GGshop", "Active", 5, isFavorite(1), R.drawable.login_logo_github));
-        allProjects.add(new ProjectItem(2, "gg_projex", "Active", 8, isFavorite(2), R.drawable.login_logo_pj_rm_bg));
-        allProjects.add(new ProjectItem(3, "GGweb", "Done", 3, isFavorite(3), R.drawable.logo_library_web));
+    private void parseProjectsResponse(JsonObject body) {
+        allProjects.clear();
+
+        JsonArray items = null;
+        if (body.has("items") && body.get("items").isJsonArray()) {
+            items = body.getAsJsonArray("items");
+        } else if (body.has("data") && body.get("data").isJsonArray()) {
+            items = body.getAsJsonArray("data");
+        }
+
+        if (items == null) {
+            return;
+        }
+
+        for (JsonElement element : items) {
+            if (!element.isJsonObject()) continue;
+
+            JsonObject obj = element.getAsJsonObject();
+
+            int id = obj.has("id") ? obj.get("id").getAsInt() : 0;
+            String name = obj.has("name") && !obj.get("name").isJsonNull() ? obj.get("name").getAsString() : "";
+            String status = obj.has("status") && !obj.get("status").isJsonNull() ? obj.get("status").getAsString() : "Active";
+            int memberCount = obj.has("memberCount") ? obj.get("memberCount").getAsInt() : 0;
+
+            int imageRes = R.drawable.ic_logo;
+            if (name.toLowerCase().contains("ggshop")) {
+                imageRes = R.drawable.login_logo_github;
+            } else if (name.toLowerCase().contains("projex")) {
+                imageRes = R.drawable.login_logo_pj_rm_bg;
+            } else if (name.toLowerCase().contains("web")) {
+                imageRes = R.drawable.logo_library_web;
+            }
+
+            ProjectItem item = new ProjectItem(
+                    id,
+                    name,
+                    status,
+                    memberCount,
+                    favoriteIds.contains(id),
+                    imageRes
+            );
+            allProjects.add(item);
+        }
+    }
+
+    private void createProject(String name, String code, String desc) {
+        if (token == null || token.isEmpty()) return;
+
+        Map<String, Object> body = new HashMap<>();
+        body.put("name", name.trim());
+        body.put("code", code == null ? "" : code.trim());
+        body.put("description", desc == null ? "" : desc.trim());
+        body.put("status", "Active");
+
+        ApiService apiService = RetrofitClient.getApiService(token);
+        apiService.createProject(token, body).enqueue(new Callback<JsonObject>() {
+            @Override
+            public void onResponse(@NonNull Call<JsonObject> call, @NonNull Response<JsonObject> response) {
+                if (!isAdded()) return;
+
+                if (response.isSuccessful()) {
+                    Toast.makeText(requireContext(), "Tạo project thành công", Toast.LENGTH_SHORT).show();
+                    loadProjectsFromApi();
+                } else {
+                    Toast.makeText(requireContext(), "Tạo project thất bại: " + response.code(), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<JsonObject> call, @NonNull Throwable t) {
+                if (isAdded()) {
+                    Toast.makeText(requireContext(), "Lỗi kết nối: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
     }
 
     private boolean isFavorite(int id) {
@@ -252,15 +352,12 @@ public class SpaceListFragment extends Fragment implements ProjectAdapter.OnProj
     @Override
     public void onProjectClick(ProjectItem item) {
         saveRecent(item.getId());
-
         recentProjectId = item.getId();
 
         ProjectFragment fragment = new ProjectFragment();
-
         Bundle bundle = new Bundle();
         bundle.putInt("project_id", item.getId());
         bundle.putString("project_name", item.getName());
-
         fragment.setArguments(bundle);
 
         requireActivity()
