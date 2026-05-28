@@ -16,27 +16,17 @@ android:layout_height="match_parent">
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="12dp">
 
-        <ImageView
-            android:id="@+id/logo"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:layout_marginStart="8dp"
-            android:src="@drawable/login_logo_pj_rm_bg"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/txtProject"
+            android:id="@+id/txtProjectName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:text="GGshop"
+            android:text="ProjectName"
             android:textColor="#FFF"
             android:textSize="24sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@id/logo"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
 
@@ -271,14 +261,14 @@ android:layout_height="match_parent">
             <LinearLayout
 
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="120dp"
                 android:orientation="horizontal"
                 android:layout_marginBottom="16dp">
 
                 <!-- TIME LEFT -->
                 <LinearLayout
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:orientation="vertical"
                     android:background="@drawable/home_bg_card"
@@ -348,11 +338,12 @@ android:layout_height="match_parent">
                 <LinearLayout
                     android:id="@+id/btnteam"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:orientation="vertical"
                     android:background="@drawable/home_bg_card"
                     android:padding="16dp"
+
                     android:clickable="true">
 
                     <ImageView

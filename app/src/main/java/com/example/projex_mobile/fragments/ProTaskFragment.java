@@ -1,6 +1,11 @@
 package com.example.projex_mobile.fragments;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,23 +14,55 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.projex_mobile.R;
+import com.example.projex_mobile.adapter.TaskAdapter;
+import com.example.projex_mobile.api.ApiService;
+import com.example.projex_mobile.api.RetrofitClient;
+import com.example.projex_mobile.objects.Task;
+import com.example.projex_mobile.objects.TaskAssignment;
+import com.example.projex_mobile.objects.TaskResponse;
+
+import android.widget.EditText;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class ProTaskFragment extends Fragment {
 
-    public ProTaskFragment() {
-    }
+    private RecyclerView rvTask;
+
+    private TaskAdapter adapter;
+
+    private List<Task> originalList = new ArrayList<>();
+
+    private List<Task> filteredList = new ArrayList<>();
+
+    private int projectId;
+
+    private String selectedStatus = "All";
+    private String selectedUser = "All";
+
+    private EditText edtSearch;
+
+    public ProTaskFragment() {}
 
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater,
-                             ViewGroup container,
-                             Bundle savedInstanceState) {
-
+    public View onCreateView(
+            @NonNull LayoutInflater inflater,
+            ViewGroup container,
+            Bundle savedInstanceState)
+    {
         return inflater.inflate(
                 R.layout.pro_task_fragment,
                 container,
@@ -34,103 +71,249 @@ public class ProTaskFragment extends Fragment {
     }
 
     @Override
-    public void onViewCreated(@NonNull View view,
-                              @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(
+            @NonNull View view,
+            @Nullable Bundle savedInstanceState) {
+
         super.onViewCreated(view, savedInstanceState);
 
+        if(getArguments() != null){
+            projectId = getArguments().getInt("project_id");
+        }
+        rvTask = view.findViewById(R.id.rvTasks);
+
+        rvTask.setLayoutManager(new LinearLayoutManager(requireContext()));
+
+        adapter = new TaskAdapter(filteredList);
+
+        rvTask.setAdapter(adapter);
+
+        edtSearch = view.findViewById(R.id.edtSearch);
+
+        LinearLayout btnAllTask = view.findViewById(R.id.btnAllTask);
+
+        LinearLayout btnStatus = view.findViewById(R.id.btnStatus);
+
+        TextView textStatus = view.findViewById(R.id.textStatus);
+
         ImageView btnBack = view.findViewById(R.id.btnBack);
+        FrameLayout btnAdd = view.findViewById(R.id.btnAdd);
+        LinearLayout ngth = view.findViewById(R.id.ngth);
+        TextView ngthText = view.findViewById(R.id.ngth_text);
 
         btnBack.setOnClickListener(v -> {
 
             requireActivity()
                     .getSupportFragmentManager()
                     .popBackStack();
-
         });
-        FrameLayout btnAdd = view.findViewById(R.id.btnAdd);
+
+
 
         btnAdd.setOnClickListener(v -> {
+
+            Add_TaskFragment fragment = new Add_TaskFragment();
+
+            Bundle bundle = new Bundle();
+
+            bundle.putInt("project_id", projectId);
+
+            fragment.setArguments(bundle);
 
             requireActivity()
                     .getSupportFragmentManager()
                     .beginTransaction()
-                    .add(R.id.frame_container,
-                            new Add_TaskFragment())
+                    .add(
+                            R.id.frame_container,
+                            fragment
+                    )
                     .addToBackStack(null)
                     .commit();
         });
 
-
-        // Trạng thái
-        LinearLayout btnStatus = view.findViewById(R.id.btnStatus);
-
         btnStatus.setOnClickListener(v -> {
-
             PopupMenu popup = new PopupMenu(requireContext(), btnStatus);
-
             popup.getMenu().add("Assigned");
-            popup.getMenu().add("In Progress");
+            popup.getMenu().add("InProgress");
             popup.getMenu().add("Done");
-
-            TextView status = view.findViewById(R.id.textStatus);
 
             popup.setOnMenuItemClickListener(item -> {
 
-                switch (item.getTitle().toString()) {
+                selectedStatus = item.getTitle().toString();
+                textStatus.setText(selectedStatus);
 
-                    case "TO DO":
-                        status.setText("Assigned");
-                        break;
-
-                    case "In Progress":
-                        status.setText("In Progress");
-                        break;
-
-                    case "Done":
-                        status.setText("Done");
-                        break;
-                }
+                filterTasks();
 
                 return true;
             });
-
             popup.show();
         });
 
-        // Người thực hiện
-        LinearLayout ngth = view.findViewById(R.id.ngth);
+        btnAllTask.setOnClickListener(v -> {
+
+            selectedStatus = "All";
+            textStatus.setText("Trạng thái");
+
+            edtSearch.setText("");
+
+            filterTasks();
+        });
 
         ngth.setOnClickListener(v -> {
 
             PopupMenu popup = new PopupMenu(requireContext(), ngth);
 
-            popup.getMenu().add("A");
-            popup.getMenu().add("B");
-            popup.getMenu().add("C");
+            popup.getMenu().add("All");
+            List<String> users = new ArrayList<>();
+            for(Task task : originalList){
+                if(task.getAssignees() != null){
+                    for(TaskAssignment assignee : task.getAssignees()){
+                        String name = assignee.getFullName();
+                        if(name != null && !users.contains(name)){
+                            users.add(name);
+                            popup.getMenu().add(name);
+                        }
+                    }
+                }
+            }
 
-            TextView ngthText = view.findViewById(R.id.ngth_text);
+
 
             popup.setOnMenuItemClickListener(item -> {
-
-                switch (item.getTitle().toString()) {
-
-                    case "A":
-                        ngthText.setText("A");
-                        break;
-
-                    case "B":
-                        ngthText.setText("B");
-                        break;
-
-                    case "C":
-                        ngthText.setText("C");
-                        break;
-                }
-
+                selectedUser = item.getTitle().toString();
+                ngthText.setText(selectedUser);
+                filterTasks();
                 return true;
             });
 
             popup.show();
         });
+
+        edtSearch.addTextChangedListener(
+                new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count)
+                    {
+                        filterTasks();
+                    }
+
+                    @Override
+                    public void afterTextChanged(Editable s) {
+                    }
+                });
+
+        loadTasks();
     }
+
+    private void loadTasks(){
+
+        SharedPreferences prefs =
+                requireActivity().getSharedPreferences("user_prefs",
+                        Context.MODE_PRIVATE
+                );
+
+        String token = prefs.getString("token", "");
+
+        ApiService apiService = RetrofitClient.getApiService(null);
+
+        apiService.getTasksByProject(token, projectId).enqueue(new Callback<TaskResponse>() {
+
+            @Override
+            public void onResponse(
+                    Call<TaskResponse> call,
+                    Response<TaskResponse> response) {
+
+                if(response.isSuccessful()
+                        && response.body() != null
+                        && response.body().getItems() != null){
+
+                    originalList = response.body().getItems();
+                    filterTasks();
+
+                }else{
+                    Log.e(
+                            "PROJECT_TASK",
+                            "Code: " + response.code()
+                    );
+                }
+            }
+
+            @Override
+            public void onFailure(
+                    Call<TaskResponse> call,
+                    Throwable t
+            ) {
+
+                Log.e(
+                        "PROJECT_TASK",
+                        t.getMessage()
+                );
+            }
+        });
+    }
+
+    private void filterTasks() {
+
+        filteredList.clear();
+
+        String keyword =
+                edtSearch.getText()
+                        .toString()
+                        .trim()
+                        .toLowerCase();
+
+        for (Task task : originalList) {
+
+            boolean matchSearch =
+                    task.getTitle() != null
+                            && task.getTitle()
+                            .toLowerCase()
+                            .contains(keyword);
+
+            boolean matchStatus =
+                    selectedStatus.equals("All")
+                            || (
+                            task.getStatus() != null
+                                    && task.getStatus()
+                                    .equalsIgnoreCase(selectedStatus)
+                    );
+
+            boolean matchUser =
+                    selectedUser.equals("All");
+
+            if(!matchUser
+                    && task.getAssignees() != null){
+
+                for(TaskAssignment assignee
+                        : task.getAssignees()){
+
+                    if(assignee.getFullName() != null
+                            && assignee.getFullName()
+                            .equalsIgnoreCase(selectedUser)){
+
+                        matchUser = true;
+
+                        break;
+                    }
+                }
+            }
+
+            if (matchSearch
+                    && matchStatus
+                    && matchUser) {
+
+                filteredList.add(task);
+            }
+        }
+
+        adapter.notifyDataSetChanged();
+    }
+
+
+
+
+
 }

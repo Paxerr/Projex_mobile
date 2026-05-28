@@ -36,10 +36,19 @@ public class HomeActivity extends AppCompatActivity {
         setupNavigation();
 
         if (savedInstanceState != null) {
-            selectedTabId = savedInstanceState.getInt(KEY_SELECTED_TAB, R.id.nav_home);
-        }
 
-        showFragmentByTab(selectedTabId);
+            selectedTabId =
+                    savedInstanceState.getInt(
+                            KEY_SELECTED_TAB,
+                            R.id.nav_home
+                    );
+
+            setSelectedNav(selectedTabId);
+
+        } else {
+
+            showFragmentByTab(R.id.nav_home);
+        }
     }
 
     @Override

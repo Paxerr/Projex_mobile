@@ -16,27 +16,17 @@
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="12dp">
 
-        <ImageView
-            android:id="@+id/logo"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:layout_marginStart="8dp"
-            android:src="@drawable/login_logo_pj_rm_bg"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/txtProject"
+            android:id="@+id/txtProjectName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:text="GGshop"
+            android:text="ProjectName"
             android:textColor="#FFF"
             android:textSize="24sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@id/logo"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
 
@@ -64,7 +54,7 @@
                 <TextView
 
                     android:textColor="#FFFFFF"
-                    android:textSize="24sp"
+                    android:textSize="24dp"
                     android:textStyle="bold"
                     android:layout_height="wrap_content"
                     android:layout_width="wrap_content"
@@ -276,14 +266,15 @@
                     <LinearLayout
 
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="match_parent"
                         android:orientation="vertical"
                         android:layout_marginStart="20dp"
-                        android:layout_weight="4">
+                        android:layout_weight="3"
+                        android:layout_marginBottom="16dp">
 
                         <!-- TIME LEFT -->
                         <LinearLayout
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:orientation="vertical"
@@ -319,14 +310,14 @@
 
                         <LinearLayout
                             android:id="@+id/btnpro_task"
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:orientation="vertical"
                             android:background="@drawable/home_bg_card"
                             android:padding="16dp"
                             android:layout_marginEnd="12dp"
-                            android:layout_marginVertical="10dp">
+                            android:layout_marginBottom="10dp">
 
                             <ImageView
                                 android:layout_width="20dp"
@@ -355,14 +346,15 @@
                         <!-- TEAM SIZE -->
                         <LinearLayout
                             android:id="@+id/btnteam"
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:orientation="vertical"
                             android:background="@drawable/home_bg_card"
                             android:padding="16dp"
                             android:clickable="true"
-                            android:layout_marginVertical="10dp">
+                            android:layout_marginEnd="12dp"
+                            >
 
                             <ImageView
                                 android:layout_width="18dp"
