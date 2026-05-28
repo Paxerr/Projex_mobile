@@ -65,4 +65,11 @@ public interface ApiService {
             @Header("Authorization") String token,
             @Body Map<String, Object> body
     );
+    @GET("api/projects/{projectId}/tasks")
+    Call<TaskResponse> getTasksByProject(
+            @Header("Authorization") String token,
+            @Path("projectId") int projectId
+    );
+
+
 }

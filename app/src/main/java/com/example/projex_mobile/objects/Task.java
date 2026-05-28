@@ -2,6 +2,8 @@ package com.example.projex_mobile.objects;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.List;
+
 public class Task {
 
     @SerializedName("id")
@@ -42,6 +44,7 @@ public class Task {
 
     @SerializedName("isDeleted")
     private boolean IsDeleted;
+    private List<TaskAssignment> assignees;
 
     public Task() {
     }
@@ -148,5 +151,14 @@ public class Task {
 
     public void setIsDeleted(boolean isDeleted) {
         IsDeleted = isDeleted;
+    }
+    public List<TaskAssignment> getAssignees() {
+        return assignees;
+    }
+
+    public void setAssignees(
+            List<TaskAssignment> assignees
+    ) {
+        this.assignees = assignees;
     }
 }
