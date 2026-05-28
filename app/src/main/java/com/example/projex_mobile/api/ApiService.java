@@ -3,6 +3,7 @@ package com.example.projex_mobile.api;
 import com.example.projex_mobile.objects.DashboardOverview;
 import com.example.projex_mobile.objects.RecentItem;
 import com.example.projex_mobile.objects.TaskResponse;
+import com.example.projex_mobile.objects.User;
 import com.google.gson.JsonObject;
 
 import java.util.List;
@@ -13,6 +14,7 @@ import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.POST;
+import retrofit2.http.PUT;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 
@@ -22,6 +24,15 @@ public interface ApiService {
 
     @POST("api/auth/register")
     Call<JsonObject> register(@Body Map<String, String> body);
+
+    @GET("api/auth/me")
+    Call<User> getProfile(@Header("Authorization") String token);
+
+    @PUT("api/auth/profile")
+    Call<JsonObject> updateProfile(
+            @Header("Authorization") String token,
+            @Body Map<String, String> body
+    );
 
     @GET("api/dashboard/overview")
     Call<DashboardOverview> getDashboardOverview(@Header("Authorization") String token);
