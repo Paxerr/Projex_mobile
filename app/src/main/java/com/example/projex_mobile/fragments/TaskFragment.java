@@ -112,7 +112,6 @@ public class TaskFragment extends Fragment {
             selectedStatus = "All";
 
             textStatus.setText("Trạng thái");
-
             edtSearch.setText("");
 
             filterTasks();

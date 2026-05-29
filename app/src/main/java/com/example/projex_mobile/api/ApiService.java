@@ -25,6 +25,15 @@ public interface ApiService {
     @POST("api/auth/register")
     Call<JsonObject> register(@Body Map<String, String> body);
 
+    @POST("api/auth/forgot-password")
+    Call<JsonObject> forgotPassword(@Body Map<String, String> body);
+
+    @POST("api/auth/verify-reset-code")
+    Call<JsonObject> verifyResetCode(@Body Map<String, String> body);
+
+    @POST("api/auth/reset-password")
+    Call<JsonObject> resetPassword(@Body Map<String, String> body);
+
     @GET("api/auth/me")
     Call<User> getProfile(@Header("Authorization") String token);
 
