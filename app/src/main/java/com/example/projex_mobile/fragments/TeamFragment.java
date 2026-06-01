@@ -32,6 +32,8 @@ public class TeamFragment extends Fragment {
     private static final String ARG_PROJECT_ID = "project_id";
 
     private int projectId = -1;
+    private int adminCount = 0;
+    private String currentUserRole = "Member";
 
     private ImageView btnBackHome;
     private ImageView btnAddMember;
@@ -63,6 +65,13 @@ public class TeamFragment extends Fragment {
 
         initViews(view);
         handleEvents();
+
+        getParentFragmentManager().setFragmentResultListener(
+                "member_added",
+                getViewLifecycleOwner(),
+                (requestKey, result) -> loadProjectMembers()
+        );
+
         loadProjectMembers();
     }
 
@@ -154,11 +163,47 @@ public class TeamFragment extends Fragment {
             return;
         }
 
+        // Count admins and find current user's role
+        int tempAdminCount = 0;
+        String tempCurrentUserRole = "Member";
+        String loggedInEmail = "";
+        try {
+            loggedInEmail = requireContext()
+                    .getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
+                    .getString("user_email", "");
+        } catch (Exception ignored) {}
+
+        for (JsonElement element : members) {
+            if (!element.isJsonObject()) continue;
+            JsonObject memberObj = element.getAsJsonObject();
+            String role = getString(memberObj, "role", "Member");
+            if ("Admin".equalsIgnoreCase(role)) {
+                tempAdminCount++;
+            }
+            JsonObject userObj = memberObj.has("user") && memberObj.get("user").isJsonObject()
+                    ? memberObj.getAsJsonObject("user") : null;
+            if (userObj != null) {
+                String email = getString(userObj, "email", "");
+                if (email.equalsIgnoreCase(loggedInEmail)) {
+                    tempCurrentUserRole = role;
+                }
+            }
+        }
+        this.adminCount = tempAdminCount;
+        this.currentUserRole = tempCurrentUserRole;
+
+        if (btnAddMember != null) {
+            boolean canAdd = "Owner".equalsIgnoreCase(currentUserRole) || "Admin".equalsIgnoreCase(currentUserRole);
+            btnAddMember.setVisibility(canAdd ? View.VISIBLE : View.GONE);
+        }
+
         for (JsonElement element : members) {
             if (!element.isJsonObject()) continue;
 
             JsonObject memberObj = element.getAsJsonObject();
 
+            int userId = memberObj.has("userId") && !memberObj.get("userId").isJsonNull()
+                    ? memberObj.get("userId").getAsInt() : -1;
             String role = getString(memberObj, "role", "Member");
             String joinedAt = formatJoinedAt(getString(memberObj, "joinedAt", ""));
 
@@ -172,12 +217,13 @@ public class TeamFragment extends Fragment {
             String email = getString(userObj, "email", "");
             String status = "● Đang hoạt động";
 
-            View card = createMemberCard(name, email, role, joinedAt, status);
+            View card = createMemberCard(userId, name, email, role, joinedAt, status);
             layoutMembersContainer.addView(card);
         }
     }
 
     private View createMemberCard(
+            int memberUserId,
             String name,
             String email,
             String role,
@@ -258,6 +304,7 @@ public class TeamFragment extends Fragment {
 
         btnMore.setOnClickListener(v ->
                 openRoleFragment(
+                        memberUserId,
                         name,
                         email,
                         role,
@@ -272,15 +319,21 @@ public class TeamFragment extends Fragment {
     }
 
     private void openAddMemberScreen() {
+        if (projectId == -1) {
+            Toast.makeText(requireContext(), "Không tìm thấy projectId", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         try {
-            ThemThanhVienDialogFragment dialog = new ThemThanhVienDialogFragment();
+            ThemThanhVienDialogFragment dialog = ThemThanhVienDialogFragment.newInstance(projectId, currentUserRole);
             dialog.show(getParentFragmentManager(), "ThemThanhVienDialog");
         } catch (Exception e) {
             Toast.makeText(requireContext(), "Không mở được popup thêm thành viên", Toast.LENGTH_SHORT).show();
         }
     }
 
-    private void openRoleFragment(String memberName,
+    private void openRoleFragment(int memberUserId,
+                                  String memberName,
                                   String memberEmail,
                                   String memberRole,
                                   String joinDate,
@@ -294,11 +347,15 @@ public class TeamFragment extends Fragment {
             }
 
             RoleFragment roleFragment = RoleFragment.newInstance(
+                    projectId,
+                    memberUserId,
                     memberName,
                     memberEmail,
                     memberRole,
                     joinDate,
-                    status
+                    status,
+                    adminCount,
+                    currentUserRole
             );
 
             requireActivity()

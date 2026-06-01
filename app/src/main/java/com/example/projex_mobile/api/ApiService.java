@@ -11,6 +11,7 @@ import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.POST;
@@ -80,5 +81,25 @@ public interface ApiService {
             @Path("projectId") int projectId
     );
 
+    @POST("api/projects/{projectId}/members/by-email")
+    Call<JsonObject> addProjectMemberByEmail(
+            @Header("Authorization") String token,
+            @Path("projectId") int projectId,
+            @Body Map<String, String> body
+    );
 
+    @PUT("api/projects/{projectId}/members/{userId}/role")
+    Call<JsonObject> updateProjectMemberRole(
+            @Header("Authorization") String token,
+            @Path("projectId") int projectId,
+            @Path("userId") int userId,
+            @Body Map<String, String> body
+    );
+
+    @DELETE("api/projects/{projectId}/members/{userId}")
+    Call<JsonObject> removeProjectMember(
+            @Header("Authorization") String token,
+            @Path("projectId") int projectId,
+            @Path("userId") int userId
+    );
 }
