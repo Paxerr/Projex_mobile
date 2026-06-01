@@ -63,6 +63,7 @@ public class AccountFragment extends Fragment {
         handleEvents(view);
     }
 
+
     private void listenEditProfileResult() {
         getParentFragmentManager().setFragmentResultListener(
                 EditProfileFragment.REQUEST_KEY_EDIT_PROFILE,

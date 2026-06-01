@@ -149,6 +149,21 @@ public class ProjectFragment extends Fragment {
                 });
     }
 
+
+    private void openTeamFragment() {
+        TeamFragment teamFragment = TeamFragment.newInstance(projectId);
+
+        requireActivity()
+                .getSupportFragmentManager()
+                .beginTransaction()
+                .replace(
+                        R.id.frame_container,
+                        teamFragment
+                )
+                .addToBackStack(null)
+                .commit();
+    }
+
     @Override
     public void onViewCreated(@NonNull View view,
                               @Nullable Bundle savedInstanceState) {
@@ -177,17 +192,11 @@ public class ProjectFragment extends Fragment {
         });
 
         LinearLayout btnTeam = view.findViewById(R.id.btnteam);
-        btnTeam.setOnClickListener(v -> {
-            requireActivity()
-                    .getSupportFragmentManager()
-                    .beginTransaction()
-                    .replace(
-                            R.id.frame_container,
-                            new TeamFragment()
-                    )
-                    .addToBackStack(null)
-                    .commit();
-        });
+        btnTeam.setOnClickListener(v -> openTeamFragment());
+
+        if (txtMemberCount != null) {
+            txtMemberCount.setOnClickListener(v -> openTeamFragment());
+        }
 
         PieChart pieChart = view.findViewById(R.id.pieChart);
 
