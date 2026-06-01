@@ -75,34 +75,22 @@ public class ProjectFragment extends Fragment {
                 .enqueue(new Callback<JsonObject>() {
 
                     @Override
-                    public void onResponse(
-                            Call<JsonObject> call,
-                            Response<JsonObject> response) {
+                    public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
 
-                        if(response.isSuccessful()
-                                && response.body() != null){
+                        if(response.isSuccessful() && response.body() != null){
 
                             JsonObject body = response.body();
 
-                            String name =
-                                    body.has("name")
-                                            ? body.get("name").getAsString()
-                                            : "";
+                            String name = body.has("name") ? body.get("name").getAsString() : "";
 
 
-                            String endDate =
-                                    body.has("endDate")
-                                            ? body.get("endDate").getAsString()
-                                            : "";
+                            String endDate = body.has("endDate") ? body.get("endDate").getAsString() : "";
 
 
                             int memberCount = 0;
 
-                            if(body.has("members")
-                                    && body.get("members").isJsonArray()){
-
-                                memberCount =
-                                        body.getAsJsonArray("members").size();
+                            if(body.has("members") && body.get("members").isJsonArray()){
+                                memberCount = body.getAsJsonArray("members").size();
                             }
 
                             if(txtProjectName != null){
@@ -114,22 +102,18 @@ public class ProjectFragment extends Fragment {
                             );
 
                             try {
-                                SimpleDateFormat sdf =
-                                        new SimpleDateFormat(
+                                SimpleDateFormat sdf = new SimpleDateFormat(
                                                 "yyyy-MM-dd'T'HH:mm:ss",
                                                 Locale.getDefault()
-                                        );
+                                );
 
-                                Date end =
-                                        sdf.parse(endDate);
+                                Date end = sdf.parse(endDate);
 
                                 Date now = new Date();
 
-                                long diff =
-                                        end.getTime() - now.getTime();
+                                long diff = end.getTime() - now.getTime();
 
-                                long days =
-                                        TimeUnit.MILLISECONDS.toDays(diff);
+                                long days = TimeUnit.MILLISECONDS.toDays(diff);
 
                                 if(days > 0){
                                     txtRemainingTime.setText(
@@ -156,10 +140,8 @@ public class ProjectFragment extends Fragment {
                     }
 
                     @Override
-                    public void onFailure(
-                            Call<JsonObject> call,
-                            Throwable t
-                    ) {
+                    public void onFailure(Call<JsonObject> call, Throwable t)
+                    {
 
                         Log.e("PROJECT",
                                 t.getMessage());
@@ -188,14 +170,14 @@ public class ProjectFragment extends Fragment {
 
         super.onViewCreated(view, savedInstanceState);
 
-        LinearLayout btnProTask =
-                view.findViewById(R.id.btnpro_task);
+        LinearLayout btnProTask = view.findViewById(R.id.btnpro_task);
 
         btnProTask.setOnClickListener(v -> {
 
             ProTaskFragment fragment = new ProTaskFragment();
             Bundle bundle = new Bundle();
             bundle.putInt("project_id", projectId);
+            bundle.putString("project_name", txtProjectName.getText().toString());
             fragment.setArguments(bundle);
 
             requireActivity()

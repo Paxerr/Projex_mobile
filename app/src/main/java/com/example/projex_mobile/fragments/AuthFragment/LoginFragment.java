@@ -106,6 +106,15 @@ public class LoginFragment extends Fragment {
                     String fullName = userObject != null ? extractString(userObject, "fullName") : null;
                     String responseEmail = userObject != null ? extractString(userObject, "email") : null;
 
+                    int userId = 0;
+
+                    if (userObject != null
+                            && userObject.has("id")
+                            && !userObject.get("id").isJsonNull()) {
+
+                        userId = userObject.get("id").getAsInt();
+                    }
+
                     if (fullName == null || fullName.isEmpty()) {
                         fullName = email.contains("@") ? email.substring(0, email.indexOf('@')) : email;
                     }
@@ -124,6 +133,7 @@ public class LoginFragment extends Fragment {
                             .putString("token", token)
                             .putString("user_name", fullName)
                             .putString("user_email", responseEmail)
+                            .putInt("user_id", userId)
                             .apply();
 
                     startActivity(new Intent(requireActivity(), HomeActivity.class));

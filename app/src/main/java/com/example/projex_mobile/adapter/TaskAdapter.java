@@ -18,9 +18,25 @@ public class TaskAdapter
         extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
 
     private List<Task> list;
+    private String defaultProjectName;
+    private OnTaskClickListener listener;
 
     public TaskAdapter(List<Task> list) {
         this.list = list;
+    }
+
+    public TaskAdapter(List<Task> list, OnTaskClickListener listener) {
+        this.list = list;
+        this.listener = listener;
+    }
+    public TaskAdapter(
+            List<Task> list,
+            OnTaskClickListener listener,
+            String defaultProjectName) {
+
+        this.list = list;
+        this.listener = listener;
+        this.defaultProjectName = defaultProjectName;
     }
 
     public class ViewHolder
@@ -33,16 +49,9 @@ public class TaskAdapter
         public ViewHolder(View itemView) {
             super(itemView);
 
-            txtTitle =
-                    itemView.findViewById(R.id.txtTitle);
-
-            txtStatus =
-                    itemView.findViewById(R.id.txtStatus);
-
-            txtProjectName =
-                    itemView.findViewById(
-                            R.id.txtProjectName
-                    );
+            txtTitle = itemView.findViewById(R.id.txtTitle);
+            txtStatus = itemView.findViewById(R.id.txtStatus);
+            txtProjectName = itemView.findViewById(R.id.txtProjectName);
         }
     }
 
@@ -51,14 +60,9 @@ public class TaskAdapter
             ViewGroup parent,
             int viewType
     ) {
-
         View view = LayoutInflater
                 .from(parent.getContext())
-                .inflate(
-                        R.layout.item_task,
-                        parent,
-                        false
-                );
+                .inflate(R.layout.item_task, parent, false);
 
         return new ViewHolder(view);
     }
@@ -68,9 +72,7 @@ public class TaskAdapter
             ViewHolder holder,
             int position
     ) {
-
-        if (list == null
-                || position >= list.size()) {
+        if (list == null || position >= list.size()) {
             return;
         }
 
@@ -81,15 +83,11 @@ public class TaskAdapter
         }
 
         holder.txtTitle.setText(
-                task.getTitle() != null
-                        ? task.getTitle()
-                        : "No Title"
+                task.getTitle() != null ? task.getTitle() : "No Title"
         );
 
         holder.txtStatus.setText(
-                task.getStatus() != null
-                        ? task.getStatus()
-                        : "Unknown"
+                task.getStatus() != null ? task.getStatus() : "Unknown"
         );
 
         if (task.getProject() != null
@@ -97,11 +95,14 @@ public class TaskAdapter
 
             holder.txtProjectName.setText(
                     task.getProject().getName()
-
             );
-            holder.txtProjectName.setTextColor(Color.parseColor("#80FFFFFF"));
 
+        } else if (defaultProjectName != null
+                && !defaultProjectName.isEmpty()) {
 
+            holder.txtProjectName.setText(
+                    defaultProjectName
+            );
 
         } else {
 
@@ -110,30 +111,27 @@ public class TaskAdapter
             );
         }
 
-        // Giữ nguyên màu text
         holder.txtStatus.setTextColor(Color.WHITE);
 
-        // Đổi màu ô chứa status
         holder.txtStatus.setBackgroundTintList(
                 ColorStateList.valueOf(
-                        getStatusBackgroundColor(
-                                task.getStatus()
-                        )
+                        getStatusBackgroundColor(task.getStatus())
                 )
         );
+
+        holder.itemView.setOnClickListener(v -> {
+            if (listener != null) {
+                listener.onTaskClick(task);
+            }
+        });
     }
 
-    // Hàm đổi màu background status
-    private int getStatusBackgroundColor(
-            String status
-    ) {
-
+    private int getStatusBackgroundColor(String status) {
         if (status == null) {
             return Color.parseColor("#6B7280");
         }
 
         switch (status) {
-
             case "Done":
                 return Color.parseColor("#800FADFF");
 
@@ -144,17 +142,17 @@ public class TaskAdapter
                 return Color.parseColor("#80EFEB3B");
 
             case "To do":
-
-
             default:
                 return Color.parseColor("#FF0000");
         }
-
     }
 
     @Override
     public int getItemCount() {
-
         return list == null ? 0 : list.size();
+    }
+
+    public interface OnTaskClickListener {
+        void onTaskClick(Task task);
     }
 }
