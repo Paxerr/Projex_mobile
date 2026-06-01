@@ -137,10 +137,9 @@ public class ProTaskFragment extends Fragment {
         btnAdd.setOnClickListener(v -> {
 
             Add_TaskFragment fragment = new Add_TaskFragment();
-
             Bundle bundle = new Bundle();
-
             bundle.putInt("project_id", projectId);
+            bundle.putString("project_name", projectName);
 
             fragment.setArguments(bundle);
 
@@ -165,9 +164,7 @@ public class ProTaskFragment extends Fragment {
 
                 selectedStatus = item.getTitle().toString();
                 textStatus.setText(selectedStatus);
-
                 filterTasks();
-
                 return true;
             });
             popup.show();
@@ -234,10 +231,7 @@ public class ProTaskFragment extends Fragment {
 
     private void loadTasks(){
 
-        SharedPreferences prefs =
-                requireActivity().getSharedPreferences("user_prefs",
-                        Context.MODE_PRIVATE
-                );
+        SharedPreferences prefs = requireActivity().getSharedPreferences("user_prefs", Context.MODE_PRIVATE);
 
         String token = prefs.getString("token", "");
 
@@ -246,14 +240,9 @@ public class ProTaskFragment extends Fragment {
         apiService.getTasksByProject(token, projectId).enqueue(new Callback<TaskResponse>() {
 
             @Override
-            public void onResponse(
-                    Call<TaskResponse> call,
-                    Response<TaskResponse> response) {
+            public void onResponse(Call<TaskResponse> call, Response<TaskResponse> response) {
 
-                if(response.isSuccessful()
-                        && response.body() != null
-                        && response.body().getItems() != null){
-
+                if(response.isSuccessful() && response.body() != null && response.body().getItems() != null){
                     originalList = response.body().getItems();
                     filterTasks();
 
@@ -266,10 +255,7 @@ public class ProTaskFragment extends Fragment {
             }
 
             @Override
-            public void onFailure(
-                    Call<TaskResponse> call,
-                    Throwable t
-            ) {
+            public void onFailure(Call<TaskResponse> call, Throwable t) {
 
                 Log.e(
                         "PROJECT_TASK",
@@ -283,52 +269,29 @@ public class ProTaskFragment extends Fragment {
 
         filteredList.clear();
 
-        String keyword =
-                edtSearch.getText()
-                        .toString()
-                        .trim()
-                        .toLowerCase();
+        String keyword = edtSearch.getText().toString().trim().toLowerCase();
 
         for (Task task : originalList) {
+            boolean matchSearch = task.getTitle() != null && task.getTitle().toLowerCase().contains(keyword);
 
-            boolean matchSearch =
-                    task.getTitle() != null
-                            && task.getTitle()
-                            .toLowerCase()
-                            .contains(keyword);
+            boolean matchStatus = selectedStatus.equals("All") || (task.getStatus() != null && task.getStatus()
+                    .equalsIgnoreCase(selectedStatus));
 
-            boolean matchStatus =
-                    selectedStatus.equals("All")
-                            || (
-                            task.getStatus() != null
-                                    && task.getStatus()
-                                    .equalsIgnoreCase(selectedStatus)
-                    );
+            boolean matchUser = selectedUser.equals("All");
 
-            boolean matchUser =
-                    selectedUser.equals("All");
+            if(!matchUser && task.getAssignees() != null){
 
-            if(!matchUser
-                    && task.getAssignees() != null){
+                for(TaskAssignment assignee : task.getAssignees()){
 
-                for(TaskAssignment assignee
-                        : task.getAssignees()){
-
-                    if(assignee.getFullName() != null
-                            && assignee.getFullName()
-                            .equalsIgnoreCase(selectedUser)){
+                    if(assignee.getFullName() != null && assignee.getFullName().equalsIgnoreCase(selectedUser)){
 
                         matchUser = true;
-
                         break;
                     }
                 }
             }
 
-            if (matchSearch
-                    && matchStatus
-                    && matchUser) {
-
+            if (matchSearch && matchStatus && matchUser) {
                 filteredList.add(task);
             }
         }

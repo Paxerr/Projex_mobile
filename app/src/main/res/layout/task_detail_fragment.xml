@@ -73,7 +73,7 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:gravity="center_vertical"
-                    android:layout_marginBottom="24dp"
+                    android:layout_marginBottom="16dp"
                     android:layout_marginHorizontal="20dp">
 
                     <!-- GGshop -->
@@ -86,7 +86,7 @@
                         android:gravity="center"
                         android:background="@drawable/team_bg_card"
                         android:paddingVertical="8dp"
-                        android:layout_marginEnd="13dp">
+                        android:layout_marginEnd="12dp">
 
 
                         <TextView
@@ -120,7 +120,7 @@
                             android:id="@+id/txtStatus"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Task"
+                            android:text="Status"
                             android:textColor="#FFFFFF"
                             android:textSize="16sp"
                             android:textStyle="bold"
@@ -137,7 +137,16 @@
                 </LinearLayout>
 
 
-
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:letterSpacing="0.04"
+                    android:text="TÊN TASK"
+                    android:textColor="#9CA3AF"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginStart="20dp"/>
                 <LinearLayout
 
                     android:layout_width="match_parent"
@@ -145,10 +154,11 @@
                     android:orientation="horizontal"
                     android:background="@drawable/team_bg_card"
                     android:padding="8dp"
-                    android:layout_marginBottom="24dp"
+                    android:layout_marginBottom="16dp"
                     android:layout_marginHorizontal="20dp"
                     android:elevation="24dp"
                     android:gravity="center_vertical">
+
 
                     <EditText
                         android:id="@+id/taskname"
@@ -163,6 +173,16 @@
 
 
                 </LinearLayout>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:letterSpacing="0.04"
+                    android:text="DESCRIPTION"
+                    android:textColor="#9CA3AF"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginStart="20dp"/>
                 <LinearLayout
 
                     android:layout_width="match_parent"
@@ -172,7 +192,7 @@
                     android:padding="8dp"
 
                     android:paddingHorizontal="16dp"
-                    android:layout_marginBottom="24dp"
+                    android:layout_marginBottom="16dp"
                     android:layout_marginHorizontal="20dp"
                     android:elevation="24dp">
 
@@ -188,6 +208,16 @@
 
 
                 </LinearLayout>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:letterSpacing="0.04"
+                    android:text="DUE DATE"
+                    android:textColor="#9CA3AF"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginStart="20dp"/>
                 <LinearLayout
 
                     android:layout_width="match_parent"
@@ -196,7 +226,7 @@
                     android:padding="8dp"
 
                     android:paddingHorizontal="16dp"
-                    android:layout_marginBottom="24dp"
+                    android:layout_marginBottom="16dp"
                     android:layout_marginHorizontal="20dp"
                     android:elevation="24dp"
                     android:orientation="horizontal">
@@ -209,9 +239,22 @@
                         android:layout_width="0dp"
                         android:hint="Due date"
                         android:layout_weight="1"
-                        android:textColor="#FFFFFF"/>
+                        android:textColor="#FFFFFF"
+                        android:focusable="false"
+                        android:clickable="true"
+                        android:cursorVisible="false"/>
 
                 </LinearLayout>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:letterSpacing="0.04"
+                    android:text="START DATE"
+                    android:textColor="#9CA3AF"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginStart="20dp"/>
                 <LinearLayout
 
                     android:layout_width="match_parent"
@@ -220,7 +263,7 @@
                     android:padding="8dp"
 
                     android:paddingHorizontal="16dp"
-                    android:layout_marginBottom="24dp"
+                    android:layout_marginBottom="16dp"
                     android:layout_marginHorizontal="20dp"
                     android:elevation="24dp"
                     android:orientation="horizontal">
@@ -233,9 +276,21 @@
                         android:layout_width="wrap_content"
                         android:hint="Start date"
                         android:layout_weight="1"
-                        android:textColor="#FFFFFF"/>
+                        android:textColor="#FFFFFF"
+                        android:clickable="false"
+                        android:editable="false"/>
 
                 </LinearLayout>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:letterSpacing="0.04"
+                    android:text="PRIORITY"
+                    android:textColor="#9CA3AF"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginStart="20dp"/>
                 <LinearLayout
 
                     android:layout_width="match_parent"

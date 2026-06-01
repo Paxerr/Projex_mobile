@@ -89,9 +89,9 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
                 android:layout_marginTop="24dp"
                 android:layout_marginBottom="8dp"
-                android:layout_marginLeft="8dp"
                 android:letterSpacing="0.04"
                 android:text="TÊN NGƯỜI QUẢN LÝ"
                 android:textColor="#9CA3AF"

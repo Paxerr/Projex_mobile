@@ -1,5 +1,6 @@
 package com.example.projex_mobile.fragments;
 
+import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -21,8 +22,10 @@ import com.example.projex_mobile.api.ApiService;
 import com.example.projex_mobile.api.RetrofitClient;
 import com.example.projex_mobile.objects.Task;
 
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TimeZone;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -43,6 +46,7 @@ public class TaskDetailFragment extends Fragment {
     private EditText edtPriority;
     private int projectId;
     String projectName = "";
+    private String dueDateApi = "";
 
     private String token = "";
 
@@ -91,6 +95,8 @@ public class TaskDetailFragment extends Fragment {
         edtStartDate = view.findViewById(R.id.Startdate);
         edtPriority = view.findViewById(R.id.Priority);
 
+        edtDueDate.setOnClickListener(v -> showDatePicker());
+
         btnBack.setOnClickListener(v -> {
             requireActivity()
                     .getSupportFragmentManager()
@@ -132,8 +138,7 @@ public class TaskDetailFragment extends Fragment {
             return;
         }
 
-        ApiService apiService =
-                RetrofitClient.getApiService(null);
+        ApiService apiService = RetrofitClient.getApiService(null);
 
         apiService.getTaskById(token, taskId)
                 .enqueue(new Callback<Task>() {
@@ -144,15 +149,13 @@ public class TaskDetailFragment extends Fragment {
 
                         if (!isAdded()) return;
 
-                        if (response.isSuccessful()
-                                && response.body() != null) {
+                        if (response.isSuccessful() && response.body() != null)
+                        {
 
                             Task task = response.body();
-
                             bindTask(task);
 
                         } else {
-
                             Toast.makeText(
                                     requireContext(),
                                     "Không lấy được task: "
@@ -163,11 +166,10 @@ public class TaskDetailFragment extends Fragment {
                     }
 
                     @Override
-                    public void onFailure(Call<Task> call,
-                                          Throwable t) {
+                    public void onFailure(Call<Task> call, Throwable t)
+                    {
 
                         if (!isAdded()) return;
-
                         Toast.makeText(
                                 requireContext(),
                                 "Lỗi: " + t.getMessage(),
@@ -179,46 +181,72 @@ public class TaskDetailFragment extends Fragment {
 
     private void bindTask(Task task) {
 
-        edtTaskName.setText(task.getTitle() != null
-                        ? task.getTitle()
-                        : ""
-        );
+        edtTaskName.setText(task.getTitle() != null ? task.getTitle() : "");
 
-        edtDescription.setText(task.getDescription() != null
-                        ? task.getDescription()
-                        : ""
-        );
+        edtDescription.setText(task.getDescription() != null ? task.getDescription() : "");
 
-        txtStatus.setText(task.getStatus() != null
-                        ? task.getStatus()
-                        : "Assigned"
-        );
+        txtStatus.setText(task.getStatus() != null ? task.getStatus() : "Assigned");
 
-        edtDueDate.setText(task.getDueDate() != null
-                        ? task.getDueDate()
-                        : ""
-        );
-        edtStartDate.setText(task.getCreatedAt() != null
-                        ? task.getCreatedAt()
-                        : ""
-        );
+        String dueDate = task.getDueDate();
+        if (dueDate != null && dueDate.contains("T")) {
+            dueDate = dueDate.substring(0, dueDate.indexOf("T"));
+        }
+        edtDueDate.setText(dueDate != null ? dueDate : "");
 
-        edtPriority.setText(String.valueOf(task.getPriority())
-        );
+        String createdAt = task.getCreatedAt();
+        if (createdAt != null && createdAt.contains("T")) {
+            createdAt = createdAt.substring(0, createdAt.indexOf("T"));
+        }
+        edtStartDate.setText(createdAt != null ? createdAt : "");
+        edtPriority.setText(String.valueOf(task.getPriority()));
 
         if (projectName != null && !projectName.isEmpty()) {
 
             txtProject.setText(projectName);
 
-        } else if (task.getProject() != null
-                && task.getProject().getName() != null) {
-
+        } else if (task.getProject() != null && task.getProject().getName() != null)
+        {
             txtProject.setText(task.getProject().getName());
 
         } else {
 
             txtProject.setText("Project " + task.getProjectId());
         }
+    }
+    private void showDatePicker() {
+        Calendar calendar = Calendar.getInstance(
+                TimeZone.getTimeZone("Asia/Ho_Chi_Minh")
+        );
+
+
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH);
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+
+        DatePickerDialog dialog = new DatePickerDialog(
+                requireContext(),
+                (view, selectedYear, selectedMonth, selectedDay) -> {
+
+                    String displayDate = String.format(
+                                    "%04d-%02d-%02d",
+                                    selectedYear,
+                                    selectedMonth + 1,
+                                    selectedDay
+                            );
+
+                    dueDateApi = selectedYear
+                            + "-"
+                            + String.format("%02d", selectedMonth + 1)
+                            + "-"
+                            + String.format("%02d", selectedDay)
+                            + "T23:59:00";
+
+                    edtDueDate.setText(displayDate);
+                },
+                year, month, day
+        );
+
+        dialog.show();
     }
 
     private void updateTask() {
@@ -227,8 +255,8 @@ public class TaskDetailFragment extends Fragment {
 
         String description = edtDescription.getText().toString().trim();
 
-        String dueDate = edtDueDate.getText().toString().trim();
-        String startDate = edtStartDate.getText().toString().trim();
+        String dueDate = dueDateApi;
+
 
         String status = txtStatus.getText().toString().trim();
 
@@ -242,8 +270,8 @@ public class TaskDetailFragment extends Fragment {
 
         try {
             priority = Integer.parseInt(priorityText);
-        } catch (Exception ignored) {
         }
+        catch (Exception ignored) {}
 
         Map<String, Object> body = new HashMap<>();
 
@@ -256,8 +284,7 @@ public class TaskDetailFragment extends Fragment {
             body.put("dueDate", dueDate);
         }
 
-        ApiService apiService =
-                RetrofitClient.getApiService(null);
+        ApiService apiService = RetrofitClient.getApiService(null);
 
         apiService.updateTask(token, taskId, body)
                 .enqueue(new Callback<Task>() {

@@ -83,6 +83,12 @@ public interface ApiService {
             @Header("Authorization") String token,
             @Path("taskId") int taskId
     );
+    @POST("api/projects/{projectId}/tasks")
+    Call<Void> createTask(
+            @Header("Authorization") String token,
+            @Path("projectId") int projectId,
+            @Body Map<String, Object> body
+    );
 
 
 }
