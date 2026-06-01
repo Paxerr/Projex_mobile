@@ -49,11 +49,13 @@ public class ProTaskFragment extends Fragment {
     private List<Task> filteredList = new ArrayList<>();
 
     private int projectId;
+    private String projectName = "";
 
     private String selectedStatus = "All";
     private String selectedUser = "All";
 
     private EditText edtSearch;
+    private TextView txtProject;
 
     public ProTaskFragment() {}
 
@@ -79,12 +81,32 @@ public class ProTaskFragment extends Fragment {
 
         if(getArguments() != null){
             projectId = getArguments().getInt("project_id");
+            projectName = getArguments().getString("project_name", "");
         }
+
         rvTask = view.findViewById(R.id.rvTasks);
 
         rvTask.setLayoutManager(new LinearLayoutManager(requireContext()));
 
-        adapter = new TaskAdapter(filteredList);
+        adapter = new TaskAdapter(filteredList, task -> {
+
+            TaskDetailFragment fragment = new TaskDetailFragment();
+
+            Bundle bundle = new Bundle();
+
+            bundle.putInt("task_id", task.getId());
+            bundle.putInt("project_id", projectId);
+            bundle.putString("project_name", projectName);
+
+            fragment.setArguments(bundle);
+
+            requireActivity()
+                    .getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.frame_container, fragment)
+                    .addToBackStack(null)
+                    .commit();
+        },projectName);
 
         rvTask.setAdapter(adapter);
 
@@ -100,6 +122,8 @@ public class ProTaskFragment extends Fragment {
         FrameLayout btnAdd = view.findViewById(R.id.btnAdd);
         LinearLayout ngth = view.findViewById(R.id.ngth);
         TextView ngthText = view.findViewById(R.id.ngth_text);
+        TextView txtProject = view.findViewById(R.id.txtProject);
+        txtProject.setText(projectName);
 
         btnBack.setOnClickListener(v -> {
 

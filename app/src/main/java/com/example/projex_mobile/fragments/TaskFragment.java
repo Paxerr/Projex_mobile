@@ -38,11 +38,9 @@ public class TaskFragment extends Fragment {
 
     private TaskAdapter adapter;
 
-    private List<Task> originalList =
-            new ArrayList<>();
+    private List<Task> originalList = new ArrayList<>();
 
-    private List<Task> filteredList =
-            new ArrayList<>();
+    private List<Task> filteredList = new ArrayList<>();
 
     private String selectedStatus = "All";
 
@@ -57,20 +55,13 @@ public class TaskFragment extends Fragment {
                              ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View view = inflater.inflate(
-                R.layout.task_fragment,
-                container,
-                false
-        );
+        View view = inflater.inflate(R.layout.task_fragment, container, false);
 
         rvTask = view.findViewById(R.id.rvTask);
 
-        rvTask.setLayoutManager(
-                new LinearLayoutManager(requireContext())
-        );
+        rvTask.setLayoutManager(new LinearLayoutManager(requireContext()));
 
-        adapter =
-                new TaskAdapter(filteredList);
+        adapter = new TaskAdapter(filteredList);
 
         rvTask.setAdapter(adapter);
 
@@ -83,20 +74,16 @@ public class TaskFragment extends Fragment {
 
         btnStatus.setOnClickListener(v -> {
 
-            PopupMenu popup =
-                    new PopupMenu(requireContext(),
-                            btnStatus);
+            PopupMenu popup = new PopupMenu(requireContext(), btnStatus);
 
 
             popup.getMenu().add("Assigned");
             popup.getMenu().add("InProgress");
-
             popup.getMenu().add("Done");
 
             popup.setOnMenuItemClickListener(item -> {
 
-                selectedStatus =
-                        item.getTitle().toString();
+                selectedStatus = item.getTitle().toString();
 
                 textStatus.setText(selectedStatus);
 
@@ -110,11 +97,8 @@ public class TaskFragment extends Fragment {
         btnAllTask.setOnClickListener(v -> {
 
             selectedStatus = "All";
-
             textStatus.setText("Trạng thái");
-
             edtSearch.setText("");
-
             filterTasks();
         });
 
@@ -156,10 +140,9 @@ public class TaskFragment extends Fragment {
 
     private void loadTasks() {
 
-        SharedPreferences prefs =
-                requireActivity().getSharedPreferences(
-                        "user_prefs",
-                        Context.MODE_PRIVATE
+        SharedPreferences prefs = requireActivity().getSharedPreferences(
+                "user_prefs",
+                Context.MODE_PRIVATE
                 );
 
         String token =
@@ -181,8 +164,7 @@ public class TaskFragment extends Fragment {
                                 && response.body() != null
                                 && response.body().getItems() != null) {
 
-                            originalList =
-                                    response.body().getItems();
+                            originalList = response.body().getItems();
 
                             filterTasks();
 
@@ -209,30 +191,21 @@ public class TaskFragment extends Fragment {
 
         filteredList.clear();
 
-        String keyword =
-                edtSearch.getText()
+        String keyword = edtSearch.getText()
                         .toString()
                         .trim()
                         .toLowerCase();
 
         for (Task task : originalList) {
 
-            boolean matchSearch =
-                    task.getTitle() != null
+            boolean matchSearch = task.getTitle() != null
                             && task.getTitle()
                             .toLowerCase()
                             .contains(keyword);
 
-            boolean matchStatus =
-                    selectedStatus.equals("All")
-                            || (
-                            task.getStatus() != null
-                                    && task.getStatus()
-                                    .equalsIgnoreCase(selectedStatus)
-                    );
+            boolean matchStatus = selectedStatus.equals("All") || (task.getStatus() != null && task.getStatus().equalsIgnoreCase(selectedStatus));
 
             if (matchSearch && matchStatus) {
-
                 filteredList.add(task);
             }
         }
