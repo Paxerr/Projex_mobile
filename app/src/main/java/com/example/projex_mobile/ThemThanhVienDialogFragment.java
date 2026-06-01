@@ -1,6 +1,7 @@
 package com.example.projex_mobile;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -19,11 +20,38 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
+import com.example.projex_mobile.api.ApiService;
+import com.example.projex_mobile.api.RetrofitClient;
+import com.google.gson.JsonObject;
+
+import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class ThemThanhVienDialogFragment extends DialogFragment {
 
+    private static final String ARG_PROJECT_ID = "project_id";
+    private static final String ARG_CURRENT_USER_ROLE = "current_user_role";
+
+    private int projectId = -1;
+    private String currentUserRole = "Member";
     private View modalCard;
     private EditText edtEmailOrName;
     private TextView tvRole;
+
+    public static ThemThanhVienDialogFragment newInstance(int projectId, String currentUserRole) {
+        ThemThanhVienDialogFragment fragment = new ThemThanhVienDialogFragment();
+        Bundle bundle = new Bundle();
+        bundle.putInt(ARG_PROJECT_ID, projectId);
+        bundle.putString(ARG_CURRENT_USER_ROLE, currentUserRole);
+        fragment.setArguments(bundle);
+        return fragment;
+    }
 
     @NonNull
     @Override
@@ -48,6 +76,11 @@ public class ThemThanhVienDialogFragment extends DialogFragment {
         super.onViewCreated(view, savedInstanceState);
 
         setCancelable(false);
+
+        if (getArguments() != null) {
+            projectId = getArguments().getInt(ARG_PROJECT_ID, -1);
+            currentUserRole = getArguments().getString(ARG_CURRENT_USER_ROLE, "Member");
+        }
 
         modalCard = view.findViewById(R.id.modalCard);
         edtEmailOrName = view.findViewById(R.id.edtEmailOrName);
@@ -79,7 +112,23 @@ public class ThemThanhVienDialogFragment extends DialogFragment {
 
         btnCancel.setOnClickListener(v -> dismiss());
 
-        roleBox.setOnClickListener(v -> showRoleDropdown(v));
+        // Only Owner is allowed to choose the role. Admins are forced to invite as Member.
+        boolean isOwner = "Owner".equalsIgnoreCase(currentUserRole);
+        if (!isOwner) {
+            if (tvRole != null) {
+                tvRole.setText("Member");
+            }
+            if (roleBox != null) {
+                roleBox.setEnabled(false);
+                roleBox.setClickable(false);
+            }
+        } else {
+            if (roleBox != null) {
+                roleBox.setEnabled(true);
+                roleBox.setClickable(true);
+                roleBox.setOnClickListener(v -> showRoleDropdown(v));
+            }
+        }
 
         View.OnClickListener submit = v -> inviteMember();
         btnAdd.setOnClickListener(submit);
@@ -116,6 +165,11 @@ public class ThemThanhVienDialogFragment extends DialogFragment {
     }
 
     private void inviteMember() {
+        if (projectId == -1) {
+            Toast.makeText(requireContext(), "Không tìm thấy projectId", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         if (edtEmailOrName == null || tvRole == null) {
             Toast.makeText(requireContext(), "Thiếu thành phần nhập liệu", Toast.LENGTH_SHORT).show();
             return;
@@ -126,7 +180,7 @@ public class ThemThanhVienDialogFragment extends DialogFragment {
                 : edtEmailOrName.getText().toString().trim();
         String role = tvRole.getText() == null
                 ? "Member"
-                : tvRole.getText().toString().trim();
+                : normalizeRole(tvRole.getText().toString().trim());
 
         if (email.isEmpty()) {
             Toast.makeText(requireContext(), "Vui lòng nhập email", Toast.LENGTH_SHORT).show();
@@ -138,12 +192,91 @@ public class ThemThanhVienDialogFragment extends DialogFragment {
             return;
         }
 
-        Toast.makeText(
-                requireContext(),
-                "Thêm người thành công",
-                Toast.LENGTH_SHORT
-        ).show();
+        String token = requireActivity()
+                .getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
+                .getString("token", "");
 
-        dismiss();
+        if (token == null || token.trim().isEmpty()) {
+            Toast.makeText(requireContext(), "Bạn cần đăng nhập lại", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        String authToken = token.startsWith("Bearer ") ? token : "Bearer " + token;
+
+        Map<String, String> body = new HashMap<>();
+        body.put("email", email);
+        body.put("role", role);
+
+        ApiService apiService = RetrofitClient.getApiService(null);
+        apiService.addProjectMemberByEmail(authToken, projectId, body)
+                .enqueue(new Callback<JsonObject>() {
+                    @Override
+                    public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                        if (!isAdded()) return;
+
+                        if (response.isSuccessful()) {
+                            Toast.makeText(
+                                    requireContext(),
+                                    "Thêm người thành công",
+                                    Toast.LENGTH_SHORT
+                            ).show();
+
+                            Bundle result = new Bundle();
+                            result.putBoolean("success", true);
+                            getParentFragmentManager().setFragmentResult("member_added", result);
+
+                            dismiss();
+                        } else {
+                            Toast.makeText(requireContext(), getErrorMessage(response), Toast.LENGTH_LONG).show();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<JsonObject> call, Throwable t) {
+                        if (!isAdded()) return;
+                        Toast.makeText(requireContext(), "Lỗi kết nối: " + t.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                });
+    }
+
+    private String normalizeRole(String role) {
+        if (role == null) {
+            return "Member";
+        }
+
+        String value = role.trim().toLowerCase();
+
+        if (value.contains("owner") || value.contains("chủ")) {
+            return "Owner";
+        }
+
+        if (value.contains("admin") || value.contains("quản")) {
+            return "Admin";
+        }
+
+        return "Member";
+    }
+
+    private String getErrorMessage(Response<JsonObject> response) {
+        try {
+            if (response.errorBody() == null) {
+                return "Thêm thành viên thất bại";
+            }
+
+            String raw = response.errorBody().string();
+            JSONObject json = new JSONObject(raw);
+
+            if (json.has("message")) {
+                return json.getString("message");
+            }
+
+            if (json.has("title")) {
+                return json.getString("title");
+            }
+
+            return raw;
+        } catch (Exception e) {
+            return "Thêm thành viên thất bại. Mã lỗi: " + response.code();
+        }
     }
 }
