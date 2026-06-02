@@ -2,6 +2,8 @@ package com.example.projex_mobile.objects;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.List;
+
 // Project.java
 public class Project {
     @SerializedName("id")
@@ -22,6 +24,8 @@ public class Project {
     private String CreatedAt;
     @SerializedName("updatedAt")
     private String UpdatedAt;
+    @SerializedName("members")
+    private List<ProjectMember> Members;
 
     public Project() {}
 
@@ -51,4 +55,11 @@ public class Project {
 
     public String getUpdatedAt() { return UpdatedAt; }
     public void setUpdatedAt(String updatedAt) { UpdatedAt = updatedAt; }
+    public List<ProjectMember> getMembers() {
+        return Members;
+    }
+
+    public void setMembers(List<ProjectMember> members) {
+        Members = members;
+    }
 }

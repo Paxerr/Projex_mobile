@@ -33,13 +33,13 @@ android:layout_height="match_parent">
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 
-    <ScrollView
+    <androidx.core.widget.NestedScrollView
     android:id="@+id/space"
     android:layout_width="match_parent"
     android:layout_height="0dp"
     android:layout_weight="1"
-    android:fillViewport="true"
-    >
+    android:fillViewport="true">
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -406,15 +406,15 @@ android:layout_height="match_parent">
 
                 <!-- RECYCLERVIEW -->
                 <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/rvUpdates"
+                    android:id="@+id/rvUpdatesTask"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content" />
 
             </LinearLayout>
         </LinearLayout>
 
     </LinearLayout>
-</ScrollView>
+</androidx.core.widget.NestedScrollView>
 
 
 </LinearLayout>

@@ -1,6 +1,7 @@
 package com.example.projex_mobile.api;
 
 import com.example.projex_mobile.objects.DashboardOverview;
+import com.example.projex_mobile.objects.Project;
 import com.example.projex_mobile.objects.RecentItem;
 import com.example.projex_mobile.objects.Task;
 import com.example.projex_mobile.objects.TaskResponse;
@@ -120,5 +121,10 @@ public interface ApiService {
             @Header("Authorization") String token,
             @Path("projectId") int projectId,
             @Path("userId") int userId
+    );
+    @GET("api/projects/{id}")
+    Call<Project> getProjectDetail(
+            @Header("Authorization") String token,
+            @Path("id") int id
     );
 }
