@@ -93,7 +93,7 @@ public class ProjectFragment extends Fragment {
         rvUpdatesTask.setAdapter(adapter);
 
 
-        loadProject();
+
         loadProject();
         loadLatestTasks();
 
@@ -218,6 +218,7 @@ public class ProjectFragment extends Fragment {
             Bundle bundle = new Bundle();
             bundle.putInt("project_id", projectId);
             bundle.putString("project_name", txtProjectName.getText().toString());
+
             fragment.setArguments(bundle);
 
             requireActivity()

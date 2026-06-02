@@ -299,7 +299,7 @@
                     android:padding="8dp"
 
                     android:paddingHorizontal="16dp"
-                    android:layout_marginBottom="24dp"
+                    android:layout_marginBottom="16dp"
                     android:layout_marginHorizontal="20dp"
                     android:elevation="24dp"
                     android:orientation="horizontal">
@@ -314,6 +314,41 @@
                         android:layout_weight="1"
                         android:inputType="number"
                         android:textColor="#FFFFFF"/>
+
+                </LinearLayout>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:letterSpacing="0.04"
+                    android:text="ASSIGNED"
+                    android:textColor="#9CA3AF"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginStart="20dp"/>
+                <LinearLayout
+
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/team_bg_card"
+                    android:padding="8dp"
+
+                    android:paddingHorizontal="16dp"
+                    android:layout_marginBottom="16dp"
+                    android:layout_marginHorizontal="20dp"
+                    android:elevation="24dp"
+                    android:orientation="horizontal">
+
+                    <EditText
+                        android:id="@+id/Assigned"
+                        android:textColorHint="#FFFFFF"
+                        android:textSize="12sp"
+                        android:layout_height="wrap_content"
+                        android:layout_width="0dp"
+                        android:hint="Assigned to"
+                        android:layout_weight="1"
+                        android:textColor="#FFFFFF"
+                        />
 
                 </LinearLayout>
                 <LinearLayout

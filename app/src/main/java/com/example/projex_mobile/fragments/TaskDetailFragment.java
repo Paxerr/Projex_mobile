@@ -21,6 +21,11 @@ import com.example.projex_mobile.R;
 import com.example.projex_mobile.api.ApiService;
 import com.example.projex_mobile.api.RetrofitClient;
 import com.example.projex_mobile.objects.Task;
+import com.example.projex_mobile.objects.Project;
+import com.example.projex_mobile.objects.ProjectMember;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import java.util.Calendar;
 import java.util.HashMap;
@@ -44,6 +49,9 @@ public class TaskDetailFragment extends Fragment {
     private EditText edtDueDate;
     private EditText edtStartDate;
     private EditText edtPriority;
+    private EditText edtAssigned;
+    private List<ProjectMember> members = new ArrayList<>();
+    private int selectedUserId = 0;
     private int projectId;
     String projectName = "";
     private String dueDateApi = "";
@@ -72,6 +80,7 @@ public class TaskDetailFragment extends Fragment {
 
         if (getArguments() != null) {
             taskId = getArguments().getInt("task_id");
+            projectId = getArguments().getInt("project_id", 0);
             projectName = getArguments().getString("project_name", "");
         }
 
@@ -94,6 +103,11 @@ public class TaskDetailFragment extends Fragment {
         edtDueDate = view.findViewById(R.id.Duedate);
         edtStartDate = view.findViewById(R.id.Startdate);
         edtPriority = view.findViewById(R.id.Priority);
+        edtAssigned = view.findViewById(R.id.Assigned);
+        edtAssigned.setFocusable(false);
+        edtAssigned.setClickable(true);
+
+        edtAssigned.setOnClickListener(v -> showMemberPopup());
 
         edtDueDate.setOnClickListener(v -> showDatePicker());
 
@@ -106,6 +120,7 @@ public class TaskDetailFragment extends Fragment {
         btnStatus.setOnClickListener(v -> showStatusPopup());
         btnSave.setOnClickListener(v -> updateTask());
 
+        loadMembers();
         loadTaskDetail();
     }
 
@@ -186,6 +201,13 @@ public class TaskDetailFragment extends Fragment {
         edtDescription.setText(task.getDescription() != null ? task.getDescription() : "");
 
         txtStatus.setText(task.getStatus() != null ? task.getStatus() : "Assigned");
+        if(task.getAssignees() != null && !task.getAssignees().isEmpty()) {
+
+            edtAssigned.setText(task.getAssignees()
+                    .get(0)
+                    .getFullName()
+            );
+        }
 
         String dueDate = task.getDueDate();
         if (dueDate != null && dueDate.contains("T")) {
@@ -329,4 +351,81 @@ public class TaskDetailFragment extends Fragment {
                     }
                 });
     }
+    private void loadMembers() {
+
+        if (projectId == 0) {
+            return;
+        }
+
+        ApiService apiService = RetrofitClient.getApiService(null);
+
+        apiService.getProjectDetail(token, projectId)
+                .enqueue(new Callback<Project>() {
+                    @Override
+                    public void onResponse(Call<Project> call,
+                                           Response<Project> response) {
+
+                        if (!isAdded()) return;
+
+                        if (response.isSuccessful()
+                                && response.body() != null
+                                && response.body().getMembers() != null) {
+
+                            members.clear();
+                            members.addAll(response.body().getMembers());
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<Project> call, Throwable t) {
+                        if (!isAdded()) return;
+
+                        Toast.makeText(
+                                requireContext(),
+                                "Lỗi load member: " + t.getMessage(),
+                                Toast.LENGTH_SHORT
+                        ).show();
+                    }
+                });
+    }
+    private void showMemberPopup() {
+
+        if (members.isEmpty()) {
+            Toast.makeText(
+                    requireContext(),
+                    "Project chưa có member",
+                    Toast.LENGTH_SHORT
+            ).show();
+            return;
+        }
+
+        PopupMenu popup = new PopupMenu(requireContext(), edtAssigned);
+
+        for (ProjectMember member : members) {
+
+            if (member.getUser() != null) {
+
+                popup.getMenu().add(
+                        0,
+                        member.getUserId(),
+                        0,
+                        member.getUser().getFullName()
+                );
+            }
+        }
+
+        popup.setOnMenuItemClickListener(item -> {
+
+            selectedUserId = item.getItemId();
+
+            edtAssigned.setText(
+                    item.getTitle().toString()
+            );
+
+            return true;
+        });
+
+        popup.show();
+    }
+
 }

@@ -17,6 +17,10 @@ import androidx.fragment.app.Fragment;
 import com.example.projex_mobile.R;
 import com.example.projex_mobile.api.ApiService;
 import com.example.projex_mobile.api.RetrofitClient;
+import com.example.projex_mobile.objects.ProjectMember;
+import android.widget.PopupMenu;
+import com.example.projex_mobile.objects.Project;
+import com.example.projex_mobile.objects.User;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -37,6 +41,9 @@ public class Add_TaskFragment extends Fragment {
 
     private EditText taskname, description, Duedate, Priority;
     private TextView btnTao, btnHuy, txtProject;
+    private TextView txtAssigned;
+    private List<ProjectMember> members = new ArrayList<>();
+    private int selectedUserId = 0;
 
     public Add_TaskFragment() {
     }
@@ -67,6 +74,9 @@ public class Add_TaskFragment extends Fragment {
         btnHuy = view.findViewById(R.id.btnHuy);
 
         txtProject.setText(projectName);
+        txtAssigned = view.findViewById(R.id.Assigned);
+        txtAssigned.setOnClickListener(v -> showMemberPopup());
+
 
         Duedate.setOnClickListener(v -> showDatePicker());
 
@@ -77,6 +87,7 @@ public class Add_TaskFragment extends Fragment {
         });
 
         btnTao.setOnClickListener(v -> createTask());
+        loadMembers();
 
         return view;
     }
@@ -197,6 +208,18 @@ public class Add_TaskFragment extends Fragment {
 
         assignedUserIds.add(userId);
 
+        if (selectedUserId == 0) {
+            Toast.makeText(
+                    requireContext(),
+                    "Vui lòng chọn người được giao task",
+                    Toast.LENGTH_SHORT
+            ).show();
+            return;
+        }
+
+
+        assignedUserIds.add(selectedUserId);
+
         body.put("assignedUserIds", assignedUserIds);
 
         ApiService apiService = RetrofitClient.getApiService(null);
@@ -245,5 +268,71 @@ public class Add_TaskFragment extends Fragment {
                         ).show();
                     }
                 });
+    }
+    private void loadMembers() {
+        SharedPreferences prefs = requireActivity().getSharedPreferences(
+                "user_prefs",
+                Context.MODE_PRIVATE
+        );
+
+        String token = prefs.getString("token", "");
+
+        ApiService apiService = RetrofitClient.getApiService(null);
+
+        apiService.getProjectDetail(token, projectId)
+                .enqueue(new Callback<Project>() {
+                    @Override
+                    public void onResponse(Call<Project> call,
+                                           Response<Project> response) {
+
+                        if (response.isSuccessful()
+                                && response.body() != null
+                                && response.body().getMembers() != null) {
+
+                            members.clear();
+                            members.addAll(response.body().getMembers());
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<Project> call, Throwable t) {
+                        Toast.makeText(
+                                requireContext(),
+                                "Lỗi load member: " + t.getMessage(),
+                                Toast.LENGTH_SHORT
+                        ).show();
+                    }
+                });
+    }
+    private void showMemberPopup() {
+        if (members.isEmpty()) {
+            Toast.makeText(
+                    requireContext(),
+                    "Project chưa có member",
+                    Toast.LENGTH_SHORT
+            ).show();
+            return;
+        }
+
+        PopupMenu popup = new PopupMenu(requireContext(), txtAssigned);
+
+        for (ProjectMember member : members) {
+            if (member.getUser() != null) {
+                popup.getMenu().add(
+                        0,
+                        member.getUserId(),
+                        0,
+                        member.getUser().getFullName()
+                );
+            }
+        }
+
+        popup.setOnMenuItemClickListener(item -> {
+            selectedUserId = item.getItemId();
+            txtAssigned.setText(item.getTitle().toString());
+            return true;
+        });
+
+        popup.show();
     }
 }
