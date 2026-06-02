@@ -32,14 +32,12 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-
-    <ScrollView
+    <androidx.core.widget.NestedScrollView
         android:id="@+id/space"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:fillViewport="true"
-        >
+        android:fillViewport="true">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -413,18 +411,12 @@
                             android:layout_height="0dp"
                             android:layout_weight="1"/>
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Tất cả"
-                            android:textColor="#85ADFF"
-                            android:textSize="12sp"
-                            android:textStyle="bold"/>
+
                     </LinearLayout>
 
                     <!-- RECYCLERVIEW -->
                     <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/rvUpdates"
+                        android:id="@+id/rvUpdatesTask"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"/>
 
@@ -432,7 +424,7 @@
             </LinearLayout>
 
         </LinearLayout>
-    </ScrollView>
+    </androidx.core.widget.NestedScrollView>
 
 
 </LinearLayout>

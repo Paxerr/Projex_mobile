@@ -1,7 +1,9 @@
 package com.example.projex_mobile.api;
 
 import com.example.projex_mobile.objects.DashboardOverview;
+import com.example.projex_mobile.objects.Project;
 import com.example.projex_mobile.objects.RecentItem;
+import com.example.projex_mobile.objects.Task;
 import com.example.projex_mobile.objects.TaskResponse;
 import com.example.projex_mobile.objects.User;
 import com.google.gson.JsonObject;
@@ -81,6 +83,24 @@ public interface ApiService {
             @Path("projectId") int projectId
     );
 
+    @PUT("api/tasks/{id}")
+    Call<Task> updateTask(
+            @Header("Authorization") String token,
+            @Path("id") int id,
+            @Body Map<String, Object> body
+    );
+    @GET("api/tasks/{taskId}")
+    Call<Task> getTaskById(
+            @Header("Authorization") String token,
+            @Path("taskId") int taskId
+    );
+    @POST("api/projects/{projectId}/tasks")
+    Call<Void> createTask(
+            @Header("Authorization") String token,
+            @Path("projectId") int projectId,
+            @Body Map<String, Object> body
+    );
+
     @POST("api/projects/{projectId}/members/by-email")
     Call<JsonObject> addProjectMemberByEmail(
             @Header("Authorization") String token,
@@ -101,5 +121,10 @@ public interface ApiService {
             @Header("Authorization") String token,
             @Path("projectId") int projectId,
             @Path("userId") int userId
+    );
+    @GET("api/projects/{id}")
+    Call<Project> getProjectDetail(
+            @Header("Authorization") String token,
+            @Path("id") int id
     );
 }

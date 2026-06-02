@@ -38,11 +38,9 @@ public class TaskFragment extends Fragment {
 
     private TaskAdapter adapter;
 
-    private List<Task> originalList =
-            new ArrayList<>();
+    private List<Task> originalList = new ArrayList<>();
 
-    private List<Task> filteredList =
-            new ArrayList<>();
+    private List<Task> filteredList = new ArrayList<>();
 
     private String selectedStatus = "All";
 
@@ -57,20 +55,38 @@ public class TaskFragment extends Fragment {
                              ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View view = inflater.inflate(
-                R.layout.task_fragment,
-                container,
-                false
-        );
+        View view = inflater.inflate(R.layout.task_fragment, container, false);
 
         rvTask = view.findViewById(R.id.rvTask);
 
-        rvTask.setLayoutManager(
-                new LinearLayoutManager(requireContext())
-        );
+        rvTask.setLayoutManager(new LinearLayoutManager(requireContext()));
 
-        adapter =
-                new TaskAdapter(filteredList);
+        adapter = new TaskAdapter(filteredList, task -> {
+
+                    TaskDetailFragment fragment = new TaskDetailFragment();
+
+                    Bundle bundle = new Bundle();
+
+                    bundle.putInt("task_id", task.getId());
+
+                    if(task.getProject() != null){
+                        bundle.putInt("project_id", task.getProject().getId());
+                        bundle.putString("project_name", task.getProject().getName());
+                    }
+
+                    fragment.setArguments(bundle);
+
+                    requireActivity()
+                            .getSupportFragmentManager()
+                            .beginTransaction()
+                            .replace(
+                                    R.id.frame_container,
+                                    fragment
+                            )
+                            .addToBackStack(null)
+                            .commit();
+                }
+        );
 
         rvTask.setAdapter(adapter);
 
@@ -82,21 +98,15 @@ public class TaskFragment extends Fragment {
         TextView textStatus = view.findViewById(R.id.textStatus);
 
         btnStatus.setOnClickListener(v -> {
-
-            PopupMenu popup =
-                    new PopupMenu(requireContext(),
-                            btnStatus);
-
+            PopupMenu popup = new PopupMenu(requireContext(), btnStatus);
 
             popup.getMenu().add("Assigned");
             popup.getMenu().add("InProgress");
-
             popup.getMenu().add("Done");
 
             popup.setOnMenuItemClickListener(item -> {
 
-                selectedStatus =
-                        item.getTitle().toString();
+                selectedStatus = item.getTitle().toString();
 
                 textStatus.setText(selectedStatus);
 
@@ -110,10 +120,8 @@ public class TaskFragment extends Fragment {
         btnAllTask.setOnClickListener(v -> {
 
             selectedStatus = "All";
-
             textStatus.setText("Trạng thái");
             edtSearch.setText("");
-
             filterTasks();
         });
 
@@ -122,29 +130,16 @@ public class TaskFragment extends Fragment {
                 new TextWatcher() {
 
                     @Override
-                    public void beforeTextChanged(
-                            CharSequence s,
-                            int start,
-                            int count,
-                            int after
-                    ) {
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
                     }
 
                     @Override
-                    public void onTextChanged(
-                            CharSequence s,
-                            int start,
-                            int before,
-                            int count
-                    ) {
-
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
                         filterTasks();
                     }
 
                     @Override
-                    public void afterTextChanged(
-                            Editable s
-                    ) {
+                    public void afterTextChanged(Editable s) {
                     }
                 });
 
@@ -155,49 +150,32 @@ public class TaskFragment extends Fragment {
 
     private void loadTasks() {
 
-        SharedPreferences prefs =
-                requireActivity().getSharedPreferences(
-                        "user_prefs",
-                        Context.MODE_PRIVATE
-                );
+        SharedPreferences prefs = requireActivity().getSharedPreferences("user_prefs", Context.MODE_PRIVATE);
 
-        String token =
-                prefs.getString("token", "");
+        String token = prefs.getString("token", "");
 
-        ApiService apiService =
-                RetrofitClient.getApiService(null);
+        ApiService apiService = RetrofitClient.getApiService(null);
 
         apiService.getAssignedTasks(token)
                 .enqueue(new Callback<TaskResponse>() {
 
                     @Override
-                    public void onResponse(
-                            Call<TaskResponse> call,
-                            Response<TaskResponse> response
-                    ) {
+                    public void onResponse(Call<TaskResponse> call, Response<TaskResponse> response) {
 
-                        if (response.isSuccessful()
-                                && response.body() != null
+                        if (response.isSuccessful() && response.body() != null
                                 && response.body().getItems() != null) {
 
-                            originalList =
-                                    response.body().getItems();
-
+                            originalList = response.body().getItems();
                             filterTasks();
 
                         } else {
-
                             Log.e("TASK_API",
                                     "Response Error");
                         }
                     }
 
                     @Override
-                    public void onFailure(
-                            Call<TaskResponse> call,
-                            Throwable t
-                    ) {
-
+                    public void onFailure(Call<TaskResponse> call, Throwable t) {
                         Log.e("TASK_API",
                                 t.getMessage());
                     }
@@ -208,30 +186,14 @@ public class TaskFragment extends Fragment {
 
         filteredList.clear();
 
-        String keyword =
-                edtSearch.getText()
-                        .toString()
-                        .trim()
-                        .toLowerCase();
+        String keyword = edtSearch.getText().toString().trim().toLowerCase();
 
         for (Task task : originalList) {
+            boolean matchSearch = task.getTitle() != null && task.getTitle().toLowerCase().contains(keyword);
 
-            boolean matchSearch =
-                    task.getTitle() != null
-                            && task.getTitle()
-                            .toLowerCase()
-                            .contains(keyword);
-
-            boolean matchStatus =
-                    selectedStatus.equals("All")
-                            || (
-                            task.getStatus() != null
-                                    && task.getStatus()
-                                    .equalsIgnoreCase(selectedStatus)
-                    );
+            boolean matchStatus = selectedStatus.equals("All") || (task.getStatus() != null && task.getStatus().equalsIgnoreCase(selectedStatus));
 
             if (matchSearch && matchStatus) {
-
                 filteredList.add(task);
             }
         }
