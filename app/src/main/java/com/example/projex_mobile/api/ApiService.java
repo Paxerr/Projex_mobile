@@ -105,7 +105,7 @@ public interface ApiService {
     Call<JsonObject> addProjectMemberByEmail(
             @Header("Authorization") String token,
             @Path("projectId") int projectId,
-            @Body Map<String, String> body
+            @Body Map<String, Object> body
     );
 
     @PUT("api/projects/{projectId}/members/{userId}/role")
