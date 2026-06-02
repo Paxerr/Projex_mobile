@@ -127,4 +127,17 @@ public interface ApiService {
             @Header("Authorization") String token,
             @Path("id") int id
     );
+    @POST("api/tasks/{taskId}/assignments")
+    Call<JsonObject> addTaskAssignments(
+            @Header("Authorization") String token,
+            @Path("taskId") int taskId,
+            @Body Map<String, Object> body
+    );
+
+    @DELETE("api/tasks/{taskId}/assignments/{userId}")
+    Call<JsonObject> removeTaskAssignment(
+            @Header("Authorization") String token,
+            @Path("taskId") int taskId,
+            @Path("userId") int userId
+    );
 }

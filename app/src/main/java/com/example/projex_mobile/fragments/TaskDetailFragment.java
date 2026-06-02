@@ -23,6 +23,7 @@ import com.example.projex_mobile.api.RetrofitClient;
 import com.example.projex_mobile.objects.Task;
 import com.example.projex_mobile.objects.Project;
 import com.example.projex_mobile.objects.ProjectMember;
+import com.google.gson.JsonObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,7 +52,8 @@ public class TaskDetailFragment extends Fragment {
     private EditText edtPriority;
     private EditText edtAssigned;
     private List<ProjectMember> members = new ArrayList<>();
-    private int selectedUserId = 0;
+    private List<Integer> oldAssignedUserIds = new ArrayList<>();
+    private List<Integer> selectedUserIds = new ArrayList<>();
     private int projectId;
     String projectName = "";
     private String dueDateApi = "";
@@ -201,12 +203,32 @@ public class TaskDetailFragment extends Fragment {
         edtDescription.setText(task.getDescription() != null ? task.getDescription() : "");
 
         txtStatus.setText(task.getStatus() != null ? task.getStatus() : "Assigned");
-        if(task.getAssignees() != null && !task.getAssignees().isEmpty()) {
+        oldAssignedUserIds.clear();
+        selectedUserIds.clear();
 
-            edtAssigned.setText(task.getAssignees()
-                    .get(0)
-                    .getFullName()
-            );
+        if (task.getAssignees() != null && !task.getAssignees().isEmpty()) {
+
+            StringBuilder names = new StringBuilder();
+
+            for (int i = 0; i < task.getAssignees().size(); i++) {
+
+                int userId = task.getAssignees().get(i).getUserId();
+                String fullName = task.getAssignees().get(i).getFullName();
+
+                oldAssignedUserIds.add(userId);
+                selectedUserIds.add(userId);
+
+                if (i > 0) {
+                    names.append(", ");
+                }
+
+                names.append(fullName);
+            }
+
+            edtAssigned.setText(names.toString());
+
+        } else {
+            edtAssigned.setText("Chưa assigned");
         }
 
         String dueDate = task.getDueDate();
@@ -317,17 +339,7 @@ public class TaskDetailFragment extends Fragment {
                         if (!isAdded()) return;
 
                         if (response.isSuccessful()) {
-
-                            Toast.makeText(
-                                    requireContext(),
-                                    "Lưu task thành công",
-                                    Toast.LENGTH_SHORT
-                            ).show();
-
-                            requireActivity()
-                                    .getSupportFragmentManager()
-                                    .popBackStack();
-
+                            syncTaskAssignments();
                         } else {
 
                             Toast.makeText(
@@ -391,11 +403,7 @@ public class TaskDetailFragment extends Fragment {
     private void showMemberPopup() {
 
         if (members.isEmpty()) {
-            Toast.makeText(
-                    requireContext(),
-                    "Project chưa có member",
-                    Toast.LENGTH_SHORT
-            ).show();
+            Toast.makeText(requireContext(), "Project chưa có member", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -405,27 +413,224 @@ public class TaskDetailFragment extends Fragment {
 
             if (member.getUser() != null) {
 
+                int userId = member.getUserId();
+                String name = member.getUser().getFullName();
+
+                boolean checked = selectedUserIds.contains(userId);
+
                 popup.getMenu().add(
                         0,
-                        member.getUserId(),
+                        userId,
                         0,
-                        member.getUser().getFullName()
+                        checked ? "✓ " + name : name
                 );
             }
         }
 
         popup.setOnMenuItemClickListener(item -> {
 
-            selectedUserId = item.getItemId();
+            int userId = item.getItemId();
 
-            edtAssigned.setText(
-                    item.getTitle().toString()
-            );
+            if (selectedUserIds.contains(userId)) {
+                selectedUserIds.remove(Integer.valueOf(userId));
+            } else {
+                selectedUserIds.add(userId);
+            }
+
+            updateAssignedText();
 
             return true;
         });
 
         popup.show();
+    }
+
+    private void updateAssignedText() {
+
+        StringBuilder names = new StringBuilder();
+
+        for (ProjectMember member : members) {
+
+            if (selectedUserIds.contains(member.getUserId())
+                    && member.getUser() != null) {
+
+                if (names.length() > 0) {
+                    names.append(", ");
+                }
+
+                names.append(member.getUser().getFullName());
+            }
+        }
+
+        if (names.length() == 0) {
+            edtAssigned.setText("Chưa assigned");
+        } else {
+            edtAssigned.setText(names.toString());
+        }
+    }
+    private void syncTaskAssignments() {
+
+        List<Integer> addIds = new ArrayList<>();
+        List<Integer> removeIds = new ArrayList<>();
+
+        for (int userId : selectedUserIds) {
+            if (!oldAssignedUserIds.contains(userId)) {
+                addIds.add(userId);
+            }
+        }
+
+        for (int userId : oldAssignedUserIds) {
+            if (!selectedUserIds.contains(userId)) {
+                removeIds.add(userId);
+            }
+        }
+
+        int requestCount = 0;
+
+        if (!addIds.isEmpty()) {
+            requestCount++;
+        }
+
+        requestCount += removeIds.size();
+
+        if (requestCount == 0) {
+            finishSave();
+            return;
+        }
+
+        ApiService apiService =
+                RetrofitClient.getApiService(null);
+
+        final int[] pending = {requestCount};
+        final boolean[] hasError = {false};
+
+        // ADD ASSIGNMENTS
+        if (!addIds.isEmpty()) {
+
+            Map<String, Object> body =
+                    new HashMap<>();
+
+            body.put("userIds", addIds);
+
+            apiService.addTaskAssignments(
+                            token,
+                            taskId,
+                            body
+                    )
+                    .enqueue(new Callback<JsonObject>() {
+
+                        @Override
+                        public void onResponse(
+                                Call<JsonObject> call,
+                                Response<JsonObject> response
+                        ) {
+
+                            if (!response.isSuccessful()) {
+                                hasError[0] = true;
+                            }
+
+                            pending[0]--;
+
+                            if (pending[0] == 0) {
+                                handleSyncResult(
+                                        hasError[0]
+                                );
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(
+                                Call<JsonObject> call,
+                                Throwable t
+                        ) {
+
+                            hasError[0] = true;
+
+                            pending[0]--;
+
+                            if (pending[0] == 0) {
+                                handleSyncResult(
+                                        hasError[0]
+                                );
+                            }
+                        }
+                    });
+        }
+
+        // REMOVE ASSIGNMENTS
+        for (int userId : removeIds) {
+
+            apiService.removeTaskAssignment(
+                            token,
+                            taskId,
+                            userId
+                    )
+                    .enqueue(new Callback<JsonObject>() {
+
+                        @Override
+                        public void onResponse(
+                                Call<JsonObject> call,
+                                Response<JsonObject> response
+                        ) {
+
+                            if (!response.isSuccessful()) {
+                                hasError[0] = true;
+                            }
+
+                            pending[0]--;
+
+                            if (pending[0] == 0) {
+                                handleSyncResult(
+                                        hasError[0]
+                                );
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(
+                                Call<JsonObject> call,
+                                Throwable t
+                        ) {
+
+                            hasError[0] = true;
+
+                            pending[0]--;
+
+                            if (pending[0] == 0) {
+                                handleSyncResult(
+                                        hasError[0]
+                                );
+                            }
+                        }
+                    });
+        }
+    }
+
+    private void handleSyncResult(boolean hasError) {
+        if (!isAdded()) return;
+
+        if (hasError) {
+            Toast.makeText(
+                    requireContext(),
+                    "Task đã lưu nhưng assigned có lỗi",
+                    Toast.LENGTH_SHORT
+            ).show();
+        } else {
+            finishSave();
+        }
+    }
+    private void finishSave() {
+        if (!isAdded()) return;
+
+        Toast.makeText(
+                requireContext(),
+                "Lưu task thành công",
+                Toast.LENGTH_SHORT
+        ).show();
+
+        requireActivity()
+                .getSupportFragmentManager()
+                .popBackStack();
     }
 
 }

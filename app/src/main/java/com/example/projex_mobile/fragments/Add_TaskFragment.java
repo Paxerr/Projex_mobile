@@ -43,7 +43,7 @@ public class Add_TaskFragment extends Fragment {
     private TextView btnTao, btnHuy, txtProject;
     private TextView txtAssigned;
     private List<ProjectMember> members = new ArrayList<>();
-    private int selectedUserId = 0;
+    private List<Integer> selectedUserIds = new ArrayList<>();
 
     public Add_TaskFragment() {
     }
@@ -133,14 +133,12 @@ public class Add_TaskFragment extends Fragment {
     private void createTask() {
 
         String title = taskname.getText().toString().trim();
-
         String desc = description.getText().toString().trim();
-
         String dueDate = dueDateApi;
-
         String priorityText = Priority.getText().toString().trim();
 
-        if (projectId == 0) {Toast.makeText(
+        if (projectId == 0) {
+            Toast.makeText(
                     requireContext(),
                     "Thiếu projectId",
                     Toast.LENGTH_SHORT
@@ -148,15 +146,18 @@ public class Add_TaskFragment extends Fragment {
             return;
         }
 
-        if (title.isEmpty()) {taskname.setError("Nhập tên task");
+        if (title.isEmpty()) {
+            taskname.setError("Nhập tên task");
             return;
         }
 
-        if (dueDate.isEmpty()) {Duedate.setError("Chọn ngày hết hạn");
+        if (dueDate.isEmpty()) {
+            Duedate.setError("Chọn ngày hết hạn");
             return;
         }
 
-        if (priorityText.isEmpty()) {Priority.setError("Nhập priority");
+        if (priorityText.isEmpty()) {
+            Priority.setError("Nhập priority");
             return;
         }
 
@@ -169,28 +170,26 @@ public class Add_TaskFragment extends Fragment {
             return;
         }
 
-        SharedPreferences prefs = requireActivity().getSharedPreferences(
-                        "user_prefs",
-                        Context.MODE_PRIVATE
-                );
-
-        String token = prefs.getString("token", "");
-
-        int userId = prefs.getInt("user_id", 0);
-
-        if (token.isEmpty()) {
+        if (selectedUserIds.isEmpty()) {
             Toast.makeText(
                     requireContext(),
-                    "Thiếu token đăng nhập",
+                    "Vui lòng chọn người được giao task",
                     Toast.LENGTH_SHORT
             ).show();
             return;
         }
 
-        if (userId == 0) {
+        SharedPreferences prefs = requireActivity().getSharedPreferences(
+                "user_prefs",
+                Context.MODE_PRIVATE
+        );
+
+        String token = prefs.getString("token", "");
+
+        if (token.isEmpty()) {
             Toast.makeText(
                     requireContext(),
-                    "Thiếu user_id đăng nhập",
+                    "Thiếu token đăng nhập",
                     Toast.LENGTH_SHORT
             ).show();
             return;
@@ -203,24 +202,7 @@ public class Add_TaskFragment extends Fragment {
         body.put("status", "Assigned");
         body.put("priority", priority);
         body.put("dueDate", dueDate);
-
-        List<Integer> assignedUserIds = new ArrayList<>();
-
-        assignedUserIds.add(userId);
-
-        if (selectedUserId == 0) {
-            Toast.makeText(
-                    requireContext(),
-                    "Vui lòng chọn người được giao task",
-                    Toast.LENGTH_SHORT
-            ).show();
-            return;
-        }
-
-
-        assignedUserIds.add(selectedUserId);
-
-        body.put("assignedUserIds", assignedUserIds);
+        body.put("assignedUserIds", selectedUserIds);
 
         ApiService apiService = RetrofitClient.getApiService(null);
 
@@ -306,11 +288,7 @@ public class Add_TaskFragment extends Fragment {
     }
     private void showMemberPopup() {
         if (members.isEmpty()) {
-            Toast.makeText(
-                    requireContext(),
-                    "Project chưa có member",
-                    Toast.LENGTH_SHORT
-            ).show();
+            Toast.makeText(requireContext(), "Project chưa có member", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -318,21 +296,55 @@ public class Add_TaskFragment extends Fragment {
 
         for (ProjectMember member : members) {
             if (member.getUser() != null) {
+                int userId = member.getUserId();
+                String name = member.getUser().getFullName();
+
+                boolean checked = selectedUserIds.contains(userId);
+
                 popup.getMenu().add(
                         0,
-                        member.getUserId(),
+                        userId,
                         0,
-                        member.getUser().getFullName()
+                        checked ? "✓ " + name : name
                 );
             }
         }
 
         popup.setOnMenuItemClickListener(item -> {
-            selectedUserId = item.getItemId();
-            txtAssigned.setText(item.getTitle().toString());
+            int userId = item.getItemId();
+
+            if (selectedUserIds.contains(userId)) {
+                selectedUserIds.remove(Integer.valueOf(userId));
+            } else {
+                selectedUserIds.add(userId);
+            }
+
+            updateAssignedText();
             return true;
         });
 
         popup.show();
+    }
+
+    private void updateAssignedText() {
+        StringBuilder names = new StringBuilder();
+
+        for (ProjectMember member : members) {
+            if (selectedUserIds.contains(member.getUserId())
+                    && member.getUser() != null) {
+
+                if (names.length() > 0) {
+                    names.append(", ");
+                }
+
+                names.append(member.getUser().getFullName());
+            }
+        }
+
+        if (names.length() == 0) {
+            txtAssigned.setText("Chọn người thực hiện");
+        } else {
+            txtAssigned.setText(names.toString());
+        }
     }
 }
