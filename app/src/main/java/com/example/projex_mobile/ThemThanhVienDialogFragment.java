@@ -26,7 +26,9 @@ import com.google.gson.JsonObject;
 
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import retrofit2.Call;
@@ -106,6 +108,25 @@ public class ThemThanhVienDialogFragment extends DialogFragment {
             return;
         }
 
+        // Cấu hình ô nhập liệu động để hỗ trợ nhập nhiều email (hàng dọc/ngang) trên mọi kích thước màn hình
+        if (edtEmailOrName != null) {
+            ViewGroup.LayoutParams lp = edtEmailOrName.getLayoutParams();
+            if (lp != null) {
+                lp.height = ViewGroup.LayoutParams.WRAP_CONTENT;
+                edtEmailOrName.setLayoutParams(lp);
+            }
+            edtEmailOrName.setMinimumHeight((int) (44 * requireContext().getResources().getDisplayMetrics().density));
+            edtEmailOrName.setHint("Ví dụ: email1@company.com, email2@company.com");
+            edtEmailOrName.setInputType(android.text.InputType.TYPE_CLASS_TEXT | android.text.InputType.TYPE_TEXT_FLAG_MULTI_LINE);
+            edtEmailOrName.setSingleLine(false);
+            edtEmailOrName.setMaxLines(3);
+        }
+
+        TextView tvLabelEmail = view.findViewById(R.id.tvLabelEmail);
+        if (tvLabelEmail != null) {
+            tvLabelEmail.setText("DANH SÁCH EMAIL (CÁCH NHAU BẰNG DẤU PHẨY/KHOẢNG TRẮNG)");
+        }
+
         // Chặn click xuyên qua card.
         modalCard.setOnClickListener(v -> { });
 
@@ -175,20 +196,48 @@ public class ThemThanhVienDialogFragment extends DialogFragment {
             return;
         }
 
-        String email = edtEmailOrName.getText() == null
+        String input = edtEmailOrName.getText() == null
                 ? ""
                 : edtEmailOrName.getText().toString().trim();
         String role = tvRole.getText() == null
                 ? "Member"
                 : normalizeRole(tvRole.getText().toString().trim());
 
-        if (email.isEmpty()) {
-            Toast.makeText(requireContext(), "Vui lòng nhập email", Toast.LENGTH_SHORT).show();
+        if (input.isEmpty()) {
+            Toast.makeText(requireContext(), "Vui lòng nhập ít nhất một email", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            Toast.makeText(requireContext(), "Email không hợp lệ", Toast.LENGTH_SHORT).show();
+        // Tách các email dựa trên dấu phẩy, dấu chấm phẩy, khoảng trắng hoặc xuống dòng
+        String[] rawEmails = input.split("[,;\\s]+");
+        List<String> emails = new ArrayList<>();
+        List<String> invalidEmails = new ArrayList<>();
+
+        for (String raw : rawEmails) {
+            String trimmed = raw.trim();
+            if (trimmed.isEmpty()) continue;
+            if (Patterns.EMAIL_ADDRESS.matcher(trimmed).matches()) {
+                if (!emails.contains(trimmed)) {
+                    emails.add(trimmed);
+                }
+            } else {
+                if (!invalidEmails.contains(trimmed)) {
+                    invalidEmails.add(trimmed);
+                }
+            }
+        }
+
+        if (!invalidEmails.isEmpty()) {
+            Toast.makeText(
+                    requireContext(),
+                    "Email không hợp lệ: " + android.text.TextUtils.join(", ", invalidEmails),
+                    Toast.LENGTH_LONG
+            ).show();
+            return;
+        }
+
+        if (emails.isEmpty()) {
+            Toast.makeText(requireContext(), "Vui lòng nhập ít nhất một email hợp lệ", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -203,9 +252,26 @@ public class ThemThanhVienDialogFragment extends DialogFragment {
 
         String authToken = token.startsWith("Bearer ") ? token : "Bearer " + token;
 
-        Map<String, String> body = new HashMap<>();
-        body.put("email", email);
-        body.put("role", role);
+        // Gọi phương thức đệ quy để gửi yêu cầu và tự động lọc nếu có lỗi
+        sendInviteRequest(authToken, emails, role, new ArrayList<>());
+    }
+
+    private void sendInviteRequest(
+            final String authToken,
+            final List<String> emailsToSubmit,
+            final String role,
+            final List<String> accumulatedBadEmails
+    ) {
+        // Tạo cấu trúc dữ liệu gửi lên API: {"members": [{"email": "...", "role": "..."}, ...]}
+        Map<String, Object> body = new HashMap<>();
+        List<Map<String, String>> membersList = new ArrayList<>();
+        for (String email : emailsToSubmit) {
+            Map<String, String> memberItem = new HashMap<>();
+            memberItem.put("email", email);
+            memberItem.put("role", role);
+            membersList.add(memberItem);
+        }
+        body.put("members", membersList);
 
         ApiService apiService = RetrofitClient.getApiService(null);
         apiService.addProjectMemberByEmail(authToken, projectId, body)
@@ -215,10 +281,17 @@ public class ThemThanhVienDialogFragment extends DialogFragment {
                         if (!isAdded()) return;
 
                         if (response.isSuccessful()) {
+                            // Thành công hoàn toàn hoặc thành công sau khi đã tự động lọc
+                            StringBuilder msg = new StringBuilder("Đã thêm thành công " + emailsToSubmit.size() + " thành viên.");
+                            if (!accumulatedBadEmails.isEmpty()) {
+                                msg.append("\nBỏ qua các email lỗi (không tồn tại/đã là thành viên): ")
+                                   .append(android.text.TextUtils.join(", ", accumulatedBadEmails));
+                            }
+
                             Toast.makeText(
                                     requireContext(),
-                                    "Thêm người thành công",
-                                    Toast.LENGTH_SHORT
+                                    msg.toString(),
+                                    Toast.LENGTH_LONG
                             ).show();
 
                             Bundle result = new Bundle();
@@ -227,7 +300,45 @@ public class ThemThanhVienDialogFragment extends DialogFragment {
 
                             dismiss();
                         } else {
-                            Toast.makeText(requireContext(), getErrorMessage(response), Toast.LENGTH_LONG).show();
+                            // Thất bại! Đọc chuỗi JSON lỗi một lần duy nhất để tránh stream closed
+                            String errorRaw = "";
+                            try {
+                                if (response.errorBody() != null) {
+                                    errorRaw = response.errorBody().string();
+                                }
+                            } catch (Exception ignored) {}
+
+                            // Trích xuất danh sách email gây lỗi từ phản hồi của Server
+                            List<String> badEmailsFromResponse = extractBadEmailsFromRaw(errorRaw);
+                            if (!badEmailsFromResponse.isEmpty()) {
+                                List<String> remainingEmails = new ArrayList<>();
+                                for (String e : emailsToSubmit) {
+                                    if (!badEmailsFromResponse.contains(e.toLowerCase())) {
+                                        remainingEmails.add(e);
+                                    }
+                                }
+
+                                // Gom các email lỗi mới phát hiện vào danh sách tích lũy
+                                List<String> newBadEmails = new ArrayList<>(accumulatedBadEmails);
+                                for (String badEmail : badEmailsFromResponse) {
+                                    if (!newBadEmails.contains(badEmail)) {
+                                        newBadEmails.add(badEmail);
+                                    }
+                                }
+
+                                // Nếu vẫn còn lại email hợp lệ khác, tự động thực hiện lại request gửi đi
+                                if (!remainingEmails.isEmpty()) {
+                                    sendInviteRequest(authToken, remainingEmails, role, newBadEmails);
+                                    return;
+                                }
+                            }
+
+                            // Nếu không còn email nào hợp lệ để thử lại, hiển thị thông báo lỗi tiếng Việt thân thiện
+                            Toast.makeText(
+                                    requireContext(),
+                                    getErrorMessageFromRaw(errorRaw, response.code()),
+                                    Toast.LENGTH_LONG
+                            ).show();
                         }
                     }
 
@@ -237,6 +348,59 @@ public class ThemThanhVienDialogFragment extends DialogFragment {
                         Toast.makeText(requireContext(), "Lỗi kết nối: " + t.getMessage(), Toast.LENGTH_LONG).show();
                     }
                 });
+    }
+
+    private List<String> extractBadEmailsFromRaw(String raw) {
+        List<String> badEmails = new ArrayList<>();
+        if (raw == null || raw.trim().isEmpty()) {
+            return badEmails;
+        }
+        try {
+            JSONObject json = new JSONObject(raw);
+            if (json.has("emails")) {
+                org.json.JSONArray arr = json.getJSONArray("emails");
+                for (int i = 0; i < arr.length(); i++) {
+                    String email = arr.getString(i);
+                    if (email != null) {
+                        badEmails.add(email.trim().toLowerCase());
+                    }
+                }
+            }
+        } catch (Exception ignored) {}
+        return badEmails;
+    }
+
+    private String getErrorMessageFromRaw(String raw, int statusCode) {
+        try {
+            if (raw == null || raw.trim().isEmpty()) {
+                return "Thêm thành viên thất bại. Mã lỗi: " + statusCode;
+            }
+
+            JSONObject json = new JSONObject(raw);
+
+            if (json.has("message")) {
+                return translateErrorMessage(json.getString("message"));
+            }
+
+            if (json.has("title")) {
+                return json.getString("title");
+            }
+
+            return raw;
+        } catch (Exception e) {
+            return "Thêm thành viên thất bại. Mã lỗi: " + statusCode;
+        }
+    }
+
+    private String translateErrorMessage(String original) {
+        if (original == null) return "Thêm thành viên thất bại";
+        if (original.contains("Some users were not found")) {
+            return "Một số email không tồn tại trong hệ thống.";
+        }
+        if (original.contains("Some users are already members")) {
+            return "Một số email đã là thành viên của dự án.";
+        }
+        return original;
     }
 
     private String normalizeRole(String role) {

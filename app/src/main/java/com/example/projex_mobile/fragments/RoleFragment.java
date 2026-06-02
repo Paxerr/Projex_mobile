@@ -38,7 +38,7 @@ public class RoleFragment extends Fragment {
     public static final String ARG_ADMIN_COUNT = "admin_count";
     public static final String ARG_CURRENT_USER_ROLE = "current_user_role";
 
-    private TextView btnBack, btnSave;
+    private TextView btnBack, btnSave, tvTitle;
     private TextView tvAvatar, tvMemberName, tvMemberEmail, tvStatusValue, tvJoinDateValue;
 
     private LinearLayout cardAdmin, cardMember, cardOwner, cardDeleteMember;
@@ -89,6 +89,7 @@ public class RoleFragment extends Fragment {
     private void initViews(View view) {
         btnBack = view.findViewById(R.id.btnBack);
         btnSave = view.findViewById(R.id.btnSave);
+        tvTitle = view.findViewById(R.id.tvTitle);
 
         tvAvatar = view.findViewById(R.id.tvAvatar);
         tvMemberName = view.findViewById(R.id.tvMemberName);
@@ -145,6 +146,10 @@ public class RoleFragment extends Fragment {
 
         // Owner can edit roles of others, but cannot edit themselves
         boolean canEditRole = isOwner && !isTargetOwner;
+
+        if (tvTitle != null) {
+            tvTitle.setText(canEditRole ? "Chỉnh sửa quyền" : "Thông tin vai trò");
+        }
 
         if (btnSave != null) {
             btnSave.setVisibility(canEditRole ? View.VISIBLE : View.GONE);

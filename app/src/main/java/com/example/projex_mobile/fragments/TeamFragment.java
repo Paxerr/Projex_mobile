@@ -295,25 +295,29 @@ public class TeamFragment extends Fragment {
 
         card.addView(infoBox, infoParams);
 
-        TextView btnMore = new TextView(requireContext());
-        btnMore.setText("⋮");
-        btnMore.setTextColor(Color.WHITE);
-        btnMore.setTextSize(24);
-        btnMore.setGravity(Gravity.CENTER);
-        btnMore.setPadding(dp(8), dp(4), dp(8), dp(4));
+        // Chỉ hiện nút 3 chấm chỉnh sửa quyền nếu người dùng hiện tại là Owner hoặc Admin
+        boolean canManage = "Owner".equalsIgnoreCase(currentUserRole) || "Admin".equalsIgnoreCase(currentUserRole);
+        if (canManage) {
+            TextView btnMore = new TextView(requireContext());
+            btnMore.setText("⋮");
+            btnMore.setTextColor(Color.WHITE);
+            btnMore.setTextSize(24);
+            btnMore.setGravity(Gravity.CENTER);
+            btnMore.setPadding(dp(8), dp(4), dp(8), dp(4));
 
-        btnMore.setOnClickListener(v ->
-                openRoleFragment(
-                        memberUserId,
-                        name,
-                        email,
-                        role,
-                        joinedAt,
-                        status
-                )
-        );
+            btnMore.setOnClickListener(v ->
+                    openRoleFragment(
+                            memberUserId,
+                            name,
+                            email,
+                            role,
+                            joinedAt,
+                            status
+                    )
+            );
 
-        card.addView(btnMore);
+            card.addView(btnMore);
+        }
 
         return card;
     }
