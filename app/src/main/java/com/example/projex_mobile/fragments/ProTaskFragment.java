@@ -25,11 +25,13 @@ import com.example.projex_mobile.R;
 import com.example.projex_mobile.adapter.TaskAdapter;
 import com.example.projex_mobile.api.ApiService;
 import com.example.projex_mobile.api.RetrofitClient;
+import com.example.projex_mobile.objects.ProjectMember;
 import com.example.projex_mobile.objects.Task;
 import com.example.projex_mobile.objects.TaskAssignment;
 import com.example.projex_mobile.objects.TaskResponse;
 
 import android.widget.EditText;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,6 +49,7 @@ public class ProTaskFragment extends Fragment {
     private List<Task> originalList = new ArrayList<>();
 
     private List<Task> filteredList = new ArrayList<>();
+    private List<ProjectMember> members = new ArrayList<>();
 
     private int projectId;
     private String projectName = "";
@@ -182,28 +185,46 @@ public class ProTaskFragment extends Fragment {
 
         ngth.setOnClickListener(v -> {
 
+            if (members.isEmpty()) {
+                Toast.makeText(
+                        requireContext(),
+                        "Project chưa có member",
+                        Toast.LENGTH_SHORT
+                ).show();
+                return;
+            }
+
             PopupMenu popup = new PopupMenu(requireContext(), ngth);
 
             popup.getMenu().add("All");
-            List<String> users = new ArrayList<>();
-            for(Task task : originalList){
-                if(task.getAssignees() != null){
-                    for(TaskAssignment assignee : task.getAssignees()){
-                        String name = assignee.getFullName();
-                        if(name != null && !users.contains(name)){
-                            users.add(name);
-                            popup.getMenu().add(name);
-                        }
-                    }
+
+            for (ProjectMember member : members) {
+                if (member.getUser() != null) {
+
+                    int userId = member.getUserId();
+                    String name = member.getUser().getFullName();
+
+                    popup.getMenu().add(
+                            0,
+                            userId,
+                            0,
+                            name
+                    );
                 }
             }
 
-
-
             popup.setOnMenuItemClickListener(item -> {
+
                 selectedUser = item.getTitle().toString();
-                ngthText.setText(selectedUser);
+
+                if (selectedUser.equals("All")) {
+                    ngthText.setText("Người thực hiện");
+                } else {
+                    ngthText.setText(selectedUser);
+                }
+
                 filterTasks();
+
                 return true;
             });
 
@@ -227,6 +248,8 @@ public class ProTaskFragment extends Fragment {
                 });
 
         loadTasks();
+        loadMembers();
+
     }
 
     private void loadTasks(){
@@ -299,7 +322,47 @@ public class ProTaskFragment extends Fragment {
         adapter.notifyDataSetChanged();
     }
 
+    private void loadMembers() {
 
+        SharedPreferences prefs = requireActivity().getSharedPreferences(
+                "user_prefs",
+                Context.MODE_PRIVATE
+        );
+
+        String token = prefs.getString("token", "");
+
+        ApiService apiService = RetrofitClient.getApiService(null);
+
+        apiService.getProjectDetail(token, projectId)
+                .enqueue(new Callback<com.example.projex_mobile.objects.Project>() {
+                    @Override
+                    public void onResponse(
+                            Call<com.example.projex_mobile.objects.Project> call,
+                            Response<com.example.projex_mobile.objects.Project> response
+                    ) {
+
+                        if (response.isSuccessful()
+                                && response.body() != null
+                                && response.body().getMembers() != null) {
+
+                            members.clear();
+                            members.addAll(response.body().getMembers());
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(
+                            Call<com.example.projex_mobile.objects.Project> call,
+                            Throwable t
+                    ) {
+                        Toast.makeText(
+                                requireContext(),
+                                "Lỗi load member: " + t.getMessage(),
+                                Toast.LENGTH_SHORT
+                        ).show();
+                    }
+                });
+    }
 
 
 

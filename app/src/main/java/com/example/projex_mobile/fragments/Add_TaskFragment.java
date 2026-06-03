@@ -37,7 +37,8 @@ public class Add_TaskFragment extends Fragment {
 
     private int projectId;
     private String projectName = "";
-    private String dueDateApi = "";
+    private String dueDateApi = null;
+
 
     private EditText taskname, description, Duedate, Priority;
     private TextView btnTao, btnHuy, txtProject;
@@ -124,7 +125,7 @@ public class Add_TaskFragment extends Fragment {
                     Duedate.setText(displayDate);
                 },
 
-                day,month,year
+                year, month, day
         );
 
         dialog.show();
@@ -151,10 +152,7 @@ public class Add_TaskFragment extends Fragment {
             return;
         }
 
-        if (dueDate.isEmpty()) {
-            Duedate.setError("Chọn ngày hết hạn");
-            return;
-        }
+
 
         if (priorityText.isEmpty()) {
             Priority.setError("Nhập priority");
