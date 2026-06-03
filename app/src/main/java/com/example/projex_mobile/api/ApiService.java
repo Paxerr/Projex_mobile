@@ -7,7 +7,6 @@ import com.example.projex_mobile.objects.Task;
 import com.example.projex_mobile.objects.TaskResponse;
 import com.example.projex_mobile.objects.User;
 import com.google.gson.JsonObject;
-
 import java.util.List;
 import java.util.Map;
 
@@ -20,6 +19,7 @@ import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
+import retrofit2.http.PATCH;
 
 public interface ApiService {
     @POST("api/auth/login")
@@ -139,5 +139,24 @@ public interface ApiService {
             @Header("Authorization") String token,
             @Path("taskId") int taskId,
             @Path("userId") int userId
+    );
+
+    @GET("api/notifications")
+    Call<JsonObject> getNotifications(
+            @Header("Authorization") String token,
+            @Query("page") int page,
+            @Query("pageSize") int pageSize,
+            @Query("isRead") Boolean isRead
+    );
+
+    @PATCH("api/notifications/{id}/read")
+    Call<JsonObject> markNotificationAsRead(
+            @Header("Authorization") String token,
+            @Path("id") int id
+    );
+
+    @PATCH("api/notifications/read-all")
+    Call<JsonObject> markAllNotificationsAsRead(
+            @Header("Authorization") String token
     );
 }

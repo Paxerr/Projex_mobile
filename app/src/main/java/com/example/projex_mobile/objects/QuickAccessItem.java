@@ -5,10 +5,6 @@ public class QuickAccessItem {
     private String name;
     private int iconRes;
     private String label;
-    private String route;
-    private int count;
-
-    public QuickAccessItem() {}
 
     public QuickAccessItem(int id, String name, int iconRes, String label) {
         this.id = id;
@@ -24,14 +20,6 @@ public class QuickAccessItem {
     public void setName(String name) { this.name = name; }
 
     public int getIconRes() { return iconRes; }
-    public void setIconRes(int iconRes) { this.iconRes = iconRes; }
-
     public String getLabel() { return label; }
-    public void setLabel(String label) { this.label = label; }
 
-    public String getRoute() { return route; }
-    public void setRoute(String route) { this.route = route; }
-
-    public int getCount() { return count; }
-    public void setCount(int count) { this.count = count; }
 }

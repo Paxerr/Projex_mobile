@@ -89,30 +89,6 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="8dp"
-                android:layout_marginTop="24dp"
-                android:layout_marginBottom="8dp"
-                android:letterSpacing="0.04"
-                android:text="TÊN NGƯỜI QUẢN LÝ"
-                android:textColor="#9CA3AF"
-                android:textSize="12sp"
-                android:textStyle="bold" />
-
-            <EditText
-                android:id="@+id/edtTenNguoiQuanLy"
-                android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:layout_marginHorizontal="8dp"
-                android:background="@drawable/home_bg_card"
-                android:hint="Nhập tên người..."
-                android:paddingHorizontal="16dp"
-                android:textColor="#FFFFFF"
-                android:textColorHint="#4B5563"
-                android:textSize="16sp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
                 android:layout_marginBottom="8dp"
                 android:layout_marginLeft="8dp"
@@ -136,7 +112,56 @@
                 android:textColorHint="#4B5563"
                 android:textSize="16sp" />
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:layout_marginBottom="8dp"
+                android:layout_marginLeft="8dp"
+                android:letterSpacing="0.04"
+                android:text="THỜI GIAN"
+                android:textColor="#9CA3AF"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="8dp"
+                android:orientation="horizontal">
+
+                <EditText
+                    android:id="@+id/edtStartDate"
+                    android:layout_width="0dp"
+                    android:layout_height="60dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/home_bg_card"
+                    android:focusable="false"
+                    android:hint="Ngày bắt đầu"
+                    android:paddingHorizontal="16dp"
+                    android:textColor="#FFFFFF"
+                    android:textColorHint="#4B5563"
+                    android:textSize="16sp" />
+
+                <View
+                    android:layout_width="12dp"
+                    android:layout_height="1dp" />
+
+                <EditText
+                    android:id="@+id/edtEndDate"
+                    android:layout_width="0dp"
+                    android:layout_height="60dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/home_bg_card"
+                    android:focusable="false"
+                    android:hint="Ngày kết thúc"
+                    android:paddingHorizontal="16dp"
+                    android:textColor="#FFFFFF"
+                    android:textColorHint="#4B5563"
+                    android:textSize="16sp" />
+            </LinearLayout>
         </LinearLayout>
+
     </ScrollView>
 
     <include

@@ -1,5 +1,6 @@
 package com.example.projex_mobile.fragments;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -11,8 +12,8 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -25,7 +26,6 @@ import com.example.projex_mobile.adapter.QuickAccessAdapter;
 import com.example.projex_mobile.adapter.RecentActivityAdapter;
 import com.example.projex_mobile.api.ApiService;
 import com.example.projex_mobile.api.RetrofitClient;
-import com.example.projex_mobile.objects.DashboardOverview;
 import com.example.projex_mobile.objects.QuickAccessItem;
 import com.example.projex_mobile.objects.RecentItem;
 import com.github.mikephil.charting.charts.PieChart;
@@ -37,6 +37,7 @@ import com.google.android.material.textfield.TextInputLayout;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,8 +48,9 @@ import retrofit2.Response;
 
 public class HomeFragment extends Fragment {
 
-    private TextView tvUserName, tvProgressPercent, tvDoneTasks, tvInProgressTasks, tvTestTasks, tvTodoTasks;
-    private TextView tvRecentEmpty, tvViewAll;
+    private TextView tvUserName, tvProgressPercent, tvDoneTasks, tvInProgressTasks, tvTodoTasks;
+    private TextView tvRecentEmpty;
+    private ImageView ivQuickAccessToggle;
     private RecyclerView rvQuickAccess, rvRecentActivity;
     private PieChart pieChart;
     private View recentLabel;
@@ -61,11 +63,11 @@ public class HomeFragment extends Fragment {
     private final List<QuickAccessItem> quickAccessList = new ArrayList<>();
     private final List<RecentItem> recentList = new ArrayList<>();
     private String token;
-    private static final boolean IS_MOCK_MODE = true;
     private boolean isQuickAccessExpanded = true;
 
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         return inflater.inflate(R.layout.home_fragment, container, false);
     }
 
@@ -99,7 +101,7 @@ public class HomeFragment extends Fragment {
         tvRecentEmpty = view.findViewById(R.id.tvRecentEmpty);
         searchLayout = view.findViewById(R.id.searchLayout);
         edtSearch = view.findViewById(R.id.edtSearch);
-        tvViewAll = view.findViewById(R.id.tvViewAll);
+        ivQuickAccessToggle = view.findViewById(R.id.ivQuickAccessToggle);
     }
 
     private void setupRecyclerViews() {
@@ -122,11 +124,6 @@ public class HomeFragment extends Fragment {
                         .replace(R.id.frame_container, new TaskFragment())
                         .addToBackStack(null)
                         .commit();
-            } else if ("Favorite".equals(item.getName())) {
-                requireActivity().getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.frame_container, new SpaceListFragment())
-                        .addToBackStack(null)
-                        .commit();
             } else {
                 ProjectFragment projectFragment = new ProjectFragment();
                 Bundle bundle = new Bundle();
@@ -142,6 +139,7 @@ public class HomeFragment extends Fragment {
         });
 
         rvQuickAccess.setAdapter(quickAccessAdapter);
+
         rvRecentActivity.setLayoutManager(new LinearLayoutManager(requireContext()));
         rvRecentActivity.setNestedScrollingEnabled(false);
         rvRecentActivity.setHasFixedSize(false);
@@ -151,15 +149,16 @@ public class HomeFragment extends Fragment {
 
     private void setupQuickAccessToggle() {
         updateQuickAccessState();
-        tvViewAll.setOnClickListener(v -> {
+        ivQuickAccessToggle.setOnClickListener(v -> {
             isQuickAccessExpanded = !isQuickAccessExpanded;
             updateQuickAccessState();
         });
     }
 
     private void updateQuickAccessState() {
-        tvViewAll.setText("XEM TẤT CẢ");
-        tvViewAll.setTextColor(Color.parseColor(isQuickAccessExpanded ? "#85ADFF" : "#6B7280"));
+        ivQuickAccessToggle.setImageResource(
+                isQuickAccessExpanded ? R.drawable.ic_chevron_down: R.drawable.ic_chevron_right
+        );
         rvQuickAccess.setVisibility(isQuickAccessExpanded ? View.VISIBLE : View.GONE);
         if (quickAccessSection != null) {
             quickAccessSection.requestLayout();
@@ -175,11 +174,7 @@ public class HomeFragment extends Fragment {
         loadQuickAccess();
         updateProgressCardMock();
 
-        if (IS_MOCK_MODE) {
-            loadRecentMock();
-        } else {
-            loadRecentActivities();
-        }
+        loadRecentMock();
     }
 
     private void setupSearchBar(View view) {
@@ -202,16 +197,9 @@ public class HomeFragment extends Fragment {
         });
 
         edtSearch.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            @Override public void afterTextChanged(Editable s) {}
+            @Override public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (s != null && s.length() > 0) {
                     searchLayout.setHint(null);
                 } else if (!edtSearch.hasFocus()) {
@@ -234,6 +222,7 @@ public class HomeFragment extends Fragment {
         });
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private void loadQuickAccess() {
         int oldSize = quickAccessList.size();
         if (oldSize > 0) {
@@ -244,50 +233,43 @@ public class HomeFragment extends Fragment {
         quickAccessList.add(new QuickAccessItem(991, "My Tasks", R.drawable.home_ic_task, "CÁ NHÂN"));
 
         SharedPreferences spacePrefs = requireContext().getSharedPreferences("space_prefs", Context.MODE_PRIVATE);
-        List<Integer> favoriteIds = new ArrayList<>();
         String favJson = spacePrefs.getString("favorite_ids", "[]");
+        String projectsJson = spacePrefs.getString("projects_json", "[]");
+
+        List<Integer> favoriteIds = new ArrayList<>();
         try {
-            JSONArray arr = new JSONArray(favJson);
-            for (int i = 0; i < arr.length(); i++) {
-                favoriteIds.add(arr.getInt(i));
+            JSONArray favArr = new JSONArray(favJson);
+            for (int i = 0; i < favArr.length(); i++) {
+                favoriteIds.add(favArr.getInt(i));
             }
         } catch (JSONException ignored) {}
 
-        List<QuickAccessItem> allAvailableProjects = new ArrayList<>();
-        allAvailableProjects.add(new QuickAccessItem(1, "GGshop", R.drawable.login_logo_github, "DỰ ÁN"));
-        allAvailableProjects.add(new QuickAccessItem(2, "gg_projex", R.drawable.login_logo_pj_rm_bg, "DỰ ÁN"));
-        allAvailableProjects.add(new QuickAccessItem(3, "GGweb", R.drawable.logo_library_web, "DỰ ÁN"));
+        try {
+            JSONArray projectsArr = new JSONArray(projectsJson);
+            for (int i = 0; i < projectsArr.length(); i++) {
+                JSONObject obj = projectsArr.getJSONObject(i);
 
-        for (QuickAccessItem project : allAvailableProjects) {
-            if (favoriteIds.contains(project.getId())) {
-                quickAccessList.add(project);
-            }
-        }
+                int id = obj.optInt("id");
+                String name = obj.optString("name", "");
+                String status = obj.optString("status", "Active");
+                int memberCount = obj.optInt("memberCount", 0);
+                int iconRes = obj.optInt("iconRes", R.drawable.ic_logo);
 
-        quickAccessAdapter.notifyItemRangeInserted(0, quickAccessList.size());
-    }
-
-    private void loadDashboardOverview() {
-        if (token == null || token.isEmpty()) return;
-
-        ApiService apiService = RetrofitClient.getApiService(token);
-        apiService.getDashboardOverview(token).enqueue(new Callback<>() {
-            @Override
-            public void onResponse(@NonNull Call<DashboardOverview> call, @NonNull Response<DashboardOverview> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    updateProgressCard(response.body());
+                if (favoriteIds.contains(id)) {
+                    quickAccessList.add(new QuickAccessItem(id, name, iconRes, "DỰ ÁN"));
                 }
             }
+        } catch (JSONException ignored) {}
 
-            @Override
-            public void onFailure(@NonNull Call<DashboardOverview> call, @NonNull Throwable t) {
-                if (isAdded()) {
-                    Toast.makeText(requireContext(), "Lỗi load dashboard: " + t.getMessage(), Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
+        quickAccessAdapter.notifyDataSetChanged();
     }
 
+    private void updateRecentState() {
+        boolean hasItems = !recentList.isEmpty();
+        recentLabel.setVisibility(View.VISIBLE);
+        rvRecentActivity.setVisibility(hasItems ? View.VISIBLE : View.GONE);
+        tvRecentEmpty.setVisibility(hasItems ? View.GONE : View.VISIBLE);
+    }
     private void loadRecentActivities() {
         if (token == null || token.isEmpty()) {
             int oldSize = recentList.size();
@@ -343,28 +325,6 @@ public class HomeFragment extends Fragment {
         pieChart.setDrawEntryLabels(false);
         pieChart.invalidate();
         pieChart.animateY(1000);
-    }
-
-    private void updateProgressCard(DashboardOverview data) {
-        int totalTasks = data.getMyTasks();
-        int doneTasks = data.getCompletedTasks();
-        int inProgress = data.getInProgressTasks();
-        int todoTasks = Math.max(totalTasks - doneTasks - inProgress, 0);
-
-        double progress = totalTasks > 0 ? (doneTasks * 100.0 / totalTasks) : 0;
-
-        tvProgressPercent.setText(getString(R.string.progress_percent, progress));
-        tvDoneTasks.setText(getString(R.string.tasks_label, doneTasks));
-        tvInProgressTasks.setText(getString(R.string.tasks_label, inProgress));
-        tvTodoTasks.setText(getString(R.string.tasks_label, todoTasks));
-        setupPieChart(doneTasks, inProgress, todoTasks);
-    }
-
-    private void updateRecentState() {
-        boolean hasItems = !recentList.isEmpty();
-        recentLabel.setVisibility(View.VISIBLE);
-        rvRecentActivity.setVisibility(hasItems ? View.VISIBLE : View.GONE);
-        tvRecentEmpty.setVisibility(hasItems ? View.GONE : View.VISIBLE);
     }
 
     private void updateProgressCardMock() {
