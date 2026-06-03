@@ -124,8 +124,6 @@ public class ProjectFragment extends Fragment {
                             String name = body.has("name") ? body.get("name").getAsString() : "";
 
 
-                            String endDate = body.has("endDate") ? body.get("endDate").getAsString() : "";
-
 
                             int memberCount = 0;
 
@@ -141,35 +139,45 @@ public class ProjectFragment extends Fragment {
                                     memberCount + " Members"
                             );
 
-                            try {
-                                SimpleDateFormat sdf = new SimpleDateFormat(
-                                                "yyyy-MM-dd'T'HH:mm:ss",
-                                                Locale.getDefault()
-                                );
+                            if (!body.has("endDate") || body.get("endDate").isJsonNull()) {
 
-                                Date end = sdf.parse(endDate);
+                                txtRemainingTime.setText("No time limit");
 
-                                Date now = new Date();
+                            } else {
 
-                                long diff = end.getTime() - now.getTime();
+                                String endDate =
+                                        body.get("endDate").getAsString();
 
-                                long days = TimeUnit.MILLISECONDS.toDays(diff);
+                                try {
 
-                                if(days > 0){
-                                    txtRemainingTime.setText(
-                                            days + " days left"
+                                    SimpleDateFormat sdf = new SimpleDateFormat(
+                                            "yyyy-MM-dd'T'HH:mm:ss",
+                                            Locale.getDefault()
                                     );
 
-                                }else{
+                                    Date end = sdf.parse(endDate);
+
+                                    Date now = new Date();
+
+                                    long diff = end.getTime() - now.getTime();
+
+                                    long days = TimeUnit.MILLISECONDS.toDays(diff);
+
+                                    if (days > 0) {
+                                        txtRemainingTime.setText(
+                                                days + " days left"
+                                        );
+                                    } else {
+                                        txtRemainingTime.setText(
+                                                "Expired"
+                                        );
+                                    }
+
+                                } catch (Exception e) {
                                     txtRemainingTime.setText(
-                                            "Expired"
+                                            "Unknown"
                                     );
                                 }
-
-                            }catch (Exception e){
-                                txtRemainingTime.setText(
-                                        "Unknown"
-                                );
                             }
 
 

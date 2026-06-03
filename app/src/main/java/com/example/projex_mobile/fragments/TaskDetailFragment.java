@@ -232,10 +232,14 @@ public class TaskDetailFragment extends Fragment {
         }
 
         String dueDate = task.getDueDate();
-        if (dueDate != null && dueDate.contains("T")) {
-            dueDate = dueDate.substring(0, dueDate.indexOf("T"));
+        if (dueDate == null){
+            edtDueDate.setText("No time limit");
         }
-        edtDueDate.setText(dueDate != null ? dueDate : "");
+        else if (dueDate != null && dueDate.contains("T")) {
+            dueDate = dueDate.substring(0, dueDate.indexOf("T"));
+            edtDueDate.setText(dueDate != null ? dueDate : "");
+        }
+
 
         String createdAt = task.getCreatedAt();
         if (createdAt != null && createdAt.contains("T")) {
