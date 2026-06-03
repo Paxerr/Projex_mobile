@@ -47,7 +47,6 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
 
         holder.tvTitle.setText(item.title);
         holder.tvMessage.setText(item.message);
-        holder.tvTicket.setText(item.ticket);
 
         String shortName = item.avatarText != null && item.avatarText.length() >= 2
                 ? item.avatarText.substring(0, 2)
