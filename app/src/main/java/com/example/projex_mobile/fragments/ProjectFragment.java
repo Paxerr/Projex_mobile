@@ -227,6 +227,12 @@ public class ProjectFragment extends Fragment {
 
         super.onViewCreated(view, savedInstanceState);
 
+        getParentFragmentManager().setFragmentResultListener(
+                "task_changed",
+                getViewLifecycleOwner(),
+                (requestKey, result) -> loadLatestTasks()
+        );
+
         LinearLayout btnProTask = view.findViewById(R.id.btnpro_task);
 
         btnProTask.setOnClickListener(v -> {

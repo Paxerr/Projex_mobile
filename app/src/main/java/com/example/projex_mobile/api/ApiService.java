@@ -97,6 +97,12 @@ public interface ApiService {
             @Body Map<String, Object> body
     );
 
+    @DELETE("api/tasks/{id}")
+    Call<JsonObject> deleteTask(
+            @Header("Authorization") String token,
+            @Path("id") int id
+    );
+
     @GET("api/tasks/{taskId}")
     Call<Task> getTaskById(
             @Header("Authorization") String token,
