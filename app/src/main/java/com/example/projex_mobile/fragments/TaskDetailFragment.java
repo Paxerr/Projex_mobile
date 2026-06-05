@@ -41,7 +41,7 @@ public class TaskDetailFragment extends Fragment {
 
     private int taskId;
 
-    private TextView btnBack, btnSave;
+    private TextView btnBack, btnSave, btnDeleteTask;
     private TextView txtProject, txtStatus;
     private LinearLayout btnStatus;
 
@@ -104,6 +104,8 @@ public class TaskDetailFragment extends Fragment {
 
         btnBack = view.findViewById(R.id.btnHuy);
         btnSave = view.findViewById(R.id.btnSave);
+        btnDeleteTask = view.findViewById(R.id.btnDeleteTask);
+        btnDeleteTask.setVisibility(View.GONE);
 
         txtProject = view.findViewById(R.id.txtProject);
         txtStatus = view.findViewById(R.id.txtStatus);
@@ -130,6 +132,7 @@ public class TaskDetailFragment extends Fragment {
 
         btnStatus.setOnClickListener(v -> showStatusPopup());
         btnSave.setOnClickListener(v -> updateTask());
+        btnDeleteTask.setOnClickListener(v -> confirmDeleteTask());
 
         loadMembers();
         loadTaskDetail();
@@ -373,7 +376,7 @@ public class TaskDetailFragment extends Fragment {
         if (!statusChanged && !detailChanged && !assignmentChanged) {
             Toast.makeText(
                     requireContext(),
-                    "Khong co thay doi",
+                    "Không có thay đổi",
                     Toast.LENGTH_SHORT
             ).show();
             return;
@@ -464,14 +467,14 @@ public class TaskDetailFragment extends Fragment {
                             }
 
                             if (showLimitedPermissionMessage) {
-                                finishSaveWithMessage("Da cap nhat status. Thong tin/assigned can quyen Admin hoac Owner.");
+                                finishSaveWithMessage("Đã cập nhập status. Thong tin/assigned can quyen Admin hoac Owner.");
                             } else {
                                 finishSave();
                             }
                         } else {
                             Toast.makeText(
                                     requireContext(),
-                                    "Luu status that bai: " + response.code(),
+                                    "Lưu status thất bại: " + response.code(),
                                     Toast.LENGTH_SHORT
                             ).show();
                         }
@@ -480,6 +483,90 @@ public class TaskDetailFragment extends Fragment {
                     @Override
                     public void onFailure(Call<Task> call, Throwable t) {
                         if (!isAdded()) return;
+                        Toast.makeText(
+                                requireContext(),
+                                "Loi: " + t.getMessage(),
+                                Toast.LENGTH_SHORT
+                        ).show();
+                    }
+                });
+    }
+
+    private void confirmDeleteTask() {
+        if (!canManageTask) {
+            Toast.makeText(
+                    requireContext(),
+                    "Chỉ Admin/Owner mới được task",
+                    Toast.LENGTH_SHORT
+            ).show();
+            return;
+        }
+
+        new androidx.appcompat.app.AlertDialog.Builder(requireContext())
+                .setTitle("Xóa task")
+                .setMessage("Bạn có chắc chắn muốn xóa task này?")
+                .setPositiveButton("Xóa", (dialog, which) -> executeDeleteTask())
+                .setNegativeButton("Hủy", null)
+                .show();
+    }
+
+    private void executeDeleteTask() {
+        if (taskId == 0) {
+            Toast.makeText(
+                    requireContext(),
+                    "Không tìm thấy task để xóa",
+                    Toast.LENGTH_SHORT
+            ).show();
+            return;
+        }
+
+        btnDeleteTask.setEnabled(false);
+        btnDeleteTask.setAlpha(0.55f);
+
+        ApiService apiService = RetrofitClient.getApiService(null);
+
+        apiService.deleteTask(token, taskId)
+                .enqueue(new Callback<JsonObject>() {
+                    @Override
+                    public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                        if (!isAdded()) return;
+
+                        btnDeleteTask.setEnabled(true);
+                        btnDeleteTask.setAlpha(1f);
+
+                        if (response.isSuccessful()) {
+                            notifyTaskChanged(true);
+                            Toast.makeText(
+                                    requireContext(),
+                                    "Xóa task thành công",
+                                    Toast.LENGTH_SHORT
+                            ).show();
+
+                            requireActivity()
+                                    .getSupportFragmentManager()
+                                    .popBackStack();
+                        } else if (response.code() == 403) {
+                            Toast.makeText(
+                                    requireContext(),
+                                    "Bạn không có quyền xóa task này",
+                                    Toast.LENGTH_SHORT
+                            ).show();
+                        } else {
+                            Toast.makeText(
+                                    requireContext(),
+                                    "Xóa task thất bại: " + response.code(),
+                                    Toast.LENGTH_SHORT
+                            ).show();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<JsonObject> call, Throwable t) {
+                        if (!isAdded()) return;
+
+                        btnDeleteTask.setEnabled(true);
+                        btnDeleteTask.setAlpha(1f);
+
                         Toast.makeText(
                                 requireContext(),
                                 "Loi: " + t.getMessage(),
@@ -632,6 +719,10 @@ public class TaskDetailFragment extends Fragment {
 
         btnStatus.setEnabled(canEditStatus);
         btnStatus.setAlpha(canEditStatus ? 1f : 0.55f);
+
+        btnDeleteTask.setVisibility(canManageTask ? View.VISIBLE : View.GONE);
+        btnDeleteTask.setEnabled(canManageTask);
+        btnDeleteTask.setAlpha(canManageTask ? 1f : 0.55f);
     }
 
     private void setEditable(EditText editText, boolean enabled) {
@@ -850,8 +941,17 @@ public class TaskDetailFragment extends Fragment {
         }
     }
 
+    private void notifyTaskChanged(boolean deleted) {
+        Bundle result = new Bundle();
+        result.putInt("task_id", taskId);
+        result.putBoolean("deleted", deleted);
+        getParentFragmentManager().setFragmentResult("task_changed", result);
+    }
+
     private void finishSaveWithMessage(String message) {
         if (!isAdded()) return;
+
+        notifyTaskChanged(false);
 
         Toast.makeText(
                 requireContext(),
@@ -866,6 +966,8 @@ public class TaskDetailFragment extends Fragment {
 
     private void finishSave() {
         if (!isAdded()) return;
+
+        notifyTaskChanged(false);
 
         Toast.makeText(
                 requireContext(),

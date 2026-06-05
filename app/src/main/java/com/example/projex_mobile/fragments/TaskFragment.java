@@ -148,6 +148,17 @@ public class TaskFragment extends Fragment {
         return view;
     }
 
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        getParentFragmentManager().setFragmentResultListener(
+                "task_changed",
+                getViewLifecycleOwner(),
+                (requestKey, result) -> loadTasks()
+        );
+    }
+
     private void loadTasks() {
 
         SharedPreferences prefs = requireActivity().getSharedPreferences("user_prefs", Context.MODE_PRIVATE);

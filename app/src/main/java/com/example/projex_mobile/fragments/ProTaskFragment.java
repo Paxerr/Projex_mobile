@@ -87,6 +87,12 @@ public class ProTaskFragment extends Fragment {
             projectName = getArguments().getString("project_name", "");
         }
 
+        getParentFragmentManager().setFragmentResultListener(
+                "task_changed",
+                getViewLifecycleOwner(),
+                (requestKey, result) -> loadTasks()
+        );
+
         rvTask = view.findViewById(R.id.rvTasks);
 
         rvTask.setLayoutManager(new LinearLayoutManager(requireContext()));
