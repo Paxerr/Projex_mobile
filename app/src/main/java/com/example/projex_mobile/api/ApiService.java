@@ -89,6 +89,14 @@ public interface ApiService {
             @Path("id") int id,
             @Body Map<String, Object> body
     );
+
+    @PATCH("api/tasks/{id}/status")
+    Call<Task> updateTaskStatus(
+            @Header("Authorization") String token,
+            @Path("id") int id,
+            @Body Map<String, Object> body
+    );
+
     @GET("api/tasks/{taskId}")
     Call<Task> getTaskById(
             @Header("Authorization") String token,

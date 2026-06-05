@@ -22,7 +22,6 @@ import com.example.projex_mobile.adapter.TaskAdapter;
 import com.example.projex_mobile.api.ApiService;
 import com.example.projex_mobile.api.RetrofitClient;
 import com.example.projex_mobile.objects.Task;
-import com.example.projex_mobile.objects.TaskAssignment;
 import com.example.projex_mobile.objects.TaskResponse;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.data.PieData;
@@ -53,6 +52,11 @@ public class ProjectFragment extends Fragment {
     private String projectName = "";
     private TextView txtMemberCount;
     private TextView txtRemainingTime;
+    private TextView txtDoneTasks;
+    private TextView txtInProgressTasks;
+    private TextView txtAssignedTasks;
+    private TextView tvProgressPercent;
+    private PieChart pieChart;
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container,
@@ -62,6 +66,11 @@ public class ProjectFragment extends Fragment {
         txtProjectName = view.findViewById(R.id.txtProjectName);
         txtMemberCount = view.findViewById(R.id.txtCount);
         txtRemainingTime = view.findViewById(R.id.txtTime);
+        txtDoneTasks = view.findViewById(R.id.txtDoneTasks);
+        txtInProgressTasks = view.findViewById(R.id.txtInProgressTasks);
+        txtAssignedTasks = view.findViewById(R.id.txtAssignedTasks);
+        tvProgressPercent = view.findViewById(R.id.tvProgressPercent);
+        pieChart = view.findViewById(R.id.pieChart);
 
         rvUpdatesTask.setLayoutManager(new LinearLayoutManager(requireContext()));
 
@@ -92,7 +101,7 @@ public class ProjectFragment extends Fragment {
 
         rvUpdatesTask.setAdapter(adapter);
 
-
+        setupPieChart(0, 0, 0);
 
         loadProject();
         loadLatestTasks();
@@ -247,28 +256,89 @@ public class ProjectFragment extends Fragment {
             txtMemberCount.setOnClickListener(v -> openTeamFragment());
         }
 
-        PieChart pieChart = view.findViewById(R.id.pieChart);
+    }
+
+    private void setupPieChart(int done, int inProgress, int assigned) {
+        if (pieChart == null) {
+            return;
+        }
 
         ArrayList<PieEntry> entries = new ArrayList<>();
-        entries.add(new PieEntry(40f));
-        entries.add(new PieEntry(30f));
-        entries.add(new PieEntry(30f));
+        int totalTasks = done + inProgress + assigned;
 
-        PieDataSet dataSet = new PieDataSet(entries, "Status");
-        dataSet.setColors(
-                Color.parseColor("#0FADFF"),
-                Color.parseColor("#EFEB3B"),
-                Color.parseColor("#48FB98")
-        );
+        if (totalTasks == 0) {
+            entries.add(new PieEntry(1f, "No tasks"));
+        } else {
+            if (done > 0) {
+                entries.add(new PieEntry(done, "Done"));
+            }
+            if (inProgress > 0) {
+                entries.add(new PieEntry(inProgress, "In Progress"));
+            }
+            if (assigned > 0) {
+                entries.add(new PieEntry(assigned, "Assigned"));
+            }
+        }
+
+        PieDataSet dataSet = new PieDataSet(entries, "");
+        if (totalTasks == 0) {
+            dataSet.setColor(Color.parseColor("#3A3A3A"));
+        } else {
+            ArrayList<Integer> colors = new ArrayList<>();
+            if (done > 0) {
+                colors.add(Color.parseColor("#0FADFF"));
+            }
+            if (inProgress > 0) {
+                colors.add(Color.parseColor("#EFEB3B"));
+            }
+            if (assigned > 0) {
+                colors.add(Color.parseColor("#48FB98"));
+            }
+            dataSet.setColors(colors);
+        }
+        dataSet.setDrawValues(false);
 
         PieData data = new PieData(dataSet);
-        data.setValueTextSize(0f);
-
-        pieChart.getLegend().setEnabled(false);
         pieChart.setData(data);
+        pieChart.getLegend().setEnabled(false);
         pieChart.getDescription().setEnabled(false);
+        pieChart.setDrawEntryLabels(false);
+        pieChart.setUsePercentValues(false);
+        pieChart.setHoleRadius(58f);
+        pieChart.setTransparentCircleRadius(62f);
+        pieChart.setCenterText("");
         pieChart.invalidate();
         pieChart.animateY(1000);
+    }
+
+    private void updateChartFromTasks(List<Task> tasks) {
+        int done = 0;
+        int inProgress = 0;
+        int assigned = 0;
+
+        if (tasks != null) {
+            for (Task task : tasks) {
+                String status = task.getStatus();
+                if (status == null) {
+                    assigned++;
+                } else if ("Done".equalsIgnoreCase(status)) {
+                    done++;
+                } else if ("InProgress".equalsIgnoreCase(status)
+                        || "In Progress".equalsIgnoreCase(status)) {
+                    inProgress++;
+                } else {
+                    assigned++;
+                }
+            }
+        }
+
+        txtDoneTasks.setText(getString(R.string.tasks_label, done));
+        txtInProgressTasks.setText(getString(R.string.tasks_label, inProgress));
+        txtAssignedTasks.setText(getString(R.string.tasks_label, assigned));
+        int totalTasks = done + inProgress + assigned;
+        float progressPercent = totalTasks == 0 ? 0f : (done * 100f / totalTasks);
+        tvProgressPercent.setText(getString(R.string.progress_percent, progressPercent));
+        setupPieChart(done, inProgress, assigned);
     }
 
     private void showLatestUpdatedTasks() {
@@ -328,9 +398,11 @@ public class ProjectFragment extends Fragment {
 
                             originalList = response.body().getItems();
 
+                            updateChartFromTasks(originalList);
                             showLatestUpdatedTasks();
 
                         } else {
+                            updateChartFromTasks(null);
                             Log.e(
                                     "LATEST_TASK",
                                     "Load task failed: " + response.code()
@@ -343,6 +415,7 @@ public class ProjectFragment extends Fragment {
                             Call<TaskResponse> call,
                             Throwable t
                     ) {
+                        updateChartFromTasks(null);
                         Log.e(
                                 "LATEST_TASK",
                                 t.getMessage()
