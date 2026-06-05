@@ -6,6 +6,8 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -23,6 +25,9 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
+import java.text.Normalizer;
+import java.util.Locale;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -37,6 +42,8 @@ public class TeamFragment extends Fragment {
 
     private ImageView btnBackHome;
     private ImageView btnAddMember;
+    private ImageView btnSearchMember;
+    private EditText edtSearchMember;
     private TextView tvCount;
     private LinearLayout layoutMembersContainer;
 
@@ -78,6 +85,8 @@ public class TeamFragment extends Fragment {
     private void initViews(View view) {
         btnBackHome = view.findViewById(R.id.btn_menu);
         btnAddMember = view.findViewById(R.id.btn_add_member);
+        btnSearchMember = view.findViewById(R.id.ic_search);
+        edtSearchMember = view.findViewById(R.id.edtSearchMember);
         tvCount = view.findViewById(R.id.tv_count);
         layoutMembersContainer = view.findViewById(R.id.layout_members_container);
     }
@@ -89,6 +98,22 @@ public class TeamFragment extends Fragment {
 
         if (btnAddMember != null) {
             btnAddMember.setOnClickListener(v -> openAddMemberScreen());
+        }
+
+        if (btnSearchMember != null) {
+            btnSearchMember.setOnClickListener(v -> searchProjectMembers());
+        }
+
+        if (edtSearchMember != null) {
+            edtSearchMember.setSingleLine(true);
+            edtSearchMember.setImeOptions(EditorInfo.IME_ACTION_SEARCH);
+            edtSearchMember.setOnEditorActionListener((v, actionId, event) -> {
+                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                    searchProjectMembers();
+                    return true;
+                }
+                return false;
+            });
         }
     }
 
@@ -103,6 +128,19 @@ public class TeamFragment extends Fragment {
     }
 
     private void loadProjectMembers() {
+        fetchProjectMembers("");
+    }
+
+    private void searchProjectMembers() {
+        String keyword = "";
+        if (edtSearchMember != null && edtSearchMember.getText() != null) {
+            keyword = edtSearchMember.getText().toString().trim();
+        }
+
+        fetchProjectMembers(keyword);
+    }
+
+    private void fetchProjectMembers(String keyword) {
         if (projectId == -1) {
             Toast.makeText(requireContext(), "Không tìm thấy projectId", Toast.LENGTH_SHORT).show();
             return;
@@ -118,6 +156,7 @@ public class TeamFragment extends Fragment {
                 .getString("token", "");
 
         ApiService apiService = RetrofitClient.getApiService(null);
+        String safeKeyword = keyword == null ? "" : keyword.trim();
 
         apiService.getProjectById(token, projectId)
                 .enqueue(new Callback<JsonObject>() {
@@ -130,7 +169,14 @@ public class TeamFragment extends Fragment {
 
                             if (body.has("members") && body.get("members").isJsonArray()) {
                                 JsonArray members = body.getAsJsonArray("members");
-                                renderMembers(members);
+                                updateMemberContext(members);
+
+                                if (safeKeyword.isEmpty()) {
+                                    renderMembers(members);
+                                } else {
+                                    JsonArray filteredMembers = filterMembers(members, safeKeyword);
+                                    renderMembers(filteredMembers);
+                                }
                             } else {
                                 layoutMembersContainer.removeAllViews();
                                 updateMemberCount(0);
@@ -149,21 +195,7 @@ public class TeamFragment extends Fragment {
                 });
     }
 
-    private void renderMembers(JsonArray members) {
-        layoutMembersContainer.removeAllViews();
-        updateMemberCount(members.size());
-
-        if (members.size() == 0) {
-            TextView emptyView = new TextView(requireContext());
-            emptyView.setText("Chưa có thành viên trong dự án");
-            emptyView.setTextColor(Color.parseColor("#9CA3AF"));
-            emptyView.setTextSize(14);
-            emptyView.setPadding(0, dp(8), 0, dp(8));
-            layoutMembersContainer.addView(emptyView);
-            return;
-        }
-
-        // Count admins and find current user's role
+    private void updateMemberContext(JsonArray members) {
         int tempAdminCount = 0;
         String tempCurrentUserRole = "Member";
         String loggedInEmail = "";
@@ -196,14 +228,27 @@ public class TeamFragment extends Fragment {
             boolean canAdd = "Owner".equalsIgnoreCase(currentUserRole) || "Admin".equalsIgnoreCase(currentUserRole);
             btnAddMember.setVisibility(canAdd ? View.VISIBLE : View.GONE);
         }
+    }
+
+    private void renderMembers(JsonArray members) {
+        layoutMembersContainer.removeAllViews();
+        updateMemberCount(members.size());
+
+        if (members.size() == 0) {
+            TextView emptyView = new TextView(requireContext());
+            emptyView.setText(getEmptyMembersMessage());
+            emptyView.setTextColor(Color.parseColor("#9CA3AF"));
+            emptyView.setTextSize(14);
+            emptyView.setPadding(0, dp(8), 0, dp(8));
+            layoutMembersContainer.addView(emptyView);
+            return;
+        }
 
         for (JsonElement element : members) {
             if (!element.isJsonObject()) continue;
 
             JsonObject memberObj = element.getAsJsonObject();
 
-            int userId = memberObj.has("userId") && !memberObj.get("userId").isJsonNull()
-                    ? memberObj.get("userId").getAsInt() : -1;
             String role = getString(memberObj, "role", "Member");
             String joinedAt = formatJoinedAt(getString(memberObj, "joinedAt", ""));
 
@@ -213,6 +258,7 @@ public class TeamFragment extends Fragment {
                 userObj = memberObj.getAsJsonObject("user");
             }
 
+            int userId = getMemberUserId(memberObj, userObj);
             String name = getString(userObj, "fullName", "Unknown");
             String email = getString(userObj, "email", "");
             String status = "● Đang hoạt động";
@@ -320,6 +366,75 @@ public class TeamFragment extends Fragment {
         }
 
         return card;
+    }
+
+    private String getEmptyMembersMessage() {
+        String keyword = "";
+        if (edtSearchMember != null && edtSearchMember.getText() != null) {
+            keyword = edtSearchMember.getText().toString().trim();
+        }
+
+        if (keyword.isEmpty()) {
+            return "Ch\u01b0a c\u00f3 th\u00e0nh vi\u00ean trong d\u1ef1 \u00e1n";
+        }
+
+        return "Kh\u00f4ng t\u00ecm th\u1ea5y th\u00e0nh vi\u00ean ph\u00f9 h\u1ee3p";
+    }
+
+    private JsonArray filterMembers(JsonArray members, String keyword) {
+        JsonArray filteredMembers = new JsonArray();
+        String normalizedKeyword = normalizeSearchText(keyword);
+
+        for (JsonElement element : members) {
+            if (!element.isJsonObject()) continue;
+
+            JsonObject memberObj = element.getAsJsonObject();
+            JsonObject userObj = memberObj.has("user") && memberObj.get("user").isJsonObject()
+                    ? memberObj.getAsJsonObject("user") : new JsonObject();
+
+            int userId = getMemberUserId(memberObj, userObj);
+            String name = getString(userObj, "fullName", "");
+            String email = getString(userObj, "email", "");
+            String role = getString(memberObj, "role", "");
+
+            if (String.valueOf(userId).contains(normalizedKeyword)
+                    || normalizeSearchText(name).contains(normalizedKeyword)
+                    || normalizeSearchText(email).contains(normalizedKeyword)
+                    || normalizeSearchText(role).contains(normalizedKeyword)) {
+                filteredMembers.add(element);
+            }
+        }
+
+        return filteredMembers;
+    }
+
+    private int getMemberUserId(JsonObject memberObj, JsonObject userObj) {
+        if (memberObj != null
+                && memberObj.has("userId")
+                && !memberObj.get("userId").isJsonNull()) {
+            return memberObj.get("userId").getAsInt();
+        }
+
+        if (userObj != null
+                && userObj.has("id")
+                && !userObj.get("id").isJsonNull()) {
+            return userObj.get("id").getAsInt();
+        }
+
+        return -1;
+    }
+
+    private String normalizeSearchText(String value) {
+        if (value == null) {
+            return "";
+        }
+
+        String normalized = Normalizer.normalize(value, Normalizer.Form.NFD)
+                .replaceAll("\\p{InCombiningDiacriticalMarks}+", "")
+                .replace('Đ', 'D')
+                .replace('đ', 'd');
+
+        return normalized.toLowerCase(new Locale("vi", "VN"));
     }
 
     private void openAddMemberScreen() {
