@@ -57,6 +57,14 @@ public class TaskDetailFragment extends Fragment {
     private int projectId;
     String projectName = "";
     private String dueDateApi = "";
+    private String originalTitle = "";
+    private String originalDescription = "";
+    private String originalStatus = "Assigned";
+    private String originalDueDateApi = "";
+    private int originalPriority = 1;
+    private int currentUserId = 0;
+    private boolean canManageTask = false;
+    private boolean permissionsLoaded = false;
 
     private String token = "";
 
@@ -92,6 +100,7 @@ public class TaskDetailFragment extends Fragment {
                 );
 
         token = prefs.getString("token", "");
+        currentUserId = prefs.getInt("user_id", 0);
 
         btnBack = view.findViewById(R.id.btnHuy);
         btnSave = view.findViewById(R.id.btnSave);
@@ -127,6 +136,15 @@ public class TaskDetailFragment extends Fragment {
     }
 
     private void showStatusPopup() {
+
+        if (!canCurrentUserChangeStatus()) {
+            Toast.makeText(
+                    requireContext(),
+                    "Ban khong co quyen cap nhat status task nay",
+                    Toast.LENGTH_SHORT
+            ).show();
+            return;
+        }
 
         PopupMenu popup = new PopupMenu(requireContext(), btnStatus);
 
@@ -198,11 +216,21 @@ public class TaskDetailFragment extends Fragment {
 
     private void bindTask(Task task) {
 
-        edtTaskName.setText(task.getTitle() != null ? task.getTitle() : "");
+        if (projectId == 0 && task.getProjectId() > 0) {
+            projectId = task.getProjectId();
+            loadMembers();
+        }
 
-        edtDescription.setText(task.getDescription() != null ? task.getDescription() : "");
+        originalTitle = task.getTitle() != null ? task.getTitle() : "";
+        originalDescription = task.getDescription() != null ? task.getDescription() : "";
+        originalStatus = normalizeStatus(task.getStatus());
+        originalPriority = task.getPriority();
 
-        txtStatus.setText(task.getStatus() != null ? task.getStatus() : "Assigned");
+        edtTaskName.setText(originalTitle);
+
+        edtDescription.setText(originalDescription);
+
+        txtStatus.setText(originalStatus);
         oldAssignedUserIds.clear();
         selectedUserIds.clear();
 
@@ -214,6 +242,12 @@ public class TaskDetailFragment extends Fragment {
 
                 int userId = task.getAssignees().get(i).getUserId();
                 String fullName = task.getAssignees().get(i).getFullName();
+                if (fullName == null || fullName.trim().isEmpty()) {
+                    fullName = task.getAssignees().get(i).getEmail();
+                }
+                if (fullName == null || fullName.trim().isEmpty()) {
+                    fullName = "User " + userId;
+                }
 
                 oldAssignedUserIds.add(userId);
                 selectedUserIds.add(userId);
@@ -231,13 +265,18 @@ public class TaskDetailFragment extends Fragment {
             edtAssigned.setText("Chưa assigned");
         }
 
-        String dueDate = task.getDueDate();
-        if (dueDate == null){
+        dueDateApi = task.getDueDate() != null ? task.getDueDate() : "";
+        originalDueDateApi = dueDateApi;
+
+        String dueDate = dueDateApi != null ? dueDateApi : "";
+        if (dueDate.isEmpty()){
             edtDueDate.setText("No time limit");
         }
-        else if (dueDate != null && dueDate.contains("T")) {
+        else if (dueDate.contains("T")) {
             dueDate = dueDate.substring(0, dueDate.indexOf("T"));
             edtDueDate.setText(dueDate != null ? dueDate : "");
+        } else {
+            edtDueDate.setText(dueDate);
         }
 
 
@@ -260,6 +299,8 @@ public class TaskDetailFragment extends Fragment {
 
             txtProject.setText("Project " + task.getProjectId());
         }
+
+        applyFieldPermissions();
     }
     private void showDatePicker() {
         Calendar calendar = Calendar.getInstance(
@@ -303,10 +344,10 @@ public class TaskDetailFragment extends Fragment {
 
         String description = edtDescription.getText().toString().trim();
 
-        String dueDate = dueDateApi;
+        String dueDate = dueDateApi != null ? dueDateApi : "";
 
 
-        String status = txtStatus.getText().toString().trim();
+        String status = normalizeStatus(txtStatus.getText().toString());
 
         String priorityText = edtPriority.getText().toString().trim();
 
@@ -320,6 +361,33 @@ public class TaskDetailFragment extends Fragment {
             priority = Integer.parseInt(priorityText);
         }
         catch (Exception ignored) {}
+
+        boolean statusChanged = !safeEquals(status, normalizeStatus(originalStatus));
+        boolean detailChanged =
+                !safeEquals(title, originalTitle)
+                        || !safeEquals(description, originalDescription)
+                        || priority != originalPriority
+                        || !safeEquals(dateKey(dueDate), dateKey(originalDueDateApi));
+        boolean assignmentChanged = !sameUserIds(oldAssignedUserIds, selectedUserIds);
+
+        if (!statusChanged && !detailChanged && !assignmentChanged) {
+            Toast.makeText(
+                    requireContext(),
+                    "Khong co thay doi",
+                    Toast.LENGTH_SHORT
+            ).show();
+            return;
+        }
+
+        if (!detailChanged && statusChanged) {
+            updateTaskStatusOnly(assignmentChanged, false);
+            return;
+        }
+
+        if (!detailChanged && assignmentChanged) {
+            syncTaskAssignments();
+            return;
+        }
 
         Map<String, Object> body = new HashMap<>();
 
@@ -345,6 +413,10 @@ public class TaskDetailFragment extends Fragment {
                         if (response.isSuccessful()) {
                             syncTaskAssignments();
                         } else {
+                            if (response.code() == 403 && statusChanged) {
+                                updateTaskStatusOnly(false, true);
+                                return;
+                            }
 
                             Toast.makeText(
                                     requireContext(),
@@ -367,6 +439,56 @@ public class TaskDetailFragment extends Fragment {
                     }
                 });
     }
+
+    private void updateTaskStatusOnly(
+            boolean syncAssignmentsAfter,
+            boolean showLimitedPermissionMessage
+    ) {
+        Map<String, Object> body = new HashMap<>();
+        body.put("status", normalizeStatus(txtStatus.getText().toString()));
+
+        ApiService apiService = RetrofitClient.getApiService(null);
+
+        apiService.updateTaskStatus(token, taskId, body)
+                .enqueue(new Callback<Task>() {
+                    @Override
+                    public void onResponse(Call<Task> call, Response<Task> response) {
+                        if (!isAdded()) return;
+
+                        if (response.isSuccessful()) {
+                            originalStatus = normalizeStatus(txtStatus.getText().toString());
+
+                            if (syncAssignmentsAfter) {
+                                syncTaskAssignments();
+                                return;
+                            }
+
+                            if (showLimitedPermissionMessage) {
+                                finishSaveWithMessage("Da cap nhat status. Thong tin/assigned can quyen Admin hoac Owner.");
+                            } else {
+                                finishSave();
+                            }
+                        } else {
+                            Toast.makeText(
+                                    requireContext(),
+                                    "Luu status that bai: " + response.code(),
+                                    Toast.LENGTH_SHORT
+                            ).show();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<Task> call, Throwable t) {
+                        if (!isAdded()) return;
+                        Toast.makeText(
+                                requireContext(),
+                                "Loi: " + t.getMessage(),
+                                Toast.LENGTH_SHORT
+                        ).show();
+                    }
+                });
+    }
+
     private void loadMembers() {
 
         if (projectId == 0) {
@@ -389,6 +511,19 @@ public class TaskDetailFragment extends Fragment {
 
                             members.clear();
                             members.addAll(response.body().getMembers());
+                            permissionsLoaded = true;
+                            canManageTask = false;
+
+                            for (ProjectMember member : members) {
+                                if (member.getUserId() == currentUserId) {
+                                    String role = member.getRole();
+                                    canManageTask = "Owner".equalsIgnoreCase(role)
+                                            || "Admin".equalsIgnoreCase(role);
+                                    break;
+                                }
+                            }
+
+                            applyFieldPermissions();
                         }
                     }
 
@@ -405,6 +540,15 @@ public class TaskDetailFragment extends Fragment {
                 });
     }
     private void showMemberPopup() {
+
+        if (permissionsLoaded && !canManageTask) {
+            Toast.makeText(
+                    requireContext(),
+                    "Chi Admin/Owner moi duoc sua assigned",
+                    Toast.LENGTH_SHORT
+            ).show();
+            return;
+        }
 
         if (members.isEmpty()) {
             Toast.makeText(requireContext(), "Project chưa có member", Toast.LENGTH_SHORT).show();
@@ -472,6 +616,88 @@ public class TaskDetailFragment extends Fragment {
             edtAssigned.setText(names.toString());
         }
     }
+
+    private void applyFieldPermissions() {
+        boolean canEditTaskInfo = canManageTask || !permissionsLoaded;
+        boolean canEditStatus = canCurrentUserChangeStatus();
+
+        setEditable(edtTaskName, canEditTaskInfo);
+        setEditable(edtDescription, canEditTaskInfo);
+        setEditable(edtDueDate, canEditTaskInfo);
+        setEditable(edtPriority, canEditTaskInfo);
+        setEditable(edtAssigned, canEditTaskInfo);
+
+        edtDueDate.setClickable(canEditTaskInfo);
+        edtAssigned.setClickable(canEditTaskInfo);
+
+        btnStatus.setEnabled(canEditStatus);
+        btnStatus.setAlpha(canEditStatus ? 1f : 0.55f);
+    }
+
+    private void setEditable(EditText editText, boolean enabled) {
+        editText.setEnabled(enabled);
+        editText.setAlpha(enabled ? 1f : 0.65f);
+    }
+
+    private boolean canCurrentUserChangeStatus() {
+        return canManageTask
+                || oldAssignedUserIds.isEmpty()
+                || (currentUserId > 0 && oldAssignedUserIds.contains(currentUserId));
+    }
+
+    private String normalizeStatus(String status) {
+        if (status == null || status.trim().isEmpty()) {
+            return "Assigned";
+        }
+
+        String value = status.trim().toLowerCase();
+        if ("todo".equals(value) || "to do".equals(value) || "assigned".equals(value)) {
+            return "Assigned";
+        }
+        if ("inprogress".equals(value) || "in progress".equals(value)) {
+            return "InProgress";
+        }
+        if ("done".equals(value) || "completed".equals(value)) {
+            return "Done";
+        }
+
+        return status.trim();
+    }
+
+    private boolean safeEquals(String first, String second) {
+        String left = first != null ? first : "";
+        String right = second != null ? second : "";
+        return left.equals(right);
+    }
+
+    private String dateKey(String value) {
+        if (value == null || value.trim().isEmpty()) {
+            return "";
+        }
+
+        String date = value.trim();
+        int timeIndex = date.indexOf("T");
+        if (timeIndex >= 0) {
+            return date.substring(0, timeIndex);
+        }
+
+        return date;
+    }
+
+    private boolean sameUserIds(List<Integer> first, List<Integer> second) {
+        if (first.size() != second.size()) {
+            return false;
+        }
+
+        for (int userId : first) {
+            if (!second.contains(userId)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
     private void syncTaskAssignments() {
 
         List<Integer> addIds = new ArrayList<>();
@@ -623,6 +849,21 @@ public class TaskDetailFragment extends Fragment {
             finishSave();
         }
     }
+
+    private void finishSaveWithMessage(String message) {
+        if (!isAdded()) return;
+
+        Toast.makeText(
+                requireContext(),
+                message,
+                Toast.LENGTH_SHORT
+        ).show();
+
+        requireActivity()
+                .getSupportFragmentManager()
+                .popBackStack();
+    }
+
     private void finishSave() {
         if (!isAdded()) return;
 

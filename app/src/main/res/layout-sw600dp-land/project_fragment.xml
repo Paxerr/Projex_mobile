@@ -109,20 +109,40 @@
                             android:gravity="center_horizontal"
                             android:layout_marginBottom="24dp"
                             android:orientation="vertical">
-                            <LinearLayout
+                            <FrameLayout
+                                android:layout_width="250dp"
+                                android:layout_height="250dp">
 
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:gravity="center_horizontal"
-
-
-                                android:focusable="true"
-                                android:orientation="vertical">
                                 <com.github.mikephil.charting.charts.PieChart
                                     android:id="@+id/pieChart"
-                                    android:layout_width="250dp"
-                                    android:layout_height="250dp"/>
-                            </LinearLayout>
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"/>
+
+                                <LinearLayout
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center"
+                                    android:gravity="center"
+                                    android:orientation="vertical">
+
+                                    <TextView
+                                        android:id="@+id/tvProgressPercent"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="0%"
+                                        android:textColor="#6366F1"
+                                        android:textSize="26sp"
+                                        android:textStyle="bold" />
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="DONE"
+                                        android:textColor="#6366F1"
+                                        android:textSize="10sp"
+                                        android:textStyle="bold" />
+                                </LinearLayout>
+                            </FrameLayout>
                             <LinearLayout
 
                                 android:layout_width="match_parent"
@@ -165,6 +185,7 @@
                                                 android:textStyle="bold"/>
 
                                             <TextView
+                                                android:id="@+id/txtDoneTasks"
                                                 android:layout_width="wrap_content"
                                                 android:layout_height="wrap_content"
                                                 android:text="12 Tasks"
@@ -201,6 +222,7 @@
                                                 android:textStyle="bold"/>
 
                                             <TextView
+                                                android:id="@+id/txtInProgressTasks"
                                                 android:layout_width="wrap_content"
                                                 android:layout_height="wrap_content"
                                                 android:text="5 Tasks"
@@ -240,12 +262,13 @@
                                             <TextView
                                                 android:layout_width="wrap_content"
                                                 android:layout_height="wrap_content"
-                                                android:text="To Do"
+                                                android:text="Assigned"
                                                 android:textColor="#FFFFFF"
                                                 android:textSize="12sp"
                                                 android:textStyle="bold"/>
 
                                             <TextView
+                                                android:id="@+id/txtAssignedTasks"
                                                 android:layout_width="wrap_content"
                                                 android:layout_height="wrap_content"
                                                 android:text="8 Tasks"
