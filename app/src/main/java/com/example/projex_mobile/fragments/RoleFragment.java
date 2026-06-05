@@ -39,7 +39,7 @@ public class RoleFragment extends Fragment {
     public static final String ARG_CURRENT_USER_ROLE = "current_user_role";
 
     private TextView btnBack, btnSave, tvTitle;
-    private TextView tvAvatar, tvMemberName, tvMemberEmail, tvStatusValue, tvJoinDateValue;
+    private TextView tvAvatar, tvMemberName, tvMemberEmail, tvStatusValue, tvJoinDateValue, tvRoleSection;
 
     private LinearLayout cardAdmin, cardMember, cardOwner, cardDeleteMember;
     private RadioButton rbAdmin, rbMember, rbOwner;
@@ -96,6 +96,7 @@ public class RoleFragment extends Fragment {
         tvMemberEmail = view.findViewById(R.id.tvMemberEmail);
         tvStatusValue = view.findViewById(R.id.tvStatusValue);
         tvJoinDateValue = view.findViewById(R.id.tvJoinDateValue);
+        tvRoleSection = view.findViewById(R.id.tvRoleSection);
 
         cardAdmin = view.findViewById(R.id.cardAdmin);
         cardMember = view.findViewById(R.id.cardMember);
@@ -154,6 +155,12 @@ public class RoleFragment extends Fragment {
         if (btnSave != null) {
             btnSave.setVisibility(canEditRole ? View.VISIBLE : View.GONE);
         }
+
+        boolean showRoleOptions = !isAdmin;
+        if (tvRoleSection != null) tvRoleSection.setVisibility(showRoleOptions ? View.VISIBLE : View.GONE);
+        if (cardAdmin != null) cardAdmin.setVisibility(showRoleOptions ? View.VISIBLE : View.GONE);
+        if (cardMember != null) cardMember.setVisibility(showRoleOptions ? View.VISIBLE : View.GONE);
+        if (cardOwner != null) cardOwner.setVisibility(showRoleOptions ? View.VISIBLE : View.GONE);
 
         if (cardAdmin != null) cardAdmin.setEnabled(canEditRole);
         if (cardMember != null) cardMember.setEnabled(canEditRole);
