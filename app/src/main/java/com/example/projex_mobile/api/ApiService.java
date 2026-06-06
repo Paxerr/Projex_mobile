@@ -37,6 +37,12 @@ public interface ApiService {
     @POST("api/auth/reset-password")
     Call<JsonObject> resetPassword(@Body Map<String, String> body);
 
+    @POST("api/auth/change-password")
+    Call<JsonObject> changePassword(
+            @Header("Authorization") String token,
+            @Body Map<String, String> body
+    );
+
     @GET("api/auth/me")
     Call<User> getProfile(@Header("Authorization") String token);
 
