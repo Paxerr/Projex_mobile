@@ -8,6 +8,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -262,8 +263,9 @@ public class TeamFragment extends Fragment {
             String name = getString(userObj, "fullName", "Unknown");
             String email = getString(userObj, "email", "");
             String status = "● Đang hoạt động";
+            String avatarUrl = getString(userObj, "avatarUrl", "");
 
-            View card = createMemberCard(userId, name, email, role, joinedAt, status);
+            View card = createMemberCard(userId, name, email, role, joinedAt, status, avatarUrl);
             layoutMembersContainer.addView(card);
         }
     }
@@ -274,7 +276,8 @@ public class TeamFragment extends Fragment {
             String email,
             String role,
             String joinedAt,
-            String status
+            String status,
+            String avatarUrl
     ) {
         LinearLayout card = new LinearLayout(requireContext());
         card.setOrientation(LinearLayout.HORIZONTAL);
@@ -289,20 +292,51 @@ public class TeamFragment extends Fragment {
         cardParams.setMargins(0, 0, 0, dp(12));
         card.setLayoutParams(cardParams);
 
-        TextView avatar = new TextView(requireContext());
-        avatar.setText(getAvatarText(name));
-        avatar.setTextColor(Color.WHITE);
-        avatar.setTextSize(14);
-        avatar.setTypeface(null, Typeface.BOLD);
-        avatar.setGravity(Gravity.CENTER);
-        avatar.setBackgroundResource(R.drawable.home_bg_card);
+        FrameLayout avatarContainer = new FrameLayout(requireContext());
+        avatarContainer.setBackgroundResource(R.drawable.home_bg_card);
+
+        TextView avatarText = new TextView(requireContext());
+        avatarText.setText(getAvatarText(name));
+        avatarText.setTextColor(Color.WHITE);
+        avatarText.setTextSize(14);
+        avatarText.setTypeface(null, Typeface.BOLD);
+        avatarText.setGravity(Gravity.CENTER);
+        avatarContainer.addView(avatarText, new FrameLayout.LayoutParams(
+                FrameLayout.LayoutParams.MATCH_PARENT,
+                FrameLayout.LayoutParams.MATCH_PARENT
+        ));
+
+        com.google.android.material.imageview.ShapeableImageView ivAvatar = new com.google.android.material.imageview.ShapeableImageView(requireContext());
+        ivAvatar.setScaleType(ImageView.ScaleType.CENTER_CROP);
+        ivAvatar.setVisibility(View.GONE);
+
+        float density = getResources().getDisplayMetrics().density;
+        int cornerRadiusPx = (int) (12 * density);
+        ivAvatar.setShapeAppearanceModel(
+                ivAvatar.getShapeAppearanceModel().toBuilder()
+                        .setAllCornerSizes(cornerRadiusPx)
+                        .build()
+        );
+        avatarContainer.addView(ivAvatar, new FrameLayout.LayoutParams(
+                FrameLayout.LayoutParams.MATCH_PARENT,
+                FrameLayout.LayoutParams.MATCH_PARENT
+        ));
+
+        if (avatarUrl != null && !avatarUrl.trim().isEmpty()) {
+            ivAvatar.setVisibility(View.VISIBLE);
+            avatarText.setVisibility(View.GONE);
+            EditProfileFragment.loadImage(avatarUrl, ivAvatar);
+        } else {
+            ivAvatar.setVisibility(View.GONE);
+            avatarText.setVisibility(View.VISIBLE);
+        }
 
         LinearLayout.LayoutParams avatarParams = new LinearLayout.LayoutParams(
                 dp(44),
                 dp(44)
         );
         avatarParams.setMargins(0, 0, dp(12), 0);
-        card.addView(avatar, avatarParams);
+        card.addView(avatarContainer, avatarParams);
 
         LinearLayout infoBox = new LinearLayout(requireContext());
         infoBox.setOrientation(LinearLayout.VERTICAL);
@@ -358,7 +392,8 @@ public class TeamFragment extends Fragment {
                             email,
                             role,
                             joinedAt,
-                            status
+                            status,
+                            avatarUrl
                     )
             );
 
@@ -456,7 +491,8 @@ public class TeamFragment extends Fragment {
                                   String memberEmail,
                                   String memberRole,
                                   String joinDate,
-                                  String status) {
+                                  String status,
+                                  String avatarUrl) {
         try {
             View parentView = (View) requireView().getParent();
 
@@ -474,7 +510,8 @@ public class TeamFragment extends Fragment {
                     joinDate,
                     status,
                     adminCount,
-                    currentUserRole
+                    currentUserRole,
+                    avatarUrl
             );
 
             requireActivity()

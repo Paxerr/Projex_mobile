@@ -259,55 +259,10 @@
                     android:textStyle="bold" />
 
                 <LinearLayout
-                    android:id="@+id/cardNotifications"
-                    android:layout_width="match_parent"
-                    android:layout_height="88dp"
-                    android:layout_marginTop="8dp"
-                    android:background="@drawable/home_bg_card"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal"
-                    android:paddingStart="24dp"
-                    android:paddingEnd="24dp">
-
-                    <FrameLayout
-                        android:id="@+id/iconBellCard"
-                        android:layout_width="56dp"
-                        android:layout_height="56dp"
-                        android:background="@drawable/home_bg_card"
-                        android:backgroundTint="#1D2940">
-
-                        <ImageView
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
-                            android:layout_gravity="center"
-                            android:contentDescription="Notification"
-                            app:srcCompat="@drawable/account_ic_nofication"
-                            app:tint="#4A8CFF" />
-                    </FrameLayout>
-
-                    <TextView
-                        android:id="@+id/tvNotificationText"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="16dp"
-                        android:layout_weight="1"
-                        android:text="Thông báo đẩy"
-                        android:textColor="#FFFFFF"
-                        android:textSize="16sp"
-                        android:textStyle="bold" />
-
-                    <com.google.android.material.switchmaterial.SwitchMaterial
-                        android:id="@+id/switchNotifications"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:checked="true" />
-                </LinearLayout>
-
-                <LinearLayout
                     android:id="@+id/cardChangePassword"
                     android:layout_width="match_parent"
                     android:layout_height="88dp"
-                    android:layout_marginTop="16dp"
+                    android:layout_marginTop="8dp"
                     android:background="@drawable/home_bg_card"
                     android:clickable="true"
                     android:focusable="true"

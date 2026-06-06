@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -21,7 +22,6 @@ import com.example.projex_mobile.api.ApiService;
 import com.example.projex_mobile.api.RetrofitClient;
 import com.example.projex_mobile.objects.DashboardOverview;
 import com.example.projex_mobile.objects.User;
-import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
@@ -41,6 +41,7 @@ public class AccountFragment extends Fragment {
     private String currentName = "Tiến Đạt Đinh";
     private String currentEmail = "dinhtiendat2105@gmail.com";
     private String currentPhone = "+84 901 234 567";
+    private String currentAvatarUrl = null;
 
     @Nullable
     @Override
@@ -72,7 +73,9 @@ public class AccountFragment extends Fragment {
                     String newName = result.getString(EditProfileFragment.KEY_NAME, currentName);
                     String newEmail = result.getString(EditProfileFragment.KEY_EMAIL, currentEmail);
                     String newPhone = result.getString(EditProfileFragment.KEY_PHONE, currentPhone);
+                    String newAvatarUrl = result.getString(EditProfileFragment.KEY_AVATAR_URL, currentAvatarUrl);
 
+                    currentAvatarUrl = newAvatarUrl;
                     updateProfileApi(newName, newEmail, newPhone);
                 }
         );
@@ -100,6 +103,8 @@ public class AccountFragment extends Fragment {
         if (tvAvatarText != null) {
             tvAvatarText.setText(makeAvatarText(currentName));
         }
+
+        setupAvatarImage(currentAvatarUrl);
     }
 
     private String getAuthToken() {
@@ -126,6 +131,7 @@ public class AccountFragment extends Fragment {
                     currentName = user.getFullName();
                     currentEmail = user.getEmail();
                     currentPhone = user.getPhoneNumber() != null ? user.getPhoneNumber() : "";
+                    currentAvatarUrl = user.getAvatarUrl();
                     bindUserData();
 
                     if (getContext() != null) {
@@ -243,8 +249,6 @@ public class AccountFragment extends Fragment {
         View cardChangePassword = view.findViewById(R.id.cardChangePassword);
         View cardLogout = view.findViewById(R.id.cardLogout);
 
-        SwitchMaterial switchNotifications = view.findViewById(R.id.switchNotifications);
-
         if (btnBack != null) {
             btnBack.setOnClickListener(v -> requireActivity()
                     .getSupportFragmentManager()
@@ -259,16 +263,6 @@ public class AccountFragment extends Fragment {
 
         if (icEditProfile != null) {
             icEditProfile.setOnClickListener(editProfileClickListener);
-        }
-
-        if (switchNotifications != null) {
-            switchNotifications.setOnCheckedChangeListener((buttonView, isChecked) -> {
-                if (isChecked) {
-                    Toast.makeText(requireContext(), "Đã bật thông báo", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(requireContext(), "Đã tắt thông báo", Toast.LENGTH_SHORT).show();
-                }
-            });
         }
 
         if (cardChangePassword != null) {
@@ -296,7 +290,8 @@ public class AccountFragment extends Fragment {
             EditProfileFragment editProfileFragment = EditProfileFragment.newInstance(
                     currentName,
                     currentEmail,
-                    currentPhone
+                    currentPhone,
+                    currentAvatarUrl
             );
 
             requireActivity()
@@ -369,5 +364,49 @@ public class AccountFragment extends Fragment {
         String lastChar = words[words.length - 1].substring(0, 1);
 
         return (firstChar + lastChar).toUpperCase(new Locale("vi", "VN"));
+    }
+
+    private void setupAvatarImage(String avatarUrl) {
+        View view = getView();
+        if (view == null) return;
+
+        FrameLayout cardAvatar = view.findViewById(R.id.cardAvatar);
+        if (cardAvatar == null) return;
+
+        com.google.android.material.imageview.ShapeableImageView ivAvatar = view.findViewById(R.id.ivAvatar);
+        if (ivAvatar == null) {
+            ivAvatar = new com.google.android.material.imageview.ShapeableImageView(requireContext());
+            ivAvatar.setId(R.id.ivAvatar);
+            FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(
+                    FrameLayout.LayoutParams.MATCH_PARENT,
+                    FrameLayout.LayoutParams.MATCH_PARENT
+            );
+            ivAvatar.setLayoutParams(params);
+            ivAvatar.setScaleType(ImageView.ScaleType.CENTER_CROP);
+            ivAvatar.setVisibility(View.GONE);
+
+            float density = getResources().getDisplayMetrics().density;
+            int cornerRadiusPx = (int) (24 * density);
+            ivAvatar.setShapeAppearanceModel(
+                    ivAvatar.getShapeAppearanceModel().toBuilder()
+                            .setAllCornerSizes(cornerRadiusPx)
+                            .build()
+            );
+
+            cardAvatar.addView(ivAvatar);
+        }
+
+        if (avatarUrl != null && !avatarUrl.trim().isEmpty()) {
+            ivAvatar.setVisibility(View.VISIBLE);
+            if (tvAvatarText != null) {
+                tvAvatarText.setVisibility(View.GONE);
+            }
+            EditProfileFragment.loadImage(avatarUrl, ivAvatar);
+        } else {
+            ivAvatar.setVisibility(View.GONE);
+            if (tvAvatarText != null) {
+                tvAvatarText.setVisibility(View.VISIBLE);
+            }
+        }
     }
 }

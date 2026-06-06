@@ -10,7 +10,10 @@ import com.google.gson.JsonObject;
 import java.util.List;
 import java.util.Map;
 
+import okhttp3.MultipartBody;
 import retrofit2.Call;
+import retrofit2.http.Multipart;
+import retrofit2.http.Part;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
 import retrofit2.http.GET;
@@ -178,5 +181,12 @@ public interface ApiService {
     @PATCH("api/notifications/read-all")
     Call<JsonObject> markAllNotificationsAsRead(
             @Header("Authorization") String token
+    );
+
+    @Multipart
+    @POST("api/users/avatar/upload")
+    Call<JsonObject> uploadAvatar(
+            @Header("Authorization") String token,
+            @Part MultipartBody.Part file
     );
 }

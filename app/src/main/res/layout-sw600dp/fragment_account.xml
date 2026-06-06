@@ -253,58 +253,10 @@
                 app:layout_constraintTop_toBottomOf="@+id/statsContainer" />
 
             <LinearLayout
-                android:id="@+id/cardNotifications"
-                android:layout_width="0dp"
-                android:layout_height="72dp"
-                android:layout_marginTop="8dp"
-                android:background="@drawable/home_bg_card"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tvSystemSettings">
-
-                <FrameLayout
-                    android:id="@+id/iconBellCard"
-                    android:layout_width="44dp"
-                    android:layout_height="44dp"
-                    android:background="@drawable/home_bg_card"
-                    android:backgroundTint="#1D2940">
-
-                    <ImageView
-                        android:layout_width="22dp"
-                        android:layout_height="22dp"
-                        android:layout_gravity="center"
-                        android:contentDescription="Notification"
-                        app:srcCompat="@drawable/account_ic_nofication"
-                        app:tint="#4A8CFF" />
-                </FrameLayout>
-
-                <TextView
-                    android:id="@+id/tvNotificationText"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:layout_weight="1"
-                    android:text="Thông báo đẩy"
-                    android:textColor="#FFFFFF"
-                    android:textSize="15sp"
-                    android:textStyle="bold" />
-
-                <com.google.android.material.switchmaterial.SwitchMaterial
-                    android:id="@+id/switchNotifications"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:checked="true" />
-            </LinearLayout>
-
-            <LinearLayout
                 android:id="@+id/cardChangePassword"
                 android:layout_width="0dp"
                 android:layout_height="72dp"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="8dp"
                 android:background="@drawable/home_bg_card"
                 android:clickable="true"
                 android:focusable="true"
@@ -315,7 +267,7 @@
                 android:paddingEnd="16dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/cardNotifications">
+                app:layout_constraintTop_toBottomOf="@+id/tvSystemSettings">
 
                 <FrameLayout
                     android:id="@+id/iconLockCard"
