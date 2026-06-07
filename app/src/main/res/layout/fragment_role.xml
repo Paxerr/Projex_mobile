@@ -79,17 +79,31 @@
                 android:orientation="vertical"
                 android:padding="16dp">
 
-                <TextView
-                    android:id="@+id/tvAvatar"
+                <FrameLayout
+                    android:id="@+id/avatarArea"
                     android:layout_width="88dp"
                     android:layout_height="88dp"
-                    android:gravity="center"
-                    android:text="DN"
-                    android:textColor="#FFFFFF"
-                    android:textSize="24sp"
-                    android:textStyle="bold"
-                    android:background="@drawable/home_bg_avatar"
-                   />
+                    android:layout_gravity="center_horizontal">
+
+                    <TextView
+                        android:id="@+id/tvAvatar"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:text="DN"
+                        android:textColor="#FFFFFF"
+                        android:textSize="24sp"
+                        android:textStyle="bold"
+                        android:background="@drawable/home_bg_avatar" />
+
+                    <com.google.android.material.imageview.ShapeableImageView
+                        android:id="@+id/ivAvatar"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:scaleType="centerCrop"
+                        android:visibility="gone"
+                        app:shapeAppearanceOverlay="@style/RoundedAvatarImage" />
+                </FrameLayout>
 
                 <TextView
                     android:id="@+id/tvMemberName"

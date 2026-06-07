@@ -20,8 +20,18 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
 
     private final List<NotificationItem> items = new ArrayList<>();
 
+    public interface OnNotificationClickListener {
+        void onNotificationClick(NotificationItem item, int position);
+    }
+
+    private OnNotificationClickListener listener;
+
     public NotificationAdapter(List<NotificationItem> items) {
         setData(items);
+    }
+
+    public void setOnNotificationClickListener(OnNotificationClickListener listener) {
+        this.listener = listener;
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -31,6 +41,13 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
             items.addAll(newItems);
         }
         notifyDataSetChanged();
+    }
+
+    public void markItemAsRead(int position) {
+        if (position >= 0 && position < items.size()) {
+            items.get(position).isUnread = false;
+            notifyItemChanged(position);
+        }
     }
 
     @NonNull
@@ -58,8 +75,15 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
             holder.vDot.setBackgroundResource(R.drawable.notice_dot_unread);
         } else {
             holder.vDot.setVisibility(View.INVISIBLE);
-            holder.vDot.setBackgroundColor(ContextCompat.getColor(holder.itemView.getContext(), android.R.color.transparent));
+            holder.vDot.setBackgroundColor(
+                    ContextCompat.getColor(holder.itemView.getContext(), android.R.color.transparent));
         }
+
+        holder.itemView.setOnClickListener(v -> {
+            if (listener != null) {
+                listener.onNotificationClick(item, holder.getAdapterPosition());
+            }
+        });
     }
 
     @Override

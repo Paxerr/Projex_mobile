@@ -4,6 +4,8 @@ import android.content.Context;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.TextView;
@@ -37,6 +39,7 @@ public class RoleFragment extends Fragment {
     public static final String ARG_USER_ID = "user_id";
     public static final String ARG_ADMIN_COUNT = "admin_count";
     public static final String ARG_CURRENT_USER_ROLE = "current_user_role";
+    public static final String ARG_MEMBER_AVATAR_URL = "member_avatar_url";
 
     private TextView btnBack, btnSave, tvTitle;
     private TextView tvAvatar, tvMemberName, tvMemberEmail, tvStatusValue, tvJoinDateValue, tvRoleSection;
@@ -62,7 +65,8 @@ public class RoleFragment extends Fragment {
                                            String joinDate,
                                            String status,
                                            int adminCount,
-                                           String currentUserRole) {
+                                           String currentUserRole,
+                                           String avatarUrl) {
         RoleFragment fragment = new RoleFragment();
         Bundle args = new Bundle();
         args.putInt(ARG_PROJECT_ID, projectId);
@@ -74,6 +78,7 @@ public class RoleFragment extends Fragment {
         args.putString(ARG_STATUS, status);
         args.putInt(ARG_ADMIN_COUNT, adminCount);
         args.putString(ARG_CURRENT_USER_ROLE, currentUserRole);
+        args.putString(ARG_MEMBER_AVATAR_URL, avatarUrl);
         fragment.setArguments(args);
         return fragment;
     }
@@ -115,6 +120,7 @@ public class RoleFragment extends Fragment {
         String memberEmail = "dang.nguyen@company.com";
         String joinDate = "12/05/2023";
         String status = "● Đang hoạt động";
+        String avatarUrl = "";
 
         if (args != null) {
             projectId = args.getInt(ARG_PROJECT_ID, -1);
@@ -126,6 +132,7 @@ public class RoleFragment extends Fragment {
             status = getSafeValue(args.getString(ARG_STATUS), status);
             adminCount = args.getInt(ARG_ADMIN_COUNT, 0);
             currentUserRole = getSafeValue(args.getString(ARG_CURRENT_USER_ROLE), "Member");
+            avatarUrl = args.getString(ARG_MEMBER_AVATAR_URL, "");
         }
 
         tvMemberName.setText(memberName);
@@ -133,6 +140,8 @@ public class RoleFragment extends Fragment {
         tvJoinDateValue.setText("🗓 " + joinDate);
         tvStatusValue.setText(status);
         tvAvatar.setText(makeAvatarText(memberName));
+
+        setupAvatarImage(avatarUrl);
 
         updateSelectedRole(currentRole);
         applyRolePermissions();
@@ -433,5 +442,88 @@ public class RoleFragment extends Fragment {
         String lastChar = words[words.length - 1].substring(0, 1);
 
         return (firstChar + lastChar).toUpperCase(new Locale("vi", "VN"));
+    }
+
+    private void setupAvatarImage(String avatarUrl) {
+        View view = getView();
+        if (view == null) return;
+
+        TextView tvAvatar = view.findViewById(R.id.tvAvatar);
+        if (tvAvatar == null) return;
+
+        com.google.android.material.imageview.ShapeableImageView ivAvatar = view.findViewById(R.id.ivAvatar);
+        if (ivAvatar == null) {
+            android.view.ViewGroup parent = (android.view.ViewGroup) tvAvatar.getParent();
+            if (parent != null) {
+                if (parent instanceof FrameLayout) {
+                    ivAvatar = new com.google.android.material.imageview.ShapeableImageView(requireContext());
+                    ivAvatar.setId(R.id.ivAvatar);
+                    FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(
+                            FrameLayout.LayoutParams.MATCH_PARENT,
+                            FrameLayout.LayoutParams.MATCH_PARENT
+                    );
+                    ivAvatar.setLayoutParams(params);
+                    ivAvatar.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                    ivAvatar.setVisibility(View.GONE);
+
+                    float density = getResources().getDisplayMetrics().density;
+                    int cornerRadiusPx = (int) (44 * density);
+                    ivAvatar.setShapeAppearanceModel(
+                            ivAvatar.getShapeAppearanceModel().toBuilder()
+                                    .setAllCornerSizes(cornerRadiusPx)
+                                    .build()
+                    );
+                    parent.addView(ivAvatar);
+                } else {
+                    int index = parent.indexOfChild(tvAvatar);
+                    parent.removeView(tvAvatar);
+
+                    FrameLayout frame = new FrameLayout(requireContext());
+                    android.view.ViewGroup.LayoutParams originalParams = tvAvatar.getLayoutParams();
+                    frame.setLayoutParams(originalParams);
+
+                    FrameLayout.LayoutParams textParams = new FrameLayout.LayoutParams(
+                            FrameLayout.LayoutParams.MATCH_PARENT,
+                            FrameLayout.LayoutParams.MATCH_PARENT
+                    );
+                    tvAvatar.setLayoutParams(textParams);
+                    frame.addView(tvAvatar);
+
+                    ivAvatar = new com.google.android.material.imageview.ShapeableImageView(requireContext());
+                    ivAvatar.setId(R.id.ivAvatar);
+                    FrameLayout.LayoutParams imageParams = new FrameLayout.LayoutParams(
+                            FrameLayout.LayoutParams.MATCH_PARENT,
+                            FrameLayout.LayoutParams.MATCH_PARENT
+                    );
+                    ivAvatar.setLayoutParams(imageParams);
+                    ivAvatar.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                    ivAvatar.setVisibility(View.GONE);
+
+                    float density = getResources().getDisplayMetrics().density;
+                    int cornerRadiusPx = (int) (44 * density);
+                    ivAvatar.setShapeAppearanceModel(
+                            ivAvatar.getShapeAppearanceModel().toBuilder()
+                                    .setAllCornerSizes(cornerRadiusPx)
+                                    .build()
+                    );
+                    frame.addView(ivAvatar);
+
+                    parent.addView(frame, index);
+                }
+            }
+        }
+
+        if (avatarUrl != null && !avatarUrl.trim().isEmpty()) {
+            if (ivAvatar != null) {
+                ivAvatar.setVisibility(View.VISIBLE);
+                EditProfileFragment.loadImage(avatarUrl, ivAvatar);
+            }
+            tvAvatar.setVisibility(View.GONE);
+        } else {
+            if (ivAvatar != null) {
+                ivAvatar.setVisibility(View.GONE);
+            }
+            tvAvatar.setVisibility(View.VISIBLE);
+        }
     }
 }

@@ -67,6 +67,9 @@ public class NotificationFragment extends Fragment {
         adapter = new NotificationAdapter(new ArrayList<>());
         rvNotifications.setAdapter(adapter);
 
+        adapter.setOnNotificationClickListener((item, position) ->
+                handleNotificationClick(item, position));
+
         setActive(btnTatCa, btnChuaDoc);
 
         btnTatCa.setOnClickListener(v -> {
@@ -84,6 +87,73 @@ public class NotificationFragment extends Fragment {
         loadNotifications();
     }
 
+    private void handleNotificationClick(NotificationItem item, int position) {
+        if (item.isUnread) {
+            markNotificationAsRead(item, position);
+        } else {
+            navigateTo(item);
+        }
+    }
+
+    private void markNotificationAsRead(NotificationItem item, int position) {
+        String authHeader = token.startsWith("Bearer ") ? token : "Bearer " + token;
+        ApiService apiService = RetrofitClient.getApiService(token);
+
+        apiService.markNotificationAsRead(authHeader, item.id)
+                .enqueue(new Callback<JsonObject>() {
+                    @Override
+                    public void onResponse(@NonNull Call<JsonObject> call,
+                                           @NonNull Response<JsonObject> response) {
+                        if (!isAdded()) return;
+                        if (response.isSuccessful()) {
+                            item.isUnread = false;
+                            adapter.markItemAsRead(position);
+                            unreadItems = filterUnread(allItems);
+                        }
+                        navigateTo(item);
+                    }
+
+                    @Override
+                    public void onFailure(@NonNull Call<JsonObject> call, @NonNull Throwable t) {
+                        if (!isAdded()) return;
+                        navigateTo(item);
+                    }
+                });
+    }
+
+    private void navigateTo(NotificationItem item) {
+        if (item.taskId != null) {
+            Bundle args = new Bundle();
+            args.putInt("task_id", item.taskId);
+            if (item.projectId != null) args.putInt("project_id", item.projectId);
+
+            TaskDetailFragment fragment = new TaskDetailFragment();
+            fragment.setArguments(args);
+            requireActivity().getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.frame_container, fragment)
+                    .addToBackStack(null)
+                    .commit();
+
+        } else if (item.projectId != null) {
+            Bundle args = new Bundle();
+            args.putInt("project_id", item.projectId);
+            args.putString("project_name", "");
+
+            ProjectFragment fragment = new ProjectFragment();
+            fragment.setArguments(args);
+            requireActivity().getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.frame_container, fragment)
+                    .addToBackStack(null)
+                    .commit();
+
+        } else {
+            Toast.makeText(requireContext(),
+                    "Không có nội dung liên kết", Toast.LENGTH_SHORT).show();
+        }
+    }
+
     private void loadNotifications() {
         if (token == null || token.trim().isEmpty()) {
             Toast.makeText(requireContext(), "Thiếu token đăng nhập", Toast.LENGTH_SHORT).show();
@@ -96,7 +166,8 @@ public class NotificationFragment extends Fragment {
         apiService.getNotifications(authHeader, 1, 100, null)
                 .enqueue(new Callback<JsonObject>() {
                     @Override
-                    public void onResponse(@NonNull Call<JsonObject> call, @NonNull Response<JsonObject> response) {
+                    public void onResponse(@NonNull Call<JsonObject> call,
+                                           @NonNull Response<JsonObject> response) {
                         if (!isAdded()) return;
 
                         if (!response.isSuccessful() || response.body() == null) {
@@ -135,24 +206,32 @@ public class NotificationFragment extends Fragment {
 
             JsonObject obj = element.getAsJsonObject();
 
-            int id = obj.has("id") && !obj.get("id").isJsonNull() ? obj.get("id").getAsInt() : 0;
-            String title = obj.has("title") && !obj.get("title").isJsonNull() ? obj.get("title").getAsString() : "";
-            String message = obj.has("message") && !obj.get("message").isJsonNull() ? obj.get("message").getAsString() : "";
-            String type = obj.has("type") && !obj.get("type").isJsonNull() ? obj.get("type").getAsString() : "";
-            boolean isRead = obj.has("isRead") && !obj.get("isRead").isJsonNull() && obj.get("isRead").getAsBoolean();
-            Integer projectId = obj.has("projectId") && !obj.get("projectId").isJsonNull() ? obj.get("projectId").getAsInt() : null;
-            Integer taskId = obj.has("taskId") && !obj.get("taskId").isJsonNull() ? obj.get("taskId").getAsInt() : null;
-            String createdAt = obj.has("createdAt") && !obj.get("createdAt").isJsonNull() ? obj.get("createdAt").getAsString() : "";
+            int id = obj.has("id") && !obj.get("id").isJsonNull()
+                    ? obj.get("id").getAsInt() : 0;
+            String title = obj.has("title") && !obj.get("title").isJsonNull()
+                    ? obj.get("title").getAsString() : "";
+            String message = obj.has("message") && !obj.get("message").isJsonNull()
+                    ? obj.get("message").getAsString() : "";
+            String type = obj.has("type") && !obj.get("type").isJsonNull()
+                    ? obj.get("type").getAsString() : "";
+            boolean isRead = obj.has("isRead") && !obj.get("isRead").isJsonNull()
+                    && obj.get("isRead").getAsBoolean();
+            Integer projectId = obj.has("projectId") && !obj.get("projectId").isJsonNull()
+                    ? obj.get("projectId").getAsInt() : null;
+            Integer taskId = obj.has("taskId") && !obj.get("taskId").isJsonNull()
+                    ? obj.get("taskId").getAsInt() : null;
+            String createdAt = obj.has("createdAt") && !obj.get("createdAt").isJsonNull()
+                    ? obj.get("createdAt").getAsString() : "";
+
+            String senderName = obj.has("senderName") && !obj.get("senderName").isJsonNull()
+                    ? obj.get("senderName").getAsString() : "";
+            String senderAvatarUrl = obj.has("senderAvatarUrl") && !obj.get("senderAvatarUrl").isJsonNull()
+                    ? obj.get("senderAvatarUrl").getAsString() : "";
 
             allItems.add(new NotificationItem(
-                    id,
-                    title,
-                    message,
-                    type,
-                    !isRead,
-                    projectId,
-                    taskId,
-                    createdAt
+                    id, title, message, type,
+                    senderName, senderAvatarUrl, // ✅
+                    !isRead, projectId, taskId, createdAt
             ));
         }
 
@@ -160,23 +239,35 @@ public class NotificationFragment extends Fragment {
         unreadItems = filterUnread(allItems);
     }
 
+    private String makeAvatarText(String title) {
+        if (title == null || title.trim().isEmpty()) return "?";
+
+        String[] words = title.trim().split("\\s+");
+
+        if (words.length == 1) {
+            return words[0].substring(0, Math.min(2, words[0].length())).toUpperCase();
+        }
+
+        String first = words[0].substring(0, 1);
+        String last = words[words.length - 1].substring(0, 1);
+        return (first + last).toUpperCase();
+    }
+
     private void showPopupMenu(View anchor) {
         ContextThemeWrapper wrapper = new ContextThemeWrapper(requireContext(), R.style.CustomPopupMenuStyle);
-        androidx.appcompat.widget.PopupMenu popupMenu = new androidx.appcompat.widget.PopupMenu(wrapper, anchor);
+        androidx.appcompat.widget.PopupMenu popupMenu =
+                new androidx.appcompat.widget.PopupMenu(wrapper, anchor);
         popupMenu.inflate(R.menu.menu_notification);
         popupMenu.setOnMenuItemClickListener(item -> {
             int id = item.getItemId();
-
             if (id == R.id.action_mark_all_read) {
                 markAllAsRead();
                 return true;
             }
-
             if (id == R.id.action_delete_read) {
                 deleteReadNotifications();
                 return true;
             }
-
             return false;
         });
         popupMenu.show();
@@ -189,7 +280,8 @@ public class NotificationFragment extends Fragment {
         ApiService apiService = RetrofitClient.getApiService(token);
         apiService.markAllNotificationsAsRead(authHeader).enqueue(new Callback<JsonObject>() {
             @Override
-            public void onResponse(@NonNull Call<JsonObject> call, @NonNull Response<JsonObject> response) {
+            public void onResponse(@NonNull Call<JsonObject> call,
+                                   @NonNull Response<JsonObject> response) {
                 if (!isAdded()) return;
                 if (response.isSuccessful()) {
                     for (NotificationItem item : allItems) item.isUnread = false;
@@ -204,7 +296,8 @@ public class NotificationFragment extends Fragment {
 
             @Override
             public void onFailure(@NonNull Call<JsonObject> call, @NonNull Throwable t) {
-                if (isAdded()) Toast.makeText(requireContext(), t.getMessage(), Toast.LENGTH_SHORT).show();
+                if (isAdded())
+                    Toast.makeText(requireContext(), t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
