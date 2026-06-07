@@ -28,6 +28,9 @@ import com.example.projex_mobile.api.ApiService;
 import com.example.projex_mobile.api.RetrofitClient;
 import com.example.projex_mobile.objects.QuickAccessItem;
 import com.example.projex_mobile.objects.RecentItem;
+import com.example.projex_mobile.objects.Task;
+import com.example.projex_mobile.objects.TaskResponse;
+import com.example.projex_mobile.objects.User;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
@@ -41,6 +44,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -50,6 +54,7 @@ public class HomeFragment extends Fragment {
 
     private TextView tvUserName, tvProgressPercent, tvDoneTasks, tvInProgressTasks, tvTodoTasks;
     private TextView tvRecentEmpty;
+    private TextView tvAvatarText;
     private ImageView ivQuickAccessToggle;
     private RecyclerView rvQuickAccess, rvRecentActivity;
     private PieChart pieChart;
@@ -78,6 +83,7 @@ public class HomeFragment extends Fragment {
         setupSearchBar(view);
         setupRecyclerViews();
         setupQuickAccessToggle();
+        setupUserHeader(view);
         loadData();
     }
 
@@ -85,10 +91,12 @@ public class HomeFragment extends Fragment {
     public void onResume() {
         super.onResume();
         loadQuickAccess();
+        refreshUserHeader();
     }
 
     private void initViews(View view) {
         tvUserName = view.findViewById(R.id.tvUserName);
+        tvAvatarText = view.findViewById(R.id.tvAvatarText);
         rvQuickAccess = view.findViewById(R.id.rvQuickAccess);
         rvRecentActivity = view.findViewById(R.id.rvRecentActivity);
         recentLabel = view.findViewById(R.id.recentLabel);
@@ -104,39 +112,229 @@ public class HomeFragment extends Fragment {
         ivQuickAccessToggle = view.findViewById(R.id.ivQuickAccessToggle);
     }
 
+    private void setupUserHeader(View view) {
+        View userHeader = view.findViewById(R.id.userHeader);
+        if (userHeader != null) {
+            userHeader.setOnClickListener(v -> openAccountFragment());
+        }
+    }
+
+    private void openAccountFragment() {
+        requireActivity().getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.frame_container, new AccountFragment())
+                .addToBackStack(null)
+                .commit();
+    }
+
+    private void refreshUserHeader() {
+        if (!isAdded()) return;
+        SharedPreferences prefs = requireActivity()
+                .getSharedPreferences("user_prefs", Context.MODE_PRIVATE);
+        String userName = prefs.getString("user_name", "");
+
+        if (tvUserName != null) {
+            tvUserName.setText(userName.isEmpty() ? "User" : userName);
+        }
+
+        if (tvAvatarText != null) {
+            tvAvatarText.setText(makeAvatarText(userName));
+        }
+    }
+
+    private void loadData() {
+        SharedPreferences prefs = requireActivity()
+                .getSharedPreferences("user_prefs", Context.MODE_PRIVATE);
+        token = prefs.getString("token", "");
+
+        loadQuickAccess();
+        loadMyTasksProgress();
+        loadRecentMock();
+    }
+
+    private void loadUserProfile() {
+        if (token == null || token.isEmpty()) return;
+
+        ApiService apiService = RetrofitClient.getApiService(token);
+        apiService.getProfile(token).enqueue(new Callback<User>() {
+            @Override
+            public void onResponse(@NonNull Call<User> call,
+                                   @NonNull Response<User> response) {
+                if (!isAdded()) return;
+                if (response.isSuccessful() && response.body() != null) {
+                    User user = response.body();
+                    String fullName = user.getFullName() != null ? user.getFullName() : "";
+
+                    requireActivity()
+                            .getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
+                            .edit()
+                            .putString("user_name", fullName)
+                            .apply();
+
+                    if (tvUserName != null) {
+                        tvUserName.setText(fullName.isEmpty() ? "User" : fullName);
+                    }
+                    if (tvAvatarText != null) {
+                        tvAvatarText.setText(makeAvatarText(fullName));
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<User> call, @NonNull Throwable t) {
+                refreshUserHeader();
+            }
+        });
+    }
+
+    private String makeAvatarText(String name) {
+        if (name == null || name.trim().isEmpty()) return "User";
+        String[] words = name.trim().split("\\s+");
+        if (words.length == 1) {
+            return words[0].substring(0, Math.min(2, words[0].length()))
+                    .toUpperCase(new Locale("vi", "VN"));
+        }
+        String first = words[0].substring(0, 1);
+        String last = words[words.length - 1].substring(0, 1);
+        return (first + last).toUpperCase(new Locale("vi", "VN"));
+    }
+
+    private void loadMyTasksProgress() {
+        if (token == null || token.isEmpty()) {
+            updateProgressCard(new ArrayList<>());
+            return;
+        }
+
+        ApiService apiService = RetrofitClient.getApiService(null);
+        apiService.getAssignedTasks(token).enqueue(new Callback<TaskResponse>() {
+            @Override
+            public void onResponse(@NonNull Call<TaskResponse> call,
+                                   @NonNull Response<TaskResponse> response) {
+                if (!isAdded()) return;
+                if (response.isSuccessful()
+                        && response.body() != null
+                        && response.body().getItems() != null) {
+                    updateProgressCard(response.body().getItems());
+                } else {
+                    updateProgressCard(new ArrayList<>());
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<TaskResponse> call, @NonNull Throwable t) {
+                if (!isAdded()) return;
+                updateProgressCard(new ArrayList<>());
+            }
+        });
+    }
+
+    private void updateProgressCard(List<Task> tasks) {
+        int done = 0;
+        int inProgress = 0;
+        int assigned = 0;
+
+        for (Task task : tasks) {
+            String status = task.getStatus();
+            if (status == null) {
+                assigned++;
+            } else if ("Done".equalsIgnoreCase(status)) {
+                done++;
+            } else if ("InProgress".equalsIgnoreCase(status)
+                    || "In Progress".equalsIgnoreCase(status)) {
+                inProgress++;
+            } else {
+                assigned++;
+            }
+        }
+
+        int total = done + inProgress + assigned;
+        float progressPercent = total == 0 ? 0f : (done * 100f / total);
+
+        tvProgressPercent.setText(getString(R.string.progress_percent, progressPercent));
+        tvDoneTasks.setText(getString(R.string.tasks_label, done));
+        tvInProgressTasks.setText(getString(R.string.tasks_label, inProgress));
+        tvTodoTasks.setText(getString(R.string.tasks_label, assigned));
+
+        setupPieChart(done, inProgress, assigned);
+    }
+
+    private void setupPieChart(int done, int inProgress, int assigned) {
+        if (pieChart == null) return;
+
+        ArrayList<PieEntry> entries = new ArrayList<>();
+        int total = done + inProgress + assigned;
+
+        if (total == 0) {
+            entries.add(new PieEntry(1f, "No tasks"));
+        } else {
+            if (done > 0) entries.add(new PieEntry(done, "Done"));
+            if (inProgress > 0) entries.add(new PieEntry(inProgress, "In Progress"));
+            if (assigned > 0) entries.add(new PieEntry(assigned, "Assigned"));
+        }
+
+        PieDataSet dataSet = new PieDataSet(entries, "");
+        if (total == 0) {
+            dataSet.setColor(Color.parseColor("#3A3A3A"));
+        } else {
+            ArrayList<Integer> colors = new ArrayList<>();
+            if (done > 0) colors.add(Color.parseColor("#0FADFF"));
+            if (inProgress > 0) colors.add(Color.parseColor("#EFEB3B"));
+            if (assigned > 0) colors.add(Color.parseColor("#48FB98"));
+            dataSet.setColors(colors);
+        }
+
+        dataSet.setDrawValues(false);
+        PieData data = new PieData(dataSet);
+        pieChart.setData(data);
+        pieChart.getLegend().setEnabled(false);
+        pieChart.getDescription().setEnabled(false);
+        pieChart.setDrawEntryLabels(false);
+        pieChart.setUsePercentValues(false);
+        pieChart.setHoleRadius(58f);
+        pieChart.setTransparentCircleRadius(62f);
+        pieChart.setCenterText("");
+        pieChart.invalidate();
+        pieChart.animateY(1000);
+    }
+
     private void setupRecyclerViews() {
         int orientation = getResources().getConfiguration().orientation;
         int swDp = getResources().getConfiguration().smallestScreenWidthDp;
         boolean isTablet = swDp >= 600;
-        boolean useVerticalQuickAccess = isTablet && orientation == android.content.res.Configuration.ORIENTATION_LANDSCAPE;
+        boolean useVerticalQuickAccess = isTablet
+                && orientation == android.content.res.Configuration.ORIENTATION_LANDSCAPE;
 
-        rvQuickAccess.setLayoutManager(
-                new LinearLayoutManager(
-                        requireContext(),
-                        useVerticalQuickAccess ? LinearLayoutManager.VERTICAL : LinearLayoutManager.HORIZONTAL,
-                        false
-                )
-        );
+        rvQuickAccess.setLayoutManager(new LinearLayoutManager(
+                requireContext(),
+                useVerticalQuickAccess
+                        ? LinearLayoutManager.VERTICAL
+                        : LinearLayoutManager.HORIZONTAL,
+                false
+        ));
 
-        quickAccessAdapter = new QuickAccessAdapter(quickAccessList, useVerticalQuickAccess ? 1 : 0, item -> {
-            if ("My Tasks".equals(item.getName())) {
-                requireActivity().getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.frame_container, new TaskFragment())
-                        .addToBackStack(null)
-                        .commit();
-            } else {
-                ProjectFragment projectFragment = new ProjectFragment();
-                Bundle bundle = new Bundle();
-                bundle.putInt("project_id", item.getId());
-                bundle.putString("project_name", item.getName());
-                projectFragment.setArguments(bundle);
-
-                requireActivity().getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.frame_container, projectFragment)
-                        .addToBackStack(null)
-                        .commit();
-            }
-        });
+        quickAccessAdapter = new QuickAccessAdapter(
+                quickAccessList,
+                useVerticalQuickAccess ? 1 : 0,
+                item -> {
+                    if ("My Tasks".equals(item.getName())) {
+                        requireActivity().getSupportFragmentManager()
+                                .beginTransaction()
+                                .replace(R.id.frame_container, new TaskFragment())
+                                .addToBackStack(null)
+                                .commit();
+                    } else {
+                        ProjectFragment projectFragment = new ProjectFragment();
+                        Bundle bundle = new Bundle();
+                        bundle.putInt("project_id", item.getId());
+                        bundle.putString("project_name", item.getName());
+                        projectFragment.setArguments(bundle);
+                        requireActivity().getSupportFragmentManager()
+                                .beginTransaction()
+                                .replace(R.id.frame_container, projectFragment)
+                                .addToBackStack(null)
+                                .commit();
+                    }
+                });
 
         rvQuickAccess.setAdapter(quickAccessAdapter);
 
@@ -157,24 +355,49 @@ public class HomeFragment extends Fragment {
 
     private void updateQuickAccessState() {
         ivQuickAccessToggle.setImageResource(
-                isQuickAccessExpanded ? R.drawable.ic_chevron_down: R.drawable.ic_chevron_right
+                isQuickAccessExpanded
+                        ? R.drawable.ic_chevron_down
+                        : R.drawable.ic_chevron_right
         );
         rvQuickAccess.setVisibility(isQuickAccessExpanded ? View.VISIBLE : View.GONE);
-        if (quickAccessSection != null) {
-            quickAccessSection.requestLayout();
-        }
+        if (quickAccessSection != null) quickAccessSection.requestLayout();
     }
 
-    private void loadData() {
-        SharedPreferences prefs = requireActivity().getSharedPreferences("user_prefs", Context.MODE_PRIVATE);
-        token = prefs.getString("token", "");
-        String userName = prefs.getString("user_name", "David");
+    @SuppressLint("NotifyDataSetChanged")
+    private void loadQuickAccess() {
+        int oldSize = quickAccessList.size();
+        if (oldSize > 0) {
+            quickAccessList.clear();
+            quickAccessAdapter.notifyItemRangeRemoved(0, oldSize);
+        }
 
-        tvUserName.setText(userName);
-        loadQuickAccess();
-        updateProgressCardMock();
+        quickAccessList.add(new QuickAccessItem(991, "My Task", R.drawable.home_ic_task, "CÁ NHÂN"));
 
-        loadRecentMock();
+        SharedPreferences spacePrefs = requireContext()
+                .getSharedPreferences("space_prefs", Context.MODE_PRIVATE);
+        String favJson = spacePrefs.getString("favorite_ids", "[]");
+        String projectsJson = spacePrefs.getString("projects_json", "[]");
+
+        List<Integer> favoriteIds = new ArrayList<>();
+        try {
+            JSONArray favArr = new JSONArray(favJson);
+            for (int i = 0; i < favArr.length(); i++) favoriteIds.add(favArr.getInt(i));
+        } catch (JSONException ignored) {}
+
+        try {
+            JSONArray projectsArr = new JSONArray(projectsJson);
+            for (int i = 0; i < projectsArr.length(); i++) {
+                JSONObject obj = projectsArr.getJSONObject(i);
+                int id = obj.optInt("id");
+                String name = obj.optString("name", "");
+                int iconRes = obj.optInt("iconRes", R.drawable.ic_logo);
+                if (favoriteIds.contains(id)) {
+                    quickAccessList.add(new QuickAccessItem(id, name, iconRes, "DỰ ÁN"));
+                }
+            }
+        } catch (JSONException ignored) {}
+
+        quickAccessAdapter.notifyDataSetChanged();
     }
 
     private void setupSearchBar(View view) {
@@ -200,11 +423,8 @@ public class HomeFragment extends Fragment {
             @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
             @Override public void afterTextChanged(Editable s) {}
             @Override public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (s != null && s.length() > 0) {
-                    searchLayout.setHint(null);
-                } else if (!edtSearch.hasFocus()) {
-                    searchLayout.setHint("Tìm kiếm");
-                }
+                if (s != null && s.length() > 0) searchLayout.setHint(null);
+                else if (!edtSearch.hasFocus()) searchLayout.setHint("Tìm kiếm");
             }
         });
 
@@ -222,121 +442,11 @@ public class HomeFragment extends Fragment {
         });
     }
 
-    @SuppressLint("NotifyDataSetChanged")
-    private void loadQuickAccess() {
-        int oldSize = quickAccessList.size();
-        if (oldSize > 0) {
-            quickAccessList.clear();
-            quickAccessAdapter.notifyItemRangeRemoved(0, oldSize);
-        }
-
-        quickAccessList.add(new QuickAccessItem(991, "My Tasks", R.drawable.home_ic_task, "CÁ NHÂN"));
-
-        SharedPreferences spacePrefs = requireContext().getSharedPreferences("space_prefs", Context.MODE_PRIVATE);
-        String favJson = spacePrefs.getString("favorite_ids", "[]");
-        String projectsJson = spacePrefs.getString("projects_json", "[]");
-
-        List<Integer> favoriteIds = new ArrayList<>();
-        try {
-            JSONArray favArr = new JSONArray(favJson);
-            for (int i = 0; i < favArr.length(); i++) {
-                favoriteIds.add(favArr.getInt(i));
-            }
-        } catch (JSONException ignored) {}
-
-        try {
-            JSONArray projectsArr = new JSONArray(projectsJson);
-            for (int i = 0; i < projectsArr.length(); i++) {
-                JSONObject obj = projectsArr.getJSONObject(i);
-
-                int id = obj.optInt("id");
-                String name = obj.optString("name", "");
-                String status = obj.optString("status", "Active");
-                int memberCount = obj.optInt("memberCount", 0);
-                int iconRes = obj.optInt("iconRes", R.drawable.ic_logo);
-
-                if (favoriteIds.contains(id)) {
-                    quickAccessList.add(new QuickAccessItem(id, name, iconRes, "DỰ ÁN"));
-                }
-            }
-        } catch (JSONException ignored) {}
-
-        quickAccessAdapter.notifyDataSetChanged();
-    }
-
     private void updateRecentState() {
         boolean hasItems = !recentList.isEmpty();
         recentLabel.setVisibility(View.VISIBLE);
         rvRecentActivity.setVisibility(hasItems ? View.VISIBLE : View.GONE);
         tvRecentEmpty.setVisibility(hasItems ? View.GONE : View.VISIBLE);
-    }
-    private void loadRecentActivities() {
-        if (token == null || token.isEmpty()) {
-            int oldSize = recentList.size();
-            recentList.clear();
-            if (oldSize > 0) recentAdapter.notifyItemRangeRemoved(0, oldSize);
-            updateRecentState();
-            return;
-        }
-
-        ApiService apiService = RetrofitClient.getApiService(token);
-        apiService.getMyTasks(token).enqueue(new Callback<>() {
-            @Override
-            public void onResponse(@NonNull Call<List<RecentItem>> call, @NonNull Response<List<RecentItem>> response) {
-                int oldSize = recentList.size();
-                recentList.clear();
-                if (oldSize > 0) recentAdapter.notifyItemRangeRemoved(0, oldSize);
-
-                if (response.isSuccessful() && response.body() != null) {
-                    recentList.addAll(response.body());
-                    recentAdapter.notifyItemRangeInserted(0, recentList.size());
-                }
-                updateRecentState();
-            }
-
-            @Override
-            public void onFailure(@NonNull Call<List<RecentItem>> call, @NonNull Throwable t) {
-                int oldSize = recentList.size();
-                recentList.clear();
-                if (oldSize > 0) recentAdapter.notifyItemRangeRemoved(0, oldSize);
-                updateRecentState();
-            }
-        });
-    }
-
-    private void setupPieChart(int done, int inProgress, int todo) {
-        ArrayList<PieEntry> entries = new ArrayList<>();
-        entries.add(new PieEntry(done, "Done"));
-        entries.add(new PieEntry(inProgress, "In Progress"));
-        entries.add(new PieEntry(todo, "Assigned"));
-
-        PieDataSet dataSet = new PieDataSet(entries, "");
-        dataSet.setColors(
-                Color.parseColor("#0FADFF"),
-                Color.parseColor("#EFEB3B"),
-                Color.parseColor("#48FB98")
-        );
-        dataSet.setDrawValues(false);
-
-        PieData data = new PieData(dataSet);
-        pieChart.setData(data);
-        pieChart.getLegend().setEnabled(false);
-        pieChart.getDescription().setEnabled(false);
-        pieChart.setDrawEntryLabels(false);
-        pieChart.invalidate();
-        pieChart.animateY(1000);
-    }
-
-    private void updateProgressCardMock() {
-        int doneTasks = 12;
-        int inProgress = 5;
-        int todoTasks = 8;
-
-        tvProgressPercent.setText(getString(R.string.progress_percent, 40f));
-        tvDoneTasks.setText(getString(R.string.tasks_label, doneTasks));
-        tvInProgressTasks.setText(getString(R.string.tasks_label, inProgress));
-        tvTodoTasks.setText(getString(R.string.tasks_label, todoTasks));
-        setupPieChart(doneTasks, inProgress, todoTasks);
     }
 
     private void loadRecentMock() {

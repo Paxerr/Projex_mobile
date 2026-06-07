@@ -35,10 +35,10 @@ public class RecentActivityAdapter extends RecyclerView.Adapter<RecentActivityAd
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         RecentItem item = items.get(position);
 
-        holder.tvTitle.setText(item.getTitle());
-        holder.tvMessage.setText(item.getMessage());
-        holder.tvTicket.setText(item.getTicketCode());
-        holder.tvTime.setText(item.getTimeAgo());
+        holder.tvTitle.setText(item.getTitle() != null ? item.getTitle() : "");
+        holder.tvMessage.setText(item.getMessage() != null ? item.getMessage() : "");
+        holder.tvTicket.setText(item.getTicketCode() != null ? item.getTicketCode() : "");
+        holder.tvTime.setText(item.getTimeAgo() != null ? item.getTimeAgo() : "");
 
         String initials = item.getAvatarText();
         if (initials == null || initials.trim().isEmpty()) {
