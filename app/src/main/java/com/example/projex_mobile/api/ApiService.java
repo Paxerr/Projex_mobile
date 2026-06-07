@@ -64,6 +64,12 @@ public interface ApiService {
     @GET("api/tasks/assigned")
     Call<TaskResponse> getAssignedTasks(@Header("Authorization") String token);
 
+    @POST("api/chatbot")
+    Call<JsonObject> chatBot(
+            @Header("Authorization") String token,
+            @Body Map<String, String> body
+    );
+
     @GET("api/projects")
     Call<JsonObject> getProjects(
             @Header("Authorization") String token,
