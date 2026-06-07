@@ -189,4 +189,5 @@ public interface ApiService {
             @Header("Authorization") String token,
             @Part MultipartBody.Part file
     );
+
 }

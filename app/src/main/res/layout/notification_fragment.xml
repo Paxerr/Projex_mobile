@@ -43,7 +43,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="8dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="24dp"
             android:gravity="center_vertical"
             android:orientation="horizontal">
 
@@ -95,11 +95,11 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="4dp"
-            android:layout_marginTop="24dp"
+            android:layout_marginLeft="4dp"
+            android:layout_marginTop="16dp"
             android:layout_marginHorizontal="8dp"
             android:letterSpacing="0.05"
-            android:text="THÁNG 3"
+            android:text="THÁNG 5"
             android:textColor="#4B5563"
             android:textSize="12sp"
             android:textStyle="bold" />
@@ -109,7 +109,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="8dp"
-            android:layout_marginTop="14dp"
+            android:layout_marginTop="12dp"
             android:nestedScrollingEnabled="false"
             android:overScrollMode="never" />
 
