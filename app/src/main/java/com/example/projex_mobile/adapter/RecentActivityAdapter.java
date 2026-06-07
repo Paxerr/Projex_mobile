@@ -37,7 +37,7 @@ public class RecentActivityAdapter extends RecyclerView.Adapter<RecentActivityAd
 
         holder.tvTitle.setText(item.getTitle() != null ? item.getTitle() : "");
         holder.tvMessage.setText(item.getMessage() != null ? item.getMessage() : "");
-        holder.tvTicket.setText(item.getTicketCode() != null ? item.getTicketCode() : "");
+        holder.tvTicket.setText("");
         holder.tvTime.setText(item.getTimeAgo() != null ? item.getTimeAgo() : "");
 
         String initials = item.getAvatarText();

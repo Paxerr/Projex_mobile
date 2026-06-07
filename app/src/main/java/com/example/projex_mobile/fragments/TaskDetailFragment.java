@@ -189,10 +189,11 @@ public class TaskDetailFragment extends Fragment {
 
                         if (response.isSuccessful() && response.body() != null)
                         {
-
                             Task task = response.body();
+
                             bindTask(task);
 
+                            recordTaskAccess();
                         } else {
                             Toast.makeText(
                                     requireContext(),
@@ -414,7 +415,14 @@ public class TaskDetailFragment extends Fragment {
                         if (!isAdded()) return;
 
                         if (response.isSuccessful()) {
-                            syncTaskAssignments();
+
+                            originalStatus =
+                                    normalizeStatus(
+                                            txtStatus.getText().toString());
+
+                            recordTaskAccess();
+
+                            finishSave();
                         } else {
                             if (response.code() == 403 && statusChanged) {
                                 updateTaskStatusOnly(false, true);
@@ -509,7 +517,31 @@ public class TaskDetailFragment extends Fragment {
                 .setNegativeButton("Hủy", null)
                 .show();
     }
+    private void recordTaskAccess() {
+        if (taskId == 0 || token == null || token.isEmpty()) return;
 
+        ApiService apiService = RetrofitClient.getApiService(null);
+        apiService.recordTaskAccess(token, taskId)
+                .enqueue(new Callback<JsonObject>() {
+                    @Override
+                    public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                        if (!isAdded()) return;
+                        if (!response.isSuccessful()) {
+                            Toast.makeText(requireContext(),
+                                    "Không lưu được recent: " + response.code(),
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<JsonObject> call, Throwable t) {
+                        if (!isAdded()) return;
+                        Toast.makeText(requireContext(),
+                                "Lỗi recent: " + t.getMessage(),
+                                Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
     private void executeDeleteTask() {
         if (taskId == 0) {
             Toast.makeText(

@@ -2,6 +2,7 @@ package com.example.projex_mobile.api;
 
 import com.example.projex_mobile.objects.DashboardOverview;
 import com.example.projex_mobile.objects.Project;
+import com.example.projex_mobile.objects.RecentAccessResponse;
 import com.example.projex_mobile.objects.RecentItem;
 import com.example.projex_mobile.objects.Task;
 import com.example.projex_mobile.objects.TaskResponse;
@@ -189,5 +190,14 @@ public interface ApiService {
             @Header("Authorization") String token,
             @Part MultipartBody.Part file
     );
+    @POST("api/access/task/{taskId}")
+    Call<JsonObject> recordTaskAccess(
+            @Header("Authorization") String token,
+            @Path("taskId") int taskId
+    );
 
+    @GET("api/access")
+    Call<List<RecentAccessResponse>> getRecentAccesses(
+            @Header("Authorization") String token
+    );
 }

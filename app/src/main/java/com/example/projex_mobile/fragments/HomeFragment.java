@@ -27,6 +27,7 @@ import com.example.projex_mobile.adapter.RecentActivityAdapter;
 import com.example.projex_mobile.api.ApiService;
 import com.example.projex_mobile.api.RetrofitClient;
 import com.example.projex_mobile.objects.QuickAccessItem;
+import com.example.projex_mobile.objects.RecentAccessResponse;
 import com.example.projex_mobile.objects.RecentItem;
 import com.example.projex_mobile.objects.Task;
 import com.example.projex_mobile.objects.TaskResponse;
@@ -92,6 +93,7 @@ public class HomeFragment extends Fragment {
         super.onResume();
         loadQuickAccess();
         refreshUserHeader();
+        loadRecentFromAccessApi();
     }
 
     private void initViews(View view) {
@@ -129,8 +131,7 @@ public class HomeFragment extends Fragment {
 
     private void refreshUserHeader() {
         if (!isAdded()) return;
-        SharedPreferences prefs = requireActivity()
-                .getSharedPreferences("user_prefs", Context.MODE_PRIVATE);
+        SharedPreferences prefs = requireActivity().getSharedPreferences("user_prefs", Context.MODE_PRIVATE);
         String userName = prefs.getString("user_name", "");
 
         if (tvUserName != null) {
@@ -143,13 +144,12 @@ public class HomeFragment extends Fragment {
     }
 
     private void loadData() {
-        SharedPreferences prefs = requireActivity()
-                .getSharedPreferences("user_prefs", Context.MODE_PRIVATE);
+        SharedPreferences prefs = requireActivity().getSharedPreferences("user_prefs", Context.MODE_PRIVATE);
         token = prefs.getString("token", "");
 
         loadQuickAccess();
         loadMyTasksProgress();
-        loadRecentMock();
+        loadRecentFromAccessApi();
     }
 
     private void loadUserProfile() {
@@ -158,15 +158,13 @@ public class HomeFragment extends Fragment {
         ApiService apiService = RetrofitClient.getApiService(token);
         apiService.getProfile(token).enqueue(new Callback<User>() {
             @Override
-            public void onResponse(@NonNull Call<User> call,
-                                   @NonNull Response<User> response) {
+            public void onResponse(@NonNull Call<User> call, @NonNull Response<User> response) {
                 if (!isAdded()) return;
                 if (response.isSuccessful() && response.body() != null) {
                     User user = response.body();
                     String fullName = user.getFullName() != null ? user.getFullName() : "";
 
-                    requireActivity()
-                            .getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
+                    requireActivity().getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
                             .edit()
                             .putString("user_name", fullName)
                             .apply();
@@ -191,8 +189,7 @@ public class HomeFragment extends Fragment {
         if (name == null || name.trim().isEmpty()) return "User";
         String[] words = name.trim().split("\\s+");
         if (words.length == 1) {
-            return words[0].substring(0, Math.min(2, words[0].length()))
-                    .toUpperCase(new Locale("vi", "VN"));
+            return words[0].substring(0, Math.min(2, words[0].length())).toUpperCase(new Locale("vi", "VN"));
         }
         String first = words[0].substring(0, 1);
         String last = words[words.length - 1].substring(0, 1);
@@ -208,8 +205,7 @@ public class HomeFragment extends Fragment {
         ApiService apiService = RetrofitClient.getApiService(null);
         apiService.getAssignedTasks(token).enqueue(new Callback<TaskResponse>() {
             @Override
-            public void onResponse(@NonNull Call<TaskResponse> call,
-                                   @NonNull Response<TaskResponse> response) {
+            public void onResponse(@NonNull Call<TaskResponse> call, @NonNull Response<TaskResponse> response) {
                 if (!isAdded()) return;
                 if (response.isSuccessful()
                         && response.body() != null
@@ -306,9 +302,7 @@ public class HomeFragment extends Fragment {
 
         rvQuickAccess.setLayoutManager(new LinearLayoutManager(
                 requireContext(),
-                useVerticalQuickAccess
-                        ? LinearLayoutManager.VERTICAL
-                        : LinearLayoutManager.HORIZONTAL,
+                useVerticalQuickAccess ? LinearLayoutManager.VERTICAL : LinearLayoutManager.HORIZONTAL,
                 false
         ));
 
@@ -355,9 +349,7 @@ public class HomeFragment extends Fragment {
 
     private void updateQuickAccessState() {
         ivQuickAccessToggle.setImageResource(
-                isQuickAccessExpanded
-                        ? R.drawable.ic_chevron_down
-                        : R.drawable.ic_chevron_right
+                isQuickAccessExpanded ? R.drawable.ic_chevron_down : R.drawable.ic_chevron_right
         );
         rvQuickAccess.setVisibility(isQuickAccessExpanded ? View.VISIBLE : View.GONE);
         if (quickAccessSection != null) quickAccessSection.requestLayout();
@@ -373,8 +365,7 @@ public class HomeFragment extends Fragment {
 
         quickAccessList.add(new QuickAccessItem(991, "My Task", R.drawable.home_ic_task, "CÁ NHÂN"));
 
-        SharedPreferences spacePrefs = requireContext()
-                .getSharedPreferences("space_prefs", Context.MODE_PRIVATE);
+        SharedPreferences spacePrefs = requireContext().getSharedPreferences("space_prefs", Context.MODE_PRIVATE);
         String favJson = spacePrefs.getString("favorite_ids", "[]");
         String projectsJson = spacePrefs.getString("projects_json", "[]");
 
@@ -449,46 +440,95 @@ public class HomeFragment extends Fragment {
         tvRecentEmpty.setVisibility(hasItems ? View.GONE : View.VISIBLE);
     }
 
-    private void loadRecentMock() {
-        recentList.clear();
+    private void loadRecentFromAccessApi() {
+        if (token == null || token.isEmpty()) {
+            recentList.clear();
+            recentAdapter.notifyDataSetChanged();
+            updateRecentState();
+            return;
+        }
 
-        RecentItem item1 = new RecentItem();
-        item1.setTitle("Vẽ Sequence diagram");
-        item1.setMessage("Dat updated a story");
-        item1.setTicketCode("GGSHOP-3");
-        item1.setAvatarText("DA");
-        item1.setTimeAgo("2h ago");
-        item1.setStatus("InProgress");
-        recentList.add(item1);
+        ApiService apiService = RetrofitClient.getApiService(token);
+        apiService.getRecentAccesses(token).enqueue(new Callback<List<RecentAccessResponse>>() {
+            @Override
+            public void onResponse(@NonNull Call<List<RecentAccessResponse>> call,
+                                   @NonNull Response<List<RecentAccessResponse>> response) {
+                if (!isAdded()) return;
 
-        RecentItem item2 = new RecentItem();
-        item2.setTitle("Vẽ UseCase");
-        item2.setMessage("TAnh updated a story");
-        item2.setTicketCode("GGSHOP-3");
-        item2.setAvatarText("TA");
-        item2.setTimeAgo("11h ago");
-        item2.setStatus("Done");
-        recentList.add(item2);
+                recentList.clear();
 
-        RecentItem item3 = new RecentItem();
-        item3.setTitle("Phân tích thiết kế");
-        item3.setMessage("Quat updated a story");
-        item3.setTicketCode("GGSHOP-3");
-        item3.setAvatarText("QU");
-        item3.setTimeAgo("1d ago");
-        item3.setStatus("Done");
-        recentList.add(item3);
+                if (response.isSuccessful() && response.body() != null) {
+                    List<RecentAccessResponse> accesses = response.body();
 
-        RecentItem item4 = new RecentItem();
-        item4.setTitle("Vẽ Activity diagram");
-        item4.setMessage("Dang updated a story");
-        item4.setTicketCode("GGSHOP-3");
-        item4.setAvatarText("DG");
-        item4.setTimeAgo("4d ago");
-        item4.setStatus("Assigned");
-        recentList.add(item4);
+                    if (accesses.isEmpty()) {
+                        recentAdapter.notifyDataSetChanged();
+                        updateRecentState();
+                        return;
+                    }
 
-        recentAdapter.notifyDataSetChanged();
-        updateRecentState();
+                    int[] remaining = {accesses.size()};
+
+                    for (RecentAccessResponse access : accesses) {
+                        if (access == null) {
+                            remaining[0]--;
+                            if (remaining[0] == 0) {
+                                recentAdapter.notifyDataSetChanged();
+                                updateRecentState();
+                            }
+                            continue;
+                        }
+
+                        apiService.getTaskById(token, access.getTaskId()).enqueue(new Callback<Task>() {
+                            @Override
+                            public void onResponse(@NonNull Call<Task> call, @NonNull Response<Task> taskResponse) {
+                                if (!isAdded()) return;
+
+                                if (taskResponse.isSuccessful() && taskResponse.body() != null) {
+                                    Task task = taskResponse.body();
+                                    recentList.add(mapTaskToRecentItem(task, access.getAccessAt()));
+                                }
+
+                                remaining[0]--;
+                                if (remaining[0] == 0) {
+                                    recentAdapter.notifyDataSetChanged();
+                                    updateRecentState();
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(@NonNull Call<Task> call, @NonNull Throwable t) {
+                                remaining[0]--;
+                                if (remaining[0] == 0) {
+                                    recentAdapter.notifyDataSetChanged();
+                                    updateRecentState();
+                                }
+                            }
+                        });
+                    }
+                } else {
+                    recentAdapter.notifyDataSetChanged();
+                    updateRecentState();
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<List<RecentAccessResponse>> call, @NonNull Throwable t) {
+                if (!isAdded()) return;
+                recentList.clear();
+                recentAdapter.notifyDataSetChanged();
+                updateRecentState();
+            }
+        });
+    }
+
+    private RecentItem mapTaskToRecentItem(Task task, String accessAt) {
+        RecentItem item = new RecentItem();
+        item.setId(task.getId());
+        item.setTitle(task.getTitle());
+        item.setMessage(task.getDescription() != null ? task.getDescription() : "");
+        item.setAvatarText(makeAvatarText(task.getTitle()));
+        item.setTimeAgo(accessAt != null ? accessAt : "");
+        item.setStatus(task.getStatus());
+        return item;
     }
 }
