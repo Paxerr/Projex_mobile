@@ -65,6 +65,7 @@ public class TaskDetailFragment extends Fragment {
     private int currentUserId = 0;
     private boolean canManageTask = false;
     private boolean permissionsLoaded = false;
+    private boolean accessRecorded = false;
 
     private String token = "";
 
@@ -187,13 +188,14 @@ public class TaskDetailFragment extends Fragment {
 
                         if (!isAdded()) return;
 
-                        if (response.isSuccessful() && response.body() != null)
-                        {
+                        if (response.isSuccessful() && response.body() != null) {
                             Task task = response.body();
-
                             bindTask(task);
 
-                            recordTaskAccess();
+                            if (!accessRecorded) {
+                                recordTaskAccess();
+                                accessRecorded = true;
+                            }
                         } else {
                             Toast.makeText(
                                     requireContext(),
