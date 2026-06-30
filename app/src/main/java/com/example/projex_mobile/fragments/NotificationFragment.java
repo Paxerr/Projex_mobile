@@ -21,13 +21,13 @@ import com.example.projex_mobile.adapter.NotificationAdapter;
 import com.example.projex_mobile.api.ApiService;
 import com.example.projex_mobile.api.RetrofitClient;
 import com.example.projex_mobile.objects.NotificationItem;
+import com.example.projex_mobile.objects.Task;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -35,7 +35,7 @@ import retrofit2.Response;
 public class NotificationFragment extends Fragment {
 
     private NotificationAdapter adapter;
-    private List<NotificationItem> allItems = new ArrayList<>();
+    private final List<NotificationItem> allItems = new ArrayList<>();
     private List<NotificationItem> unreadItems = new ArrayList<>();
 
     private TextView btnTatCa, btnChuaDoc, btnMore;
@@ -67,8 +67,7 @@ public class NotificationFragment extends Fragment {
         adapter = new NotificationAdapter(new ArrayList<>());
         rvNotifications.setAdapter(adapter);
 
-        adapter.setOnNotificationClickListener((item, position) ->
-                handleNotificationClick(item, position));
+        adapter.setOnNotificationClickListener((item, position) -> handleNotificationClick(item, position));
 
         setActive(btnTatCa, btnChuaDoc);
 
@@ -126,6 +125,7 @@ public class NotificationFragment extends Fragment {
             Bundle args = new Bundle();
             args.putInt("task_id", item.taskId);
             if (item.projectId != null) args.putInt("project_id", item.projectId);
+            if (item.projectName != null) args.putString("project_name", item.projectName);
 
             TaskDetailFragment fragment = new TaskDetailFragment();
             fragment.setArguments(args);
@@ -134,11 +134,10 @@ public class NotificationFragment extends Fragment {
                     .replace(R.id.frame_container, fragment)
                     .addToBackStack(null)
                     .commit();
-
         } else if (item.projectId != null) {
             Bundle args = new Bundle();
             args.putInt("project_id", item.projectId);
-            args.putString("project_name", "");
+            args.putString("project_name", item.projectName != null ? item.projectName : "");
 
             ProjectFragment fragment = new ProjectFragment();
             fragment.setArguments(args);
@@ -147,10 +146,8 @@ public class NotificationFragment extends Fragment {
                     .replace(R.id.frame_container, fragment)
                     .addToBackStack(null)
                     .commit();
-
         } else {
-            Toast.makeText(requireContext(),
-                    "Không có nội dung liên kết", Toast.LENGTH_SHORT).show();
+            Toast.makeText(requireContext(), "Không có nội dung liên kết", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -161,8 +158,8 @@ public class NotificationFragment extends Fragment {
         }
 
         String authHeader = token.startsWith("Bearer ") ? token : "Bearer " + token;
-
         ApiService apiService = RetrofitClient.getApiService(token);
+
         apiService.getNotifications(authHeader, 1, 100, null)
                 .enqueue(new Callback<JsonObject>() {
                     @Override
@@ -175,21 +172,18 @@ public class NotificationFragment extends Fragment {
                             return;
                         }
 
-                        parseNotifications(response.body());
-                        adapter.setData(new ArrayList<>(allItems));
-                        setActive(btnTatCa, btnChuaDoc);
+                        parseNotifications(response.body(), apiService);
                     }
 
                     @Override
                     public void onFailure(@NonNull Call<JsonObject> call, @NonNull Throwable t) {
-                        if (isAdded()) {
-                            Toast.makeText(requireContext(), "Lỗi kết nối: " + t.getMessage(), Toast.LENGTH_SHORT).show();
-                        }
+                        if (!isAdded()) return;
+                        Toast.makeText(requireContext(), "Lỗi kết nối: " + t.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
     }
 
-    private void parseNotifications(JsonObject body) {
+    private void parseNotifications(JsonObject body, ApiService apiService) {
         allItems.clear();
 
         JsonArray items = null;
@@ -199,64 +193,155 @@ public class NotificationFragment extends Fragment {
             items = body.getAsJsonArray("data");
         }
 
-        if (items == null) return;
+        if (items == null) {
+            adapter.setData(new ArrayList<>());
+            return;
+        }
+
+        List<NotificationItem> parsedItems = new ArrayList<>();
+        final int[] remaining = {0};
+
+        for (JsonElement element : items) {
+            if (!element.isJsonObject()) continue;
+            remaining[0]++;
+        }
+
+        if (remaining[0] == 0) {
+            adapter.setData(new ArrayList<>());
+            return;
+        }
 
         for (JsonElement element : items) {
             if (!element.isJsonObject()) continue;
 
             JsonObject obj = element.getAsJsonObject();
 
-            int id = obj.has("id") && !obj.get("id").isJsonNull()
-                    ? obj.get("id").getAsInt() : 0;
-            String title = obj.has("title") && !obj.get("title").isJsonNull()
-                    ? obj.get("title").getAsString() : "";
-            String message = obj.has("message") && !obj.get("message").isJsonNull()
-                    ? obj.get("message").getAsString() : "";
-            String type = obj.has("type") && !obj.get("type").isJsonNull()
-                    ? obj.get("type").getAsString() : "";
-            boolean isRead = obj.has("isRead") && !obj.get("isRead").isJsonNull()
-                    && obj.get("isRead").getAsBoolean();
-            Integer projectId = obj.has("projectId") && !obj.get("projectId").isJsonNull()
-                    ? obj.get("projectId").getAsInt() : null;
-            Integer taskId = obj.has("taskId") && !obj.get("taskId").isJsonNull()
-                    ? obj.get("taskId").getAsInt() : null;
-            String createdAt = obj.has("createdAt") && !obj.get("createdAt").isJsonNull()
-                    ? obj.get("createdAt").getAsString() : "";
+            int id = obj.has("id") && !obj.get("id").isJsonNull() ? obj.get("id").getAsInt() : 0;
+            String title = obj.has("title") && !obj.get("title").isJsonNull() ? obj.get("title").getAsString() : "";
+            String message = obj.has("message") && !obj.get("message").isJsonNull() ? obj.get("message").getAsString() : "";
+            String type = obj.has("type") && !obj.get("type").isJsonNull() ? obj.get("type").getAsString() : "";
+            boolean isRead = obj.has("isRead") && !obj.get("isRead").isJsonNull() && obj.get("isRead").getAsBoolean();
+            Integer projectId = obj.has("projectId") && !obj.get("projectId").isJsonNull() ? obj.get("projectId").getAsInt() : null;
+            Integer taskId = obj.has("taskId") && !obj.get("taskId").isJsonNull() ? obj.get("taskId").getAsInt() : null;
+            String createdAt = obj.has("createdAt") && !obj.get("createdAt").isJsonNull() ? obj.get("createdAt").getAsString() : "";
+            String senderName = obj.has("senderName") && !obj.get("senderName").isJsonNull() ? obj.get("senderName").getAsString() : "";
+            String senderAvatarUrl = obj.has("senderAvatarUrl") && !obj.get("senderAvatarUrl").isJsonNull() ? obj.get("senderAvatarUrl").getAsString() : "";
 
-            String senderName = obj.has("senderName") && !obj.get("senderName").isJsonNull()
-                    ? obj.get("senderName").getAsString() : "";
-            String senderAvatarUrl = obj.has("senderAvatarUrl") && !obj.get("senderAvatarUrl").isJsonNull()
-                    ? obj.get("senderAvatarUrl").getAsString() : "";
+            if (taskId != null) {
+                apiService.getTaskById(token, taskId).enqueue(new Callback<Task>() {
+                    @Override
+                    public void onResponse(@NonNull Call<Task> call, @NonNull Response<Task> response) {
+                        if (!isAdded()) return;
 
-            allItems.add(new NotificationItem(
-                    id, title, message, type,
-                    senderName, senderAvatarUrl, // ✅
-                    !isRead, projectId, taskId, createdAt
-            ));
+                        if (response.isSuccessful() && response.body() != null) {
+                            Task task = response.body();
+                            int resolvedProjectId = task.getProjectId();
+
+                            apiService.getProjectDetailRaw(token, resolvedProjectId).enqueue(new Callback<JsonObject>() {
+                                @Override
+                                public void onResponse(@NonNull Call<JsonObject> call,
+                                                       @NonNull Response<JsonObject> response) {
+                                    if (!isAdded()) return;
+
+                                    String resolvedProjectName = "Project " + resolvedProjectId;
+
+                                    if (response.isSuccessful() && response.body() != null) {
+                                        JsonObject body = response.body();
+
+                                        if (body.has("name") && !body.get("name").isJsonNull()) {
+                                            resolvedProjectName = body.get("name").getAsString();
+                                        } else if (body.has("data") && body.get("data").isJsonObject()) {
+                                            JsonObject data = body.getAsJsonObject("data");
+                                            if (data.has("name") && !data.get("name").isJsonNull()) {
+                                                resolvedProjectName = data.get("name").getAsString();
+                                            }
+                                        } else if (body.has("project") && body.get("project").isJsonObject()) {
+                                            JsonObject project = body.getAsJsonObject("project");
+                                            if (project.has("name") && !project.get("name").isJsonNull()) {
+                                                resolvedProjectName = project.get("name").getAsString();
+                                            }
+                                        }
+                                    }
+
+                                    allItems.add(new NotificationItem(
+                                            id, title, message,
+                                            senderName, senderAvatarUrl,
+                                            !isRead, resolvedProjectId, resolvedProjectName,
+                                            taskId, createdAt
+                                    ));
+                                    onNotificationBuilt();
+                                }
+
+                                @Override
+                                public void onFailure(@NonNull Call<JsonObject> call, @NonNull Throwable t) {
+                                    if (!isAdded()) return;
+
+                                    allItems.add(new NotificationItem(
+                                            id, title, message,
+                                            senderName, senderAvatarUrl,
+                                            !isRead, resolvedProjectId, "Project " + resolvedProjectId,
+                                            taskId, createdAt
+                                    ));
+                                    onNotificationBuilt();
+                                }
+                            });
+
+                        } else {
+                            allItems.add(new NotificationItem(
+                                    id, title, message,
+                                    senderName, senderAvatarUrl,
+                                    !isRead, projectId, null,
+                                    taskId, createdAt
+                            ));
+                            onNotificationBuilt();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(@NonNull Call<Task> call, @NonNull Throwable t) {
+                        if (!isAdded()) return;
+                        allItems.add(new NotificationItem(
+                                id, title, message,
+                                senderName, senderAvatarUrl,
+                                !isRead, projectId, null,
+                                taskId, createdAt
+                        ));
+                        onNotificationBuilt();
+                    }
+                });
+            } else {
+                allItems.add(new NotificationItem(
+                        id, title, message,
+                        senderName, senderAvatarUrl,
+                        !isRead, projectId, null,
+                        null, createdAt
+                ));
+                onNotificationBuilt();
+            }
         }
-
-        allItems = sortUnreadFirst(allItems);
-        unreadItems = filterUnread(allItems);
     }
 
-    private String makeAvatarText(String title) {
-        if (title == null || title.trim().isEmpty()) return "?";
+    private void onNotificationBuilt() {
+        if (!isAdded()) return;
 
-        String[] words = title.trim().split("\\s+");
+        if (allItems.size() == 0) return;
 
-        if (words.length == 1) {
-            return words[0].substring(0, Math.min(2, words[0].length())).toUpperCase();
+        if (allItems.size() > 1) {
+            allItems.sort((a, b) -> {
+                if (a.createdAt == null) return 1;
+                if (b.createdAt == null) return -1;
+                return b.createdAt.compareTo(a.createdAt);
+            });
         }
 
-        String first = words[0].substring(0, 1);
-        String last = words[words.length - 1].substring(0, 1);
-        return (first + last).toUpperCase();
+        unreadItems = filterUnread(allItems);
+        adapter.setData(new ArrayList<>(allItems));
+        setActive(btnTatCa, btnChuaDoc);
     }
 
     private void showPopupMenu(View anchor) {
         ContextThemeWrapper wrapper = new ContextThemeWrapper(requireContext(), R.style.CustomPopupMenuStyle);
-        androidx.appcompat.widget.PopupMenu popupMenu =
-                new androidx.appcompat.widget.PopupMenu(wrapper, anchor);
+        androidx.appcompat.widget.PopupMenu popupMenu = new androidx.appcompat.widget.PopupMenu(wrapper, anchor);
         popupMenu.inflate(R.menu.menu_notification);
         popupMenu.setOnMenuItemClickListener(item -> {
             int id = item.getItemId();
@@ -296,8 +381,7 @@ public class NotificationFragment extends Fragment {
 
             @Override
             public void onFailure(@NonNull Call<JsonObject> call, @NonNull Throwable t) {
-                if (isAdded())
-                    Toast.makeText(requireContext(), t.getMessage(), Toast.LENGTH_SHORT).show();
+                if (isAdded()) Toast.makeText(requireContext(), t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -307,7 +391,8 @@ public class NotificationFragment extends Fragment {
         for (NotificationItem item : allItems) {
             if (item.isUnread) remaining.add(item);
         }
-        allItems = sortUnreadFirst(remaining);
+        allItems.clear();
+        allItems.addAll(remaining);
         unreadItems = filterUnread(allItems);
         adapter.setData(new ArrayList<>(allItems));
         setActive(btnTatCa, btnChuaDoc);
@@ -322,19 +407,11 @@ public class NotificationFragment extends Fragment {
         return result;
     }
 
-    private List<NotificationItem> sortUnreadFirst(List<NotificationItem> source) {
-        List<NotificationItem> result = new ArrayList<>(source);
-        result.sort((o1, o2) -> {
-            if (o1.isUnread == o2.isUnread) return 0;
-            return o1.isUnread ? -1 : 1;
-        });
-        return result;
-    }
-
     private void setActive(TextView active, TextView inactive) {
         active.setTextColor(requireContext().getColor(R.color.white));
         active.setBackgroundResource(R.drawable.notice_bg_btn_active);
         inactive.setTextColor(requireContext().getColor(R.color.text_secondary));
         inactive.setBackgroundResource(R.drawable.notice_bg_btn_inactive);
     }
+
 }
