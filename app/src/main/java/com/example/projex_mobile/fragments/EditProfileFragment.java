@@ -275,8 +275,7 @@ public class EditProfileFragment extends Fragment {
             return;
         }
 
-        if ((urlString.contains("localhost") || urlString.contains("127.0.0.1"))
-                && urlString.contains("/uploads/")) {
+        if (urlString.contains("/uploads/")) {
             String path = urlString.substring(urlString.indexOf("/uploads/"));
             String baseUrl = com.example.projex_mobile.api.RetrofitClient.BASE_URL;
             urlString = baseUrl.substring(0, baseUrl.length() - 1) + path;
@@ -291,6 +290,7 @@ public class EditProfileFragment extends Fragment {
             try {
                 URL url = new URL(finalUrl);
                 HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                connection.setRequestProperty("ngrok-skip-browser-warning", "69420");
                 connection.setDoInput(true);
                 connection.connect();
                 InputStream input = connection.getInputStream();
