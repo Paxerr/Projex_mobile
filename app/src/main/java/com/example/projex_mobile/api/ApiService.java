@@ -72,6 +72,13 @@ public interface ApiService {
     @GET("api/tasks/assigned")
     Call<TaskResponse> getAssignedTasks(@Header("Authorization") String token);
 
+    @GET("api/tasks/assigned")
+    Call<TaskResponse> getAssignedTasks(
+            @Header("Authorization") String token,
+            @Query("page") int page,
+            @Query("pageSize") int pageSize
+    );
+
     @POST("api/chatbot")
     Call<JsonObject> chatBot(
             @Header("Authorization") String token,
@@ -104,6 +111,20 @@ public interface ApiService {
     Call<TaskResponse> getTasksByProject(
             @Header("Authorization") String token,
             @Path("projectId") int projectId
+    );
+
+    @GET("api/projects/{projectId}/GetAllTaskByProject")
+    Call<List<Task>> getAllTasksByProject(
+            @Header("Authorization") String token,
+            @Path("projectId") int projectId
+    );
+
+    @GET("api/projects/{projectId}/tasks")
+    Call<TaskResponse> getTasksByProject(
+            @Header("Authorization") String token,
+            @Path("projectId") int projectId,
+            @Query("page") int page,
+            @Query("pageSize") int pageSize
     );
 
     @PUT("api/tasks/{id}")
