@@ -9,12 +9,14 @@ public class NotificationItem {
     public String senderName;
     public boolean isUnread;
     public Integer projectId;
+    public String projectName;
     public Integer taskId;
     public String createdAt;
 
-    public NotificationItem(int id, String title, String message, String avatarText,
+    public NotificationItem(int id, String title, String message,
                             String senderName, String senderAvatarUrl,
-                            boolean isUnread, Integer projectId, Integer taskId, String createdAt) {
+                            boolean isUnread, Integer projectId, String projectName,
+                            Integer taskId, String createdAt) {
         this.id = id;
         this.title = title;
         this.message = message;
@@ -23,6 +25,7 @@ public class NotificationItem {
         this.avatarText = makeAvatarText(senderName);
         this.isUnread = isUnread;
         this.projectId = projectId;
+        this.projectName = projectName;
         this.taskId = taskId;
         this.createdAt = createdAt;
     }

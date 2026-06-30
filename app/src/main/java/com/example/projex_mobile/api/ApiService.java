@@ -60,7 +60,14 @@ public interface ApiService {
     Call<DashboardOverview> getDashboardOverview(@Header("Authorization") String token);
 
     @GET("api/dashboard/my-tasks")
-    Call<List<RecentItem>> getMyTasks(@Header("Authorization") String token);
+    Call<TaskResponse> getMyTasks(
+            @Header("Authorization") String token,
+            @Query("page") int page,
+            @Query("pageSize") int pageSize
+    );
+
+    @GET("api/tasks/assigned/GetAllTask")
+    Call<List<Task>> getAllAssignedTasks(@Header("Authorization") String token);
 
     @GET("api/tasks/assigned")
     Call<TaskResponse> getAssignedTasks(@Header("Authorization") String token);
@@ -124,6 +131,7 @@ public interface ApiService {
             @Header("Authorization") String token,
             @Path("taskId") int taskId
     );
+
     @POST("api/projects/{projectId}/tasks")
     Call<Void> createTask(
             @Header("Authorization") String token,
@@ -153,9 +161,15 @@ public interface ApiService {
             @Path("userId") int userId
     );
     @GET("api/projects/{id}")
+    Call<JsonObject> getProjectDetailRaw(
+            @Header("Authorization") String token,
+            @Path("id") int projectId
+    );
+
+    @GET("api/projects/{id}")
     Call<Project> getProjectDetail(
             @Header("Authorization") String token,
-            @Path("id") int id
+            @Path("id") int projectId
     );
     @POST("api/tasks/{taskId}/assignments")
     Call<JsonObject> addTaskAssignments(
@@ -201,7 +215,6 @@ public interface ApiService {
             @Header("Authorization") String token,
             @Path("taskId") int taskId
     );
-
     @GET("api/access")
     Call<List<RecentAccessResponse>> getRecentAccesses(
             @Header("Authorization") String token

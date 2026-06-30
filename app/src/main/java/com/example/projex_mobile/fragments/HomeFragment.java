@@ -296,56 +296,58 @@ public class HomeFragment extends Fragment {
     private void updateProgressCard(List<Task> tasks) {
         int done = 0;
         int inProgress = 0;
-        int assigned = 0;
+        int todo = 0;
 
         for (Task task : tasks) {
             if (task == null) continue;
 
             String status = task.getStatus();
-            if (status == null) {
-                assigned++;
-            } else if ("Done".equalsIgnoreCase(status)) {
+            status = status == null ? "" : status.trim();
+
+            if (status.equalsIgnoreCase("Done")) {
                 done++;
-            } else if ("InProgress".equalsIgnoreCase(status) || "In Progress".equalsIgnoreCase(status)) {
+            } else if (status.equalsIgnoreCase("InProgress")
+                    || status.equalsIgnoreCase("In Progress")) {
                 inProgress++;
             } else {
-                assigned++;
+                todo++;
             }
         }
 
-        int total = done + inProgress + assigned;
+        int total = done + inProgress + todo;
         float progressPercent = total == 0 ? 0f : (done * 100f / total);
 
-        tvProgressPercent.setText(getString(R.string.progress_percent, progressPercent));
+        tvProgressPercent.setText(String.format(Locale.getDefault(), "%.0f%%", progressPercent));
         tvDoneTasks.setText(getString(R.string.tasks_label, done));
         tvInProgressTasks.setText(getString(R.string.tasks_label, inProgress));
-        tvTodoTasks.setText(getString(R.string.tasks_label, assigned));
+        tvTodoTasks.setText(getString(R.string.tasks_label, todo));
 
-        setupPieChart(done, inProgress, assigned);
+        setupPieChart(done, inProgress, todo);
     }
 
-    private void setupPieChart(int done, int inProgress, int assigned) {
+    private void setupPieChart(int done, int inProgress, int todo) {
         if (pieChart == null) return;
 
         ArrayList<PieEntry> entries = new ArrayList<>();
-        int total = done + inProgress + assigned;
+        int total = done + inProgress + todo;
 
         if (total == 0) {
             entries.add(new PieEntry(1f, "No tasks"));
         } else {
             if (done > 0) entries.add(new PieEntry(done, "Done"));
             if (inProgress > 0) entries.add(new PieEntry(inProgress, "In Progress"));
-            if (assigned > 0) entries.add(new PieEntry(assigned, "Assigned"));
+            if (todo > 0) entries.add(new PieEntry(todo, "To Do"));
         }
 
         PieDataSet dataSet = new PieDataSet(entries, "");
+
         if (total == 0) {
             dataSet.setColor(Color.parseColor("#3A3A3A"));
         } else {
             ArrayList<Integer> colors = new ArrayList<>();
             if (done > 0) colors.add(Color.parseColor("#0FADFF"));
             if (inProgress > 0) colors.add(Color.parseColor("#EFEB3B"));
-            if (assigned > 0) colors.add(Color.parseColor("#48FB98"));
+            if (todo > 0) colors.add(Color.parseColor("#48FB98"));
             dataSet.setColors(colors);
         }
 
@@ -581,10 +583,10 @@ public class HomeFragment extends Fragment {
         }
 
         final int loadGeneration = ++recentLoadGeneration;
-        ApiService apiService = RetrofitClient.getApiService(null);
+        ApiService apiService = RetrofitClient.getApiService(token);
 
         List<RecentAccessResponse> recentAccesses = new ArrayList<>();
-        List<Task> assignedTasks = new ArrayList<>();
+        List<Task> myTasks = new ArrayList<>();
         final int[] pendingSources = {2};
 
         apiService.getRecentAccesses(token).enqueue(new Callback<List<RecentAccessResponse>>() {
@@ -597,38 +599,36 @@ public class HomeFragment extends Fragment {
                     recentAccesses.addAll(response.body());
                 }
 
-                onRecentSourceDone(apiService, recentAccesses, assignedTasks, pendingSources, loadGeneration);
+                onRecentSourceDone(apiService, recentAccesses, myTasks, pendingSources, loadGeneration);
             }
 
             @Override
             public void onFailure(@NonNull Call<List<RecentAccessResponse>> call, @NonNull Throwable t) {
                 if (!isActiveRecentLoad(loadGeneration)) return;
-                onRecentSourceDone(apiService, recentAccesses, assignedTasks, pendingSources, loadGeneration);
+                onRecentSourceDone(apiService, recentAccesses, myTasks, pendingSources, loadGeneration);
             }
         });
 
-        apiService.getAssignedTasks(token).enqueue(new Callback<TaskResponse>() {
+        apiService.getAllAssignedTasks(token).enqueue(new Callback<List<Task>>() {
             @Override
-            public void onResponse(@NonNull Call<TaskResponse> call,
-                                   @NonNull Response<TaskResponse> response) {
+            public void onResponse(@NonNull Call<List<Task>> call,
+                                   @NonNull Response<List<Task>> response) {
                 if (!isActiveRecentLoad(loadGeneration)) return;
 
-                if (response.isSuccessful()
-                        && response.body() != null
-                        && response.body().getItems() != null) {
-                    assignedTasks.addAll(response.body().getItems());
+                if (response.isSuccessful() && response.body() != null) {
+                    myTasks.addAll(response.body());
                 }
 
-                updateProgressCard(assignedTasks);
-                onRecentSourceDone(apiService, recentAccesses, assignedTasks, pendingSources, loadGeneration);
+                updateProgressCard(myTasks);
+                onRecentSourceDone(apiService, recentAccesses, myTasks, pendingSources, loadGeneration);
             }
 
             @Override
-            public void onFailure(@NonNull Call<TaskResponse> call, @NonNull Throwable t) {
+            public void onFailure(@NonNull Call<List<Task>> call, @NonNull Throwable t) {
                 if (!isActiveRecentLoad(loadGeneration)) return;
 
                 updateProgressCard(new ArrayList<>());
-                onRecentSourceDone(apiService, recentAccesses, assignedTasks, pendingSources, loadGeneration);
+                onRecentSourceDone(apiService, recentAccesses, myTasks, pendingSources, loadGeneration);
             }
         });
     }
