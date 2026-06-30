@@ -45,6 +45,14 @@ public class TaskFragment extends Fragment {
     private String selectedStatus = "All";
 
     private EditText edtSearch;
+    private TextView btnPrevPage;
+    private TextView btnNextPage;
+    private TextView tvPageInfo;
+
+    private static final int PAGE_SIZE = 10;
+    private int currentPage = 1;
+    private int totalPages = 1;
+    private boolean isLoading = false;
 
 
     public TaskFragment() {
@@ -96,6 +104,23 @@ public class TaskFragment extends Fragment {
         LinearLayout btnStatus = view.findViewById(R.id.btnStatus);
 
         TextView textStatus = view.findViewById(R.id.textStatus);
+        btnPrevPage = view.findViewById(R.id.btnPrevPage);
+        btnNextPage = view.findViewById(R.id.btnNextPage);
+        tvPageInfo = view.findViewById(R.id.tvPageInfo);
+
+        btnPrevPage.setOnClickListener(v -> {
+            if (!isLoading && currentPage > 1) {
+                currentPage--;
+                loadTasks();
+            }
+        });
+
+        btnNextPage.setOnClickListener(v -> {
+            if (!isLoading && currentPage < totalPages) {
+                currentPage++;
+                loadTasks();
+            }
+        });
 
         btnStatus.setOnClickListener(v -> {
             PopupMenu popup = new PopupMenu(requireContext(), btnStatus);
@@ -110,7 +135,8 @@ public class TaskFragment extends Fragment {
 
                 textStatus.setText(selectedStatus);
 
-                filterTasks();
+                currentPage = 1;
+                loadTasks();
 
                 return true;
             });
@@ -122,7 +148,8 @@ public class TaskFragment extends Fragment {
             selectedStatus = "All";
             textStatus.setText("Trạng thái");
             edtSearch.setText("");
-            filterTasks();
+            currentPage = 1;
+            loadTasks();
         });
 
 
@@ -143,6 +170,7 @@ public class TaskFragment extends Fragment {
                     }
                 });
 
+        updatePaginationUi();
         loadTasks();
 
         return view;
@@ -155,11 +183,16 @@ public class TaskFragment extends Fragment {
         getParentFragmentManager().setFragmentResultListener(
                 "task_changed",
                 getViewLifecycleOwner(),
-                (requestKey, result) -> loadTasks()
+                (requestKey, result) -> {
+                    currentPage = 1;
+                    loadTasks();
+                }
         );
     }
 
     private void loadTasks() {
+        isLoading = true;
+        updatePaginationUi();
 
         SharedPreferences prefs = requireActivity().getSharedPreferences("user_prefs", Context.MODE_PRIVATE);
 
@@ -167,28 +200,58 @@ public class TaskFragment extends Fragment {
 
         ApiService apiService = RetrofitClient.getApiService(null);
 
-        apiService.getAssignedTasks(token)
+        apiService.getAssignedTasks(token, currentPage, PAGE_SIZE)
                 .enqueue(new Callback<TaskResponse>() {
 
                     @Override
                     public void onResponse(Call<TaskResponse> call, Response<TaskResponse> response) {
+                        if (!isAdded()) {
+                            return;
+                        }
+
+                        isLoading = false;
 
                         if (response.isSuccessful() && response.body() != null
                                 && response.body().getItems() != null) {
 
-                            originalList = response.body().getItems();
+                            TaskResponse body = response.body();
+                            if (body.getPage() != null && body.getPage() > 0) {
+                                currentPage = body.getPage();
+                            }
+
+                            originalList = new ArrayList<>(body.getItems());
+                            totalPages = Math.max(1, body.resolveTotalPages(currentPage, PAGE_SIZE));
+
+                            boolean hasKnownTotal = body.getTotalPages() != null
+                                    || body.getTotalItems() != null;
+                            if (originalList.isEmpty()
+                                    && currentPage > 1
+                                    && (!hasKnownTotal || currentPage > totalPages)) {
+                                currentPage = hasKnownTotal ? totalPages : currentPage - 1;
+                                loadTasks();
+                                return;
+                            }
+
                             filterTasks();
 
                         } else {
                             Log.e("TASK_API",
                                     "Response Error");
                         }
+
+                        updatePaginationUi();
                     }
 
                     @Override
                     public void onFailure(Call<TaskResponse> call, Throwable t) {
+                        if (!isAdded()) {
+                            return;
+                        }
+
+                        isLoading = false;
+                        updatePaginationUi();
                         Log.e("TASK_API",
-                                t.getMessage());
+                                String.valueOf(t.getMessage()));
                     }
                 });
     }
@@ -210,5 +273,24 @@ public class TaskFragment extends Fragment {
         }
 
         adapter.notifyDataSetChanged();
+    }
+
+    private void updatePaginationUi() {
+        if (tvPageInfo != null) {
+            tvPageInfo.setText("Trang " + currentPage + "/" + totalPages);
+        }
+
+        setPaginationButtonState(btnPrevPage, !isLoading && currentPage > 1);
+        setPaginationButtonState(btnNextPage, !isLoading && currentPage < totalPages);
+    }
+
+    private void setPaginationButtonState(TextView button, boolean enabled) {
+        if (button == null) {
+            return;
+        }
+
+        button.setEnabled(enabled);
+        button.setClickable(enabled);
+        button.setAlpha(enabled ? 1f : 0.45f);
     }
 }
