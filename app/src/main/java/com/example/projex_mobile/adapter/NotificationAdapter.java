@@ -62,8 +62,13 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         NotificationItem item = items.get(position);
 
-        holder.tvTitle.setText(item.title);
-        holder.tvMessage.setText(item.message);
+        holder.tvTitle.setText(item.title != null ? item.title : "");
+        holder.tvMessage.setText(item.message != null ? item.message : "");
+        holder.tvTicket.setText(
+                item.projectName != null && !item.projectName.trim().isEmpty()
+                        ? item.projectName
+                        : (item.projectId != null ? "Project " + item.projectId : "")
+        );
 
         String shortName = item.avatarText != null && item.avatarText.length() >= 2
                 ? item.avatarText.substring(0, 2)
@@ -81,7 +86,10 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
 
         holder.itemView.setOnClickListener(v -> {
             if (listener != null) {
-                listener.onNotificationClick(item, holder.getAdapterPosition());
+                int pos = holder.getBindingAdapterPosition();
+                if (pos != RecyclerView.NO_POSITION) {
+                    listener.onNotificationClick(item, pos);
+                }
             }
         });
     }
