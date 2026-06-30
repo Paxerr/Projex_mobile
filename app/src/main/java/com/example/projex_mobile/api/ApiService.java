@@ -106,6 +106,12 @@ public interface ApiService {
             @Path("projectId") int projectId
     );
 
+    @GET("api/projects/{projectId}/GetAllTaskByProject")
+    Call<List<Task>> getAllTasksByProject(
+            @Header("Authorization") String token,
+            @Path("projectId") int projectId
+    );
+
     @GET("api/projects/{projectId}/tasks")
     Call<TaskResponse> getTasksByProject(
             @Header("Authorization") String token,

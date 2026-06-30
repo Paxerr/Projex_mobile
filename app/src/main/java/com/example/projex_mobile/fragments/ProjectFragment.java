@@ -22,7 +22,6 @@ import com.example.projex_mobile.adapter.TaskAdapter;
 import com.example.projex_mobile.api.ApiService;
 import com.example.projex_mobile.api.RetrofitClient;
 import com.example.projex_mobile.objects.Task;
-import com.example.projex_mobile.objects.TaskResponse;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
@@ -389,20 +388,19 @@ public class ProjectFragment extends Fragment {
 
         ApiService apiService = RetrofitClient.getApiService(null);
 
-        apiService.getTasksByProject(token, projectId)
-                .enqueue(new Callback<TaskResponse>() {
+        apiService.getAllTasksByProject(token, projectId)
+                .enqueue(new Callback<List<Task>>() {
 
                     @Override
                     public void onResponse(
-                            Call<TaskResponse> call,
-                            Response<TaskResponse> response
+                            Call<List<Task>> call,
+                            Response<List<Task>> response
                     ) {
 
                         if (response.isSuccessful()
-                                && response.body() != null
-                                && response.body().getItems() != null) {
+                                && response.body() != null) {
 
-                            originalList = response.body().getItems();
+                            originalList = response.body();
 
                             updateChartFromTasks(originalList);
                             showLatestUpdatedTasks();
@@ -418,7 +416,7 @@ public class ProjectFragment extends Fragment {
 
                     @Override
                     public void onFailure(
-                            Call<TaskResponse> call,
+                            Call<List<Task>> call,
                             Throwable t
                     ) {
                         updateChartFromTasks(null);
