@@ -6,15 +6,13 @@ public class ProjectItem {
     private String status;
     private int memberCount;
     private boolean favorite;
-    private int imageResId;
 
-    public ProjectItem(int id, String name, String status, int memberCount, boolean favorite, int imageResId) {
+    public ProjectItem(int id, String name, String status, int memberCount, boolean favorite) {
         this.id = id;
         this.name = name;
         this.status = status;
         this.memberCount = memberCount;
         this.favorite = favorite;
-        this.imageResId = imageResId;
     }
 
     public int getId() {
@@ -39,13 +37,5 @@ public class ProjectItem {
 
     public void setFavorite(boolean favorite) {
         this.favorite = favorite;
-    }
-
-    public int getImageResId() {
-        return imageResId;
-    }
-
-    public void setImageResId(int imageResId) {
-        this.imageResId = imageResId;
     }
 }
