@@ -275,8 +275,12 @@ public class EditProfileFragment extends Fragment {
             return;
         }
 
-        // Defensive URL rewrite for Android emulators
-        if (urlString.contains("localhost")) {
+        if ((urlString.contains("localhost") || urlString.contains("127.0.0.1"))
+                && urlString.contains("/uploads/")) {
+            String path = urlString.substring(urlString.indexOf("/uploads/"));
+            String baseUrl = com.example.projex_mobile.api.RetrofitClient.BASE_URL;
+            urlString = baseUrl.substring(0, baseUrl.length() - 1) + path;
+        } else if (urlString.contains("localhost")) {
             urlString = urlString.replace("localhost", "10.0.2.2");
         } else if (urlString.contains("127.0.0.1")) {
             urlString = urlString.replace("127.0.0.1", "10.0.2.2");

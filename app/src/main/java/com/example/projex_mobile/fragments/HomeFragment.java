@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -61,6 +62,7 @@ public class HomeFragment extends Fragment {
     private TextView tvUserName, tvProgressPercent, tvDoneTasks, tvInProgressTasks, tvTodoTasks;
     private TextView tvRecentEmpty;
     private TextView tvAvatarText;
+    private ImageView ivAvatar;
     private ImageView ivQuickAccessToggle;
     private RecyclerView rvQuickAccess, rvRecentActivity;
     private PieChart pieChart;
@@ -97,6 +99,7 @@ public class HomeFragment extends Fragment {
     public void onResume() {
         super.onResume();
         loadQuickAccess();
+        loadUserProfile();
         refreshUserHeader();
         if (hasSession()) {
             loadRecent();
@@ -108,6 +111,7 @@ public class HomeFragment extends Fragment {
     private void initViews(View view) {
         tvUserName = view.findViewById(R.id.tvUserName);
         tvAvatarText = view.findViewById(R.id.tvAvatarText);
+        ivAvatar = view.findViewById(R.id.ivAvatar);
         rvQuickAccess = view.findViewById(R.id.rvQuickAccess);
         rvRecentActivity = view.findViewById(R.id.rvRecentActivity);
         recentLabel = view.findViewById(R.id.recentLabel);
@@ -148,6 +152,7 @@ public class HomeFragment extends Fragment {
         if (!isAdded()) return;
         SharedPreferences prefs = requireActivity().getSharedPreferences("user_prefs", Context.MODE_PRIVATE);
         String userName = prefs.getString("user_name", "");
+        String avatarUrl = prefs.getString("avatar_url", "");
 
         if (tvUserName != null) {
             tvUserName.setText(userName.isEmpty() ? "User" : userName);
@@ -156,6 +161,8 @@ public class HomeFragment extends Fragment {
         if (tvAvatarText != null) {
             tvAvatarText.setText(makeAvatarText(userName));
         }
+
+        setupAvatarImage(avatarUrl);
     }
 
     private void loadData() {
@@ -194,6 +201,7 @@ public class HomeFragment extends Fragment {
                     requireActivity().getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
                             .edit()
                             .putString("user_name", fullName)
+                            .putString("avatar_url", user.getAvatarUrl() != null ? user.getAvatarUrl() : "")
                             .apply();
 
                     if (tvUserName != null) tvUserName.setText(fullName.isEmpty() ? "User" : fullName);
@@ -206,6 +214,55 @@ public class HomeFragment extends Fragment {
                 refreshUserHeader();
             }
         });
+    }
+
+    private void setupAvatarImage(String avatarUrl) {
+        View view = getView();
+        if (view == null) return;
+
+        FrameLayout cardAvatar = view.findViewById(R.id.cardAvatar);
+        if (cardAvatar == null) return;
+
+        if (ivAvatar == null) {
+            ivAvatar = view.findViewById(R.id.ivAvatar);
+        }
+
+        if (ivAvatar == null) {
+            com.google.android.material.imageview.ShapeableImageView shapeableAvatar =
+                    new com.google.android.material.imageview.ShapeableImageView(requireContext());
+            shapeableAvatar.setId(R.id.ivAvatar);
+            FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(
+                    FrameLayout.LayoutParams.MATCH_PARENT,
+                    FrameLayout.LayoutParams.MATCH_PARENT
+            );
+            shapeableAvatar.setLayoutParams(params);
+            shapeableAvatar.setScaleType(ImageView.ScaleType.CENTER_CROP);
+            shapeableAvatar.setVisibility(View.GONE);
+
+            float density = getResources().getDisplayMetrics().density;
+            int cornerRadiusPx = (int) (24 * density);
+            shapeableAvatar.setShapeAppearanceModel(
+                    shapeableAvatar.getShapeAppearanceModel().toBuilder()
+                            .setAllCornerSizes(cornerRadiusPx)
+                            .build()
+            );
+
+            cardAvatar.addView(shapeableAvatar);
+            ivAvatar = shapeableAvatar;
+        }
+
+        if (avatarUrl != null && !avatarUrl.trim().isEmpty()) {
+            ivAvatar.setVisibility(View.VISIBLE);
+            if (tvAvatarText != null) {
+                tvAvatarText.setVisibility(View.GONE);
+            }
+            EditProfileFragment.loadImage(avatarUrl, ivAvatar);
+        } else {
+            ivAvatar.setVisibility(View.GONE);
+            if (tvAvatarText != null) {
+                tvAvatarText.setVisibility(View.VISIBLE);
+            }
+        }
     }
 
     private String makeAvatarText(String name) {
@@ -517,6 +574,7 @@ public class HomeFragment extends Fragment {
                     if (old == null || isLater(access.getAccessAt(), old.getAccessAt())) {
                         latestMap.put(access.getTaskId(), access);
                     }
+                    setupAvatarImage(user.getAvatarUrl());
                 }
 
                 List<RecentAccessResponse> uniqueAccesses = new ArrayList<>(latestMap.values());

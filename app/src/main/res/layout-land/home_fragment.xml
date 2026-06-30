@@ -32,6 +32,7 @@
             android:orientation="horizontal">
 
             <FrameLayout
+                android:id="@+id/cardAvatar"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
                 android:background="@drawable/home_bg_avatar">
@@ -45,6 +46,14 @@
                     android:textColor="#FFFFFF"
                     android:textSize="14sp"
                     android:textStyle="bold" />
+
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:id="@+id/ivAvatar"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="centerCrop"
+                    android:visibility="gone"
+                    app:shapeAppearanceOverlay="@style/RoundedAvatarImage" />
             </FrameLayout>
 
             <TextView
