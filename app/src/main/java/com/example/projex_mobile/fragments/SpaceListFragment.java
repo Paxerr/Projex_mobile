@@ -59,6 +59,12 @@ public class SpaceListFragment extends Fragment implements ProjectAdapter.OnProj
     private final List<ProjectItem> allProjects = new ArrayList<>();
     private final List<ProjectItem> filteredProjects = new ArrayList<>();
 
+    private TextView btnPrevPage, btnNextPage, tvPageInfo;
+    private static final int PAGE_SIZE = 10;
+    private int currentPage = 1;
+    private int totalPages = 1;
+    private boolean isLoading = false;
+
     private SharedPreferences prefs;
     private final List<Integer> favoriteIds = new ArrayList<>();
     private int recentProjectId = -1;
@@ -105,6 +111,9 @@ public class SpaceListFragment extends Fragment implements ProjectAdapter.OnProj
         tvRecent = view.findViewById(R.id.tvRecent);
         tvFavorite = view.findViewById(R.id.tvFavorite);
         tvEmpty = view.findViewById(R.id.tvEmpty);
+        btnPrevPage = view.findViewById(R.id.btnPrevPage);
+        btnNextPage = view.findViewById(R.id.btnNextPage);
+        tvPageInfo = view.findViewById(R.id.tvPageInfo);
 
         setupRecyclerView();
         setupListeners();
@@ -137,7 +146,8 @@ public class SpaceListFragment extends Fragment implements ProjectAdapter.OnProj
         edtSearch.addTextChangedListener(new TextWatcher() {
             @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
             @Override public void onTextChanged(CharSequence s, int start, int before, int count) {
-                applyFilter();
+                currentPage = 1;
+                loadProjectsFromApi();
             }
             @Override public void afterTextChanged(Editable s) {}
         });
@@ -147,22 +157,44 @@ public class SpaceListFragment extends Fragment implements ProjectAdapter.OnProj
         tvAll.setOnClickListener(v -> {
             currentTab = "ALL";
             updateTabUI();
-            applyFilter();
+            currentPage = 1;
+            loadProjectsFromApi();
         });
 
         tvRecent.setOnClickListener(v -> {
             currentTab = "RECENT";
             updateTabUI();
-            applyFilter();
+            currentPage = 1;
+            loadProjectsFromApi();
         });
 
         tvFavorite.setOnClickListener(v -> {
             currentTab = "FAVORITE";
             updateTabUI();
-            applyFilter();
+            currentPage = 1;
+            loadProjectsFromApi();
         });
 
+        if (btnPrevPage != null) {
+            btnPrevPage.setOnClickListener(v -> {
+                if (!isLoading && currentPage > 1) {
+                    currentPage--;
+                    loadProjectsFromApi();
+                }
+            });
+        }
+
+        if (btnNextPage != null) {
+            btnNextPage.setOnClickListener(v -> {
+                if (!isLoading && currentPage < totalPages) {
+                    currentPage++;
+                    loadProjectsFromApi();
+                }
+            });
+        }
+
         updateTabUI();
+        updatePaginationUi();
     }
 
     private void openCreateSpace() {
@@ -176,25 +208,36 @@ public class SpaceListFragment extends Fragment implements ProjectAdapter.OnProj
             return;
         }
 
+        isLoading = true;
+        updatePaginationUi();
+
+        String keyword = edtSearch.getText() != null ? edtSearch.getText().toString().trim() : null;
+        if (keyword != null && keyword.isEmpty()) keyword = null;
+
         ApiService apiService = RetrofitClient.getApiService(token);
-        apiService.getProjects(token, 1, 100, null, null, null, null)
+        apiService.getProjects(token, currentPage, PAGE_SIZE, keyword, null, null, null)
                 .enqueue(new Callback<JsonObject>() {
                     @Override
                     public void onResponse(@NonNull Call<JsonObject> call, @NonNull Response<JsonObject> response) {
                         if (!isAdded()) return;
+                        isLoading = false;
 
                         if (!response.isSuccessful() || response.body() == null) {
                             showToast("Không tải được danh sách project");
+                            updatePaginationUi();
                             return;
                         }
 
                         parseProjectsResponse(response.body());
                         applyFilter();
+                        updatePaginationUi();
                     }
 
                     @Override
                     public void onFailure(@NonNull Call<JsonObject> call, @NonNull Throwable t) {
                         if (isAdded()) {
+                            isLoading = false;
+                            updatePaginationUi();
                             showToast("Lỗi kết nối: " + t.getMessage());
                         }
                     }
@@ -203,6 +246,20 @@ public class SpaceListFragment extends Fragment implements ProjectAdapter.OnProj
 
     private void parseProjectsResponse(JsonObject body) {
         allProjects.clear();
+
+        if (body.has("page") && !body.get("page").isJsonNull()) {
+            currentPage = body.get("page").getAsInt();
+        }
+
+        if (body.has("totalPages") && !body.get("totalPages").isJsonNull()) {
+            totalPages = body.get("totalPages").getAsInt();
+        } else if (body.has("totalItems") && !body.get("totalItems").isJsonNull()) {
+            int totalItems = body.get("totalItems").getAsInt();
+            totalPages = (int) Math.ceil((double) totalItems / PAGE_SIZE);
+        } else {
+            totalPages = 1;
+        }
+        if (totalPages < 1) totalPages = 1;
 
         JsonArray items = null;
         if (body.has("items") && body.get("items").isJsonArray()) {
@@ -469,5 +526,23 @@ public class SpaceListFragment extends Fragment implements ProjectAdapter.OnProj
         } else {
             applyFilter();
         }
+    }
+
+    private void updatePaginationUi() {
+        if (tvPageInfo != null) {
+            tvPageInfo.setText("Trang " + currentPage + "/" + totalPages);
+        }
+
+        setPaginationButtonState(btnPrevPage, !isLoading && currentPage > 1);
+        setPaginationButtonState(btnNextPage, !isLoading && currentPage < totalPages);
+    }
+
+    private void setPaginationButtonState(TextView button, boolean enabled) {
+        if (button == null) {
+            return;
+        }
+        button.setEnabled(enabled);
+        button.setClickable(enabled);
+        button.setAlpha(enabled ? 1f : 0.45f);
     }
 }

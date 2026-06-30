@@ -586,8 +586,9 @@ public class HomeFragment extends Fragment {
         ApiService apiService = RetrofitClient.getApiService(token);
 
         List<RecentAccessResponse> recentAccesses = new ArrayList<>();
-        List<Task> myTasks = new ArrayList<>();
-        final int[] pendingSources = {2};
+        List<Task> assignedTasks = new ArrayList<>();
+        List<Task> allMyTasks = new ArrayList<>();
+        final int[] pendingSources = {3};
 
         apiService.getRecentAccesses(token).enqueue(new Callback<List<RecentAccessResponse>>() {
             @Override
@@ -599,13 +600,13 @@ public class HomeFragment extends Fragment {
                     recentAccesses.addAll(response.body());
                 }
 
-                onRecentSourceDone(apiService, recentAccesses, myTasks, pendingSources, loadGeneration);
+                onRecentSourceDone(apiService, recentAccesses, assignedTasks, allMyTasks, pendingSources, loadGeneration);
             }
 
             @Override
             public void onFailure(@NonNull Call<List<RecentAccessResponse>> call, @NonNull Throwable t) {
                 if (!isActiveRecentLoad(loadGeneration)) return;
-                onRecentSourceDone(apiService, recentAccesses, myTasks, pendingSources, loadGeneration);
+                onRecentSourceDone(apiService, recentAccesses, assignedTasks, allMyTasks, pendingSources, loadGeneration);
             }
         });
 
@@ -616,11 +617,11 @@ public class HomeFragment extends Fragment {
                 if (!isActiveRecentLoad(loadGeneration)) return;
 
                 if (response.isSuccessful() && response.body() != null) {
-                    myTasks.addAll(response.body());
+                    assignedTasks.addAll(response.body());
                 }
 
-                updateProgressCard(myTasks);
-                onRecentSourceDone(apiService, recentAccesses, myTasks, pendingSources, loadGeneration);
+                updateProgressCard(assignedTasks);
+                onRecentSourceDone(apiService, recentAccesses, assignedTasks, allMyTasks, pendingSources, loadGeneration);
             }
 
             @Override
@@ -628,7 +629,26 @@ public class HomeFragment extends Fragment {
                 if (!isActiveRecentLoad(loadGeneration)) return;
 
                 updateProgressCard(new ArrayList<>());
-                onRecentSourceDone(apiService, recentAccesses, myTasks, pendingSources, loadGeneration);
+                onRecentSourceDone(apiService, recentAccesses, assignedTasks, allMyTasks, pendingSources, loadGeneration);
+            }
+        });
+
+        apiService.getMyTasks(token, 1, 50).enqueue(new Callback<TaskResponse>() {
+            @Override
+            public void onResponse(@NonNull Call<TaskResponse> call, @NonNull Response<TaskResponse> response) {
+                if (!isActiveRecentLoad(loadGeneration)) return;
+
+                if (response.isSuccessful() && response.body() != null && response.body().getItems() != null) {
+                    allMyTasks.addAll(response.body().getItems());
+                }
+
+                onRecentSourceDone(apiService, recentAccesses, assignedTasks, allMyTasks, pendingSources, loadGeneration);
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<TaskResponse> call, @NonNull Throwable t) {
+                if (!isActiveRecentLoad(loadGeneration)) return;
+                onRecentSourceDone(apiService, recentAccesses, assignedTasks, allMyTasks, pendingSources, loadGeneration);
             }
         });
     }
@@ -636,6 +656,7 @@ public class HomeFragment extends Fragment {
     private void onRecentSourceDone(ApiService apiService,
                                     List<RecentAccessResponse> recentAccesses,
                                     List<Task> assignedTasks,
+                                    List<Task> allMyTasks,
                                     int[] pendingSources,
                                     int loadGeneration) {
         pendingSources[0]--;
@@ -654,8 +675,17 @@ public class HomeFragment extends Fragment {
             putRecentSeed(seedMap, task.getId(), task, getLatestTaskActivityAt(task));
         }
 
+        for (Task task : allMyTasks) {
+            if (task == null || task.getId() <= 0) continue;
+            putRecentSeed(seedMap, task.getId(), task, getLatestTaskActivityAt(task));
+        }
+
         List<RecentSeed> seeds = new ArrayList<>(seedMap.values());
         seeds.sort((a, b) -> Long.compare(parseAccessTime(b.activityAt), parseAccessTime(a.activityAt)));
+
+        if (seeds.size() > 5) {
+            seeds = seeds.subList(0, 5);
+        }
 
         if (seeds.isEmpty()) {
             publishRecentItems(new ArrayList<>(), loadGeneration);
@@ -703,8 +733,16 @@ public class HomeFragment extends Fragment {
             return;
         }
 
-        if (task != null && old.task == null) {
-            old.task = task;
+        if (task != null) {
+            if (old.task == null) {
+                old.task = task;
+            } else {
+                long oldTime = parseAccessTime(getLatestTaskActivityAt(old.task));
+                long newTime = parseAccessTime(getLatestTaskActivityAt(task));
+                if (newTime >= oldTime) {
+                    old.task = task;
+                }
+            }
         }
 
         old.activityAt = latestTime(old.activityAt, activityAt);
@@ -775,7 +813,11 @@ public class HomeFragment extends Fragment {
         if (!isActiveRecentLoad(loadGeneration)) return;
 
         recentList.clear();
-        recentList.addAll(items);
+        if (items.size() > 5) {
+            recentList.addAll(items.subList(0, 5));
+        } else {
+            recentList.addAll(items);
+        }
 
         if (recentAdapter != null) {
             recentAdapter.notifyDataSetChanged();
