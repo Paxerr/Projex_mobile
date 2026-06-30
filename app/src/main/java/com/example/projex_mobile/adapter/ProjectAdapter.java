@@ -43,38 +43,12 @@ public class ProjectAdapter extends RecyclerView.Adapter<ProjectAdapter.ProjectV
     public ProjectViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.project_item, parent, false);
-        return new ProjectViewHolder(view);
+        return new ProjectViewHolder(view, listener);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ProjectViewHolder holder, int position) {
-        ProjectItem item = items.get(position);
-
-        holder.tvProjectName.setText(item.getName());
-        holder.tvProjectStatus.setText(item.getStatus() != null ? item.getStatus() : "");
-        holder.tvProjectMemberCount.setText(item.getMemberCount() + " members");
-
-        if (item.getImageResId() != 0) {
-            holder.imgProjectIcon.setImageResource(item.getImageResId());
-        } else {
-            holder.imgProjectIcon.setImageResource(R.drawable.ic_logo);
-        }
-
-        if (item.isFavorite()) {
-            holder.imgFavorite.setImageResource(R.drawable.ic_favorite_border);
-            holder.imgFavorite.setColorFilter(Color.parseColor("#85ADFF"));
-        } else {
-            holder.imgFavorite.setImageResource(R.drawable.ic_favorite);
-            holder.imgFavorite.setColorFilter(Color.parseColor("#6B7280"));
-        }
-
-        holder.itemView.setOnClickListener(v -> {
-            if (listener != null) listener.onProjectClick(item);
-        });
-
-        holder.imgFavorite.setOnClickListener(v -> {
-            if (listener != null) listener.onFavoriteClick(item);
-        });
+        holder.bind(items.get(position));
     }
 
     @Override
@@ -82,17 +56,68 @@ public class ProjectAdapter extends RecyclerView.Adapter<ProjectAdapter.ProjectV
         return items.size();
     }
 
-    static class ProjectViewHolder extends RecyclerView.ViewHolder {
-        ImageView imgProjectIcon, imgFavorite;
-        TextView tvProjectName, tvProjectStatus, tvProjectMemberCount;
+    private static String getInitial(String name) {
+        if (name == null || name.trim().isEmpty()) return "?";
 
-        public ProjectViewHolder(@NonNull View itemView) {
+        String[] parts = name.trim().split("[\\s_\\-]+");
+        StringBuilder sb = new StringBuilder();
+
+        for (String part : parts) {
+            if (!part.isEmpty()) {
+                sb.append(Character.toUpperCase(part.charAt(0)));
+                if (sb.length() == 2) break;
+            }
+        }
+
+        if (sb.length() == 0) {
+            sb.append(Character.toUpperCase(name.trim().charAt(0)));
+        }
+
+        return sb.toString();
+    }
+
+    static class ProjectViewHolder extends RecyclerView.ViewHolder {
+        TextView tvProjectInitial, tvProjectName, tvProjectStatus, tvProjectMemberCount;
+        ImageView imgFavorite;
+        private ProjectItem currentItem;
+
+        public ProjectViewHolder(@NonNull View itemView, OnProjectClickListener listener) {
             super(itemView);
-            imgProjectIcon = itemView.findViewById(R.id.imgProjectIcon);
+
+            tvProjectInitial = itemView.findViewById(R.id.tvProjectInitial);
             imgFavorite = itemView.findViewById(R.id.imgFavorite);
             tvProjectName = itemView.findViewById(R.id.tvProjectName);
             tvProjectStatus = itemView.findViewById(R.id.tvProjectStatus);
             tvProjectMemberCount = itemView.findViewById(R.id.tvProjectMemberCount);
+
+            itemView.setOnClickListener(v -> {
+                if (listener != null && currentItem != null) {
+                    listener.onProjectClick(currentItem);
+                }
+            });
+
+            imgFavorite.setOnClickListener(v -> {
+                if (listener != null && currentItem != null) {
+                    listener.onFavoriteClick(currentItem);
+                }
+            });
+        }
+
+        public void bind(ProjectItem item) {
+            currentItem = item;
+
+            tvProjectName.setText(item.getName());
+            tvProjectStatus.setText(item.getStatus() != null ? item.getStatus() : "");
+            tvProjectMemberCount.setText(item.getMemberCount() + " members");
+            tvProjectInitial.setText(getInitial(item.getName()));
+
+            if (item.isFavorite()) {
+                imgFavorite.setImageResource(R.drawable.ic_favorite);
+                imgFavorite.setColorFilter(Color.parseColor("#85ADFF"));
+            } else {
+                imgFavorite.setImageResource(R.drawable.ic_favorite_border);
+                imgFavorite.setColorFilter(Color.parseColor("#6B7280"));
+            }
         }
     }
 }
