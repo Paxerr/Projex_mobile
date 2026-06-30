@@ -30,12 +30,14 @@ import com.example.projex_mobile.adapter.ProjectAdapter;
 import com.example.projex_mobile.api.ApiService;
 import com.example.projex_mobile.api.RetrofitClient;
 import com.example.projex_mobile.objects.ProjectItem;
+import com.example.projex_mobile.utils.PrefKeyHelper;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -116,6 +118,11 @@ public class SpaceListFragment extends Fragment implements ProjectAdapter.OnProj
     public void onResume() {
         super.onResume();
         loadPrefs();
+
+        for (ProjectItem project : allProjects) {
+            project.setFavorite(favoriteIds.contains(project.getId()));
+        }
+
         applyFilter();
     }
 
@@ -204,7 +211,10 @@ public class SpaceListFragment extends Fragment implements ProjectAdapter.OnProj
             items = body.getAsJsonArray("data");
         }
 
-        if (items == null) return;
+        if (items == null) {
+            saveProjectsForQuickAccess();
+            return;
+        }
 
         for (JsonElement element : items) {
             if (!element.isJsonObject()) continue;
@@ -226,6 +236,8 @@ public class SpaceListFragment extends Fragment implements ProjectAdapter.OnProj
 
             allProjects.add(item);
         }
+
+        saveProjectsForQuickAccess();
     }
 
     private void createProject(String name, String description, String startDate, String endDate) {
@@ -267,7 +279,11 @@ public class SpaceListFragment extends Fragment implements ProjectAdapter.OnProj
     private void loadPrefs() {
         favoriteIds.clear();
 
-        String favJson = prefs.getString("favorite_ids", "[]");
+        String favJson = prefs.getString(
+                PrefKeyHelper.userScopedKey(requireContext(), "favorite_ids"),
+                "[]"
+        );
+
         try {
             JSONArray arr = new JSONArray(favJson);
             for (int i = 0; i < arr.length(); i++) {
@@ -276,19 +292,47 @@ public class SpaceListFragment extends Fragment implements ProjectAdapter.OnProj
         } catch (JSONException ignored) {
         }
 
-        recentProjectId = prefs.getInt("recent_project_id", -1);
+        recentProjectId = prefs.getInt(
+                PrefKeyHelper.userScopedKey(requireContext(), "recent_project_id"),
+                -1
+        );
     }
 
     private void saveFavorites() {
         JSONArray arr = new JSONArray();
+
         for (Integer id : favoriteIds) {
             arr.put(id);
         }
-        prefs.edit().putString("favorite_ids", arr.toString()).apply();
+
+        prefs.edit()
+                .putString(PrefKeyHelper.userScopedKey(requireContext(), "favorite_ids"), arr.toString())
+                .apply();
     }
 
     private void saveRecent(int projectId) {
-        prefs.edit().putInt("recent_project_id", projectId).apply();
+        prefs.edit()
+                .putInt(PrefKeyHelper.userScopedKey(requireContext(), "recent_project_id"), projectId)
+                .apply();
+    }
+
+    private void saveProjectsForQuickAccess() {
+        JSONArray arr = new JSONArray();
+
+        for (ProjectItem item : allProjects) {
+            JSONObject obj = new JSONObject();
+
+            try {
+                obj.put("id", item.getId());
+                obj.put("name", item.getName());
+                arr.put(obj);
+            } catch (JSONException ignored) {
+            }
+        }
+
+        prefs.edit()
+                .putString(PrefKeyHelper.userScopedKey(requireContext(), "projects_json"), arr.toString())
+                .apply();
     }
 
     private void updateTabUI() {
@@ -395,14 +439,35 @@ public class SpaceListFragment extends Fragment implements ProjectAdapter.OnProj
 
     @Override
     public void onFavoriteClick(ProjectItem item) {
-        if (favoriteIds.contains(item.getId())) {
-            favoriteIds.remove((Integer) item.getId());
+        int projectId = item.getId();
+
+        boolean willBeFavorite;
+
+        if (favoriteIds.contains(projectId)) {
+            favoriteIds.remove((Integer) projectId);
+            willBeFavorite = false;
         } else {
-            favoriteIds.add(item.getId());
+            favoriteIds.add(projectId);
+            willBeFavorite = true;
+        }
+
+        item.setFavorite(willBeFavorite);
+
+        for (ProjectItem project : allProjects) {
+            if (project.getId() == projectId) {
+                project.setFavorite(willBeFavorite);
+                break;
+            }
         }
 
         saveFavorites();
-        item.setFavorite(favoriteIds.contains(item.getId()));
-        applyFilter();
+
+        if ("FAVORITE".equals(currentTab) && !willBeFavorite) {
+            filteredProjects.remove(item);
+            adapter.setData(filteredProjects);
+            tvEmpty.setVisibility(filteredProjects.isEmpty() ? View.VISIBLE : View.GONE);
+        } else {
+            applyFilter();
+        }
     }
 }

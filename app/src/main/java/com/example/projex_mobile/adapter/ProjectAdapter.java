@@ -112,10 +112,10 @@ public class ProjectAdapter extends RecyclerView.Adapter<ProjectAdapter.ProjectV
             tvProjectInitial.setText(getInitial(item.getName()));
 
             if (item.isFavorite()) {
-                imgFavorite.setImageResource(R.drawable.ic_favorite);
+                imgFavorite.setImageResource(R.drawable.ic_favorite_border);
                 imgFavorite.setColorFilter(Color.parseColor("#85ADFF"));
             } else {
-                imgFavorite.setImageResource(R.drawable.ic_favorite_border);
+                imgFavorite.setImageResource(R.drawable.ic_favorite);
                 imgFavorite.setColorFilter(Color.parseColor("#6B7280"));
             }
         }

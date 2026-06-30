@@ -30,6 +30,7 @@ import com.example.projex_mobile.api.ApiService;
 import com.example.projex_mobile.api.RetrofitClient;
 import com.example.projex_mobile.objects.Project;
 import com.example.projex_mobile.objects.QuickAccessItem;
+import com.example.projex_mobile.utils.PrefKeyHelper;
 import com.example.projex_mobile.objects.RecentAccessResponse;
 import com.example.projex_mobile.objects.RecentItem;
 import com.example.projex_mobile.objects.Task;
@@ -453,22 +454,37 @@ public class HomeFragment extends Fragment {
 
     @SuppressLint("NotifyDataSetChanged")
     private void loadQuickAccess() {
-        int oldSize = quickAccessList.size();
-        if (oldSize > 0) {
-            quickAccessList.clear();
-            quickAccessAdapter.notifyItemRangeRemoved(0, oldSize);
-        }
-
+        quickAccessList.clear();
         quickAccessList.add(new QuickAccessItem(991, "My Tasks", R.drawable.home_ic_task, "CÁ NHÂN"));
 
-        SharedPreferences spacePrefs = requireContext().getSharedPreferences("space_prefs", Context.MODE_PRIVATE);
-        String favJson = spacePrefs.getString("favorite_ids", "[]");
-        String projectsJson = spacePrefs.getString("projects_json", "[]");
+        if (!hasSession()) {
+            if (quickAccessAdapter != null) {
+                quickAccessAdapter.notifyDataSetChanged();
+            }
+            if (quickAccessSection != null) {
+                quickAccessSection.setVisibility(View.VISIBLE);
+            }
+            return;
+        }
+
+        SharedPreferences spacePrefs = requireContext()
+                .getSharedPreferences("space_prefs", Context.MODE_PRIVATE);
+
+        String favJson = spacePrefs.getString(
+                PrefKeyHelper.userScopedKey(requireContext(), "favorite_ids"),
+                "[]"
+        );
+        String projectsJson = spacePrefs.getString(
+                PrefKeyHelper.userScopedKey(requireContext(), "projects_json"),
+                "[]"
+        );
 
         List<Integer> favoriteIds = new ArrayList<>();
         try {
             JSONArray favArr = new JSONArray(favJson);
-            for (int i = 0; i < favArr.length(); i++) favoriteIds.add(favArr.getInt(i));
+            for (int i = 0; i < favArr.length(); i++) {
+                favoriteIds.add(favArr.getInt(i));
+            }
         } catch (JSONException ignored) {
         }
 
@@ -476,17 +492,25 @@ public class HomeFragment extends Fragment {
             JSONArray projectsArr = new JSONArray(projectsJson);
             for (int i = 0; i < projectsArr.length(); i++) {
                 JSONObject obj = projectsArr.getJSONObject(i);
-                int id = obj.optInt("id");
-                String name = obj.optString("name", "");
+
+                int id = obj.optInt("id", -1);
+                String name = obj.optString("name", "").trim();
                 int iconRes = obj.optInt("iconRes", R.drawable.ic_logo);
-                if (favoriteIds.contains(id)) {
+
+                if (id != -1 && !name.isEmpty() && favoriteIds.contains(id)) {
                     quickAccessList.add(new QuickAccessItem(id, name, iconRes, "DỰ ÁN"));
                 }
             }
         } catch (JSONException ignored) {
         }
 
-        quickAccessAdapter.notifyDataSetChanged();
+        if (quickAccessAdapter != null) {
+            quickAccessAdapter.notifyDataSetChanged();
+        }
+
+        if (quickAccessSection != null) {
+            quickAccessSection.setVisibility(View.VISIBLE);
+        }
     }
 
     private void setupSearchBar(View view) {
