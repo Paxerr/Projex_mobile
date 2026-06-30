@@ -1,8 +1,8 @@
 package com.example.projex_mobile.fragments.AuthFragment;
 
-import android.content.Context;
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
-import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Patterns;
 import android.view.View;
@@ -15,10 +15,12 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.example.projex_mobile.AuthActivity;
 import com.example.projex_mobile.HomeActivity;
 import com.example.projex_mobile.R;
 import com.example.projex_mobile.api.ApiService;
 import com.example.projex_mobile.api.RetrofitClient;
+import com.example.projex_mobile.utils.AuthSessionManager;
 import com.google.gson.JsonObject;
 
 import java.util.HashMap;
@@ -42,6 +44,8 @@ public class LoginFragment extends Fragment {
         EditText edtPassword = view.findViewById(R.id.edtPassword);
         Button btnLogin = view.findViewById(R.id.btnLogin);
         TextView tvForgot = view.findViewById(R.id.tvForgot);
+        View btnGoogle = view.findViewById(R.id.btnGoogle);
+        View btnGithub = view.findViewById(R.id.btnGithub);
 
         btnLogin.setOnClickListener(v -> {
             String email = edtEmail.getText() == null ? "" : edtEmail.getText().toString().trim();
@@ -123,18 +127,7 @@ public class LoginFragment extends Fragment {
                         responseEmail = email;
                     }
 
-                    if (!token.startsWith("Bearer ")) {
-                        token = "Bearer " + token;
-                    }
-
-                    requireActivity()
-                            .getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
-                            .edit()
-                            .putString("token", token)
-                            .putString("user_name", fullName)
-                            .putString("user_email", responseEmail)
-                            .putInt("user_id", userId)
-                            .apply();
+                    AuthSessionManager.saveLogin(requireContext(), token, fullName, responseEmail, userId);
 
                     startActivity(new Intent(requireActivity(), HomeActivity.class));
                     requireActivity().finish();
@@ -150,6 +143,9 @@ public class LoginFragment extends Fragment {
             });
         });
 
+        btnGoogle.setOnClickListener(v -> openSocialLogin("google"));
+        btnGithub.setOnClickListener(v -> openSocialLogin("github"));
+
         tvForgot.setOnClickListener(v -> {
             View authContent = requireActivity().findViewById(R.id.authContent);
             authContent.setVisibility(View.GONE);
@@ -161,6 +157,22 @@ public class LoginFragment extends Fragment {
                     .addToBackStack("forgot_password")
                     .commit();
         });
+    }
+
+    private void openSocialLogin(String provider) {
+        Uri loginUri = Uri.parse(RetrofitClient.BASE_URL)
+                .buildUpon()
+                .appendEncodedPath("api/auth/" + provider)
+                .appendQueryParameter("redirect_uri", AuthActivity.SOCIAL_AUTH_CALLBACK_URI)
+                .build();
+
+        try {
+            startActivity(new Intent(Intent.ACTION_VIEW, loginUri));
+        } catch (ActivityNotFoundException exception) {
+            if (isAdded()) {
+                Toast.makeText(requireContext(), "No browser app found", Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 
     private static String extractString(JsonObject object, String key) {

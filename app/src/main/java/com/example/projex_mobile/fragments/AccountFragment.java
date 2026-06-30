@@ -139,6 +139,7 @@ public class AccountFragment extends Fragment {
                                 .edit()
                                 .putString("user_name", currentName)
                                 .putString("user_email", currentEmail)
+                                .putString("avatar_url", currentAvatarUrl != null ? currentAvatarUrl : "")
                                 .apply();
                     }
                 } else {
@@ -214,6 +215,7 @@ public class AccountFragment extends Fragment {
                                 .edit()
                                 .putString("user_name", currentName)
                                 .putString("user_email", currentEmail)
+                                .putString("avatar_url", currentAvatarUrl != null ? currentAvatarUrl : "")
                                 .apply();
                     }
 

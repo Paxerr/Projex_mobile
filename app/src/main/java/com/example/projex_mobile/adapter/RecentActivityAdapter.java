@@ -17,10 +17,16 @@ import java.util.List;
 
 public class RecentActivityAdapter extends RecyclerView.Adapter<RecentActivityAdapter.ViewHolder> {
 
-    private final List<RecentItem> items;
+    public interface OnRecentClickListener {
+        void onClick(RecentItem item);
+    }
 
-    public RecentActivityAdapter(List<RecentItem> items) {
+    private final List<RecentItem> items;
+    private final OnRecentClickListener listener;
+
+    public RecentActivityAdapter(List<RecentItem> items, OnRecentClickListener listener) {
         this.items = items;
+        this.listener = listener;
     }
 
     @NonNull
@@ -35,52 +41,58 @@ public class RecentActivityAdapter extends RecyclerView.Adapter<RecentActivityAd
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         RecentItem item = items.get(position);
 
-        holder.tvTitle.setText(item.getTitle() != null ? item.getTitle() : "");
-        holder.tvMessage.setText(item.getMessage() != null ? item.getMessage() : "");
-        holder.tvTicket.setText("");
-        holder.tvTime.setText(item.getTimeAgo() != null ? item.getTimeAgo() : "");
+        holder.tvAvatar.setText(safeText(item.getAvatarText(), "NA"));
+        holder.tvTitle.setText(safeText(item.getTitle(), ""));
+        holder.tvMessage.setText(safeText(item.getMessage(), ""));
+        holder.tvProjectName.setText(safeText(item.getProjectName(), ""));
+        holder.tvTime.setText(safeText(item.getTimeAgo(), ""));
+        holder.tvStatus.setText(getDisplayStatus(item.getStatus()));
+        holder.tvStatus.setBackgroundTintList(ColorStateList.valueOf(getStatusColor(item.getStatus())));
 
-        String initials = item.getAvatarText();
-        if (initials == null || initials.trim().isEmpty()) {
-            initials = item.getTitle() != null && !item.getTitle().trim().isEmpty()
-                    ? String.valueOf(item.getTitle().trim().charAt(0)).toUpperCase()
-                    : "NA";
-        }
-        holder.tvAvatar.setText(initials);
-
-        String status = item.getStatus();
-        holder.tvStatus.setText(getDisplayStatus(status));
-        holder.tvStatus.setBackgroundTintList(ColorStateList.valueOf(getStatusColor(status)));
+        holder.itemView.setOnClickListener(v -> {
+            if (listener != null) {
+                listener.onClick(item);
+            }
+        });
     }
 
     @Override
     public int getItemCount() {
-        return items != null ? items.size() : 0;
+        return items.size();
+    }
+
+    private String safeText(String value, String fallback) {
+        return value == null || value.trim().isEmpty() ? fallback : value;
     }
 
     private String getDisplayStatus(String status) {
-        if (status == null) return "Unknown";
-        if ("InProgress".equalsIgnoreCase(status)) return "In Progress";
-        if ("Assigned".equalsIgnoreCase(status)) return "Assigned";
-        return status;
+        if (status == null) return "Assigned";
+        if ("Done".equalsIgnoreCase(status)) return "Done";
+        if ("InProgress".equalsIgnoreCase(status) || "In Progress".equalsIgnoreCase(status)) return "In Progress";
+        return "Assigned";
     }
 
     private int getStatusColor(String status) {
-        if ("InProgress".equalsIgnoreCase(status)) return Color.parseColor("#F4B740");
+        if (status == null) return Color.parseColor("#3A3A3A");
         if ("Done".equalsIgnoreCase(status)) return Color.parseColor("#0FADFF");
-        if ("Assigned".equalsIgnoreCase(status)) return Color.parseColor("#22C55E");
-        return Color.parseColor("#6B7280");
+        if ("InProgress".equalsIgnoreCase(status) || "In Progress".equalsIgnoreCase(status)) return Color.parseColor("#EFEB3B");
+        return Color.parseColor("#48FB98");
+    }
+
+    @Override
+    public void onViewRecycled(@NonNull ViewHolder holder) {
+        super.onViewRecycled(holder);
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView tvAvatar, tvTitle, tvMessage, tvTicket, tvTime, tvStatus;
+        TextView tvAvatar, tvTitle, tvMessage, tvProjectName, tvTime, tvStatus;
 
         ViewHolder(@NonNull View itemView) {
             super(itemView);
             tvAvatar = itemView.findViewById(R.id.tvAvatar);
             tvTitle = itemView.findViewById(R.id.tvTitle);
             tvMessage = itemView.findViewById(R.id.tvMessage);
-            tvTicket = itemView.findViewById(R.id.tvTicket);
+            tvProjectName = itemView.findViewById(R.id.tvProjectName);
             tvTime = itemView.findViewById(R.id.tvTime);
             tvStatus = itemView.findViewById(R.id.tvStatus);
         }
