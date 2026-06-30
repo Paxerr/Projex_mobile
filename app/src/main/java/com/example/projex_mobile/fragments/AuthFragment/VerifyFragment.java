@@ -25,7 +25,7 @@ import retrofit2.Response;
 public class VerifyFragment extends Fragment {
     private static final String ARG_EMAIL = "email";
 
-    public VerifyFragment(){
+    public VerifyFragment() {
         super(R.layout.verify_fragment);
     }
 
@@ -50,11 +50,9 @@ public class VerifyFragment extends Fragment {
         EditText otp3 = view.findViewById(R.id.otp3);
         EditText otp4 = view.findViewById(R.id.otp4);
 
-        btnBack.setOnClickListener(v -> {
-            requireActivity()
-                    .getSupportFragmentManager()
-                    .popBackStack();
-        });
+        btnBack.setOnClickListener(v -> requireActivity()
+                .getSupportFragmentManager()
+                .popBackStack());
 
         btnVerify.setOnClickListener(v -> {
             String code = getText(otp1) + getText(otp2) + getText(otp3) + getText(otp4);
@@ -66,6 +64,13 @@ public class VerifyFragment extends Fragment {
 
             if (code.length() != 4) {
                 Toast.makeText(requireContext(), "Vui lòng nhập đủ 4 số", Toast.LENGTH_SHORT).show();
+                focusFirstEmptyOtp(otp1, otp2, otp3, otp4);
+                return;
+            }
+
+            if (!code.matches("\\d{4}")) {
+                Toast.makeText(requireContext(), "Mã xác thực chỉ được gồm 4 chữ số", Toast.LENGTH_SHORT).show();
+                focusFirstInvalidOtp(otp1, otp2, otp3, otp4);
                 return;
             }
 
@@ -75,13 +80,15 @@ public class VerifyFragment extends Fragment {
             body.put("code", code);
 
             ApiService apiService = RetrofitClient.getApiService(null);
-            apiService.verifyResetCode(body).enqueue(new Callback<JsonObject>() {
+            apiService.verifyResetCode(body).enqueue(new Callback<>() {
                 @Override
                 public void onResponse(@NonNull Call<JsonObject> call, @NonNull Response<JsonObject> response) {
                     btnVerify.setEnabled(true);
+                    if (!isAdded()) return;
 
                     if (!response.isSuccessful()) {
-                        Toast.makeText(requireContext(), "Mã xác thực không đúng hoặc đã hết hạn", Toast.LENGTH_SHORT).show();
+                        String errorMessage = AuthErrorMapper.fromResponse(response, "Mã xác thực không đúng hoặc đã hết hạn");
+                        Toast.makeText(requireContext(), errorMessage, Toast.LENGTH_SHORT).show();
                         return;
                     }
 
@@ -96,7 +103,9 @@ public class VerifyFragment extends Fragment {
                 @Override
                 public void onFailure(@NonNull Call<JsonObject> call, @NonNull Throwable t) {
                     btnVerify.setEnabled(true);
-                    Toast.makeText(requireContext(), "Lỗi kết nối: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                    if (isAdded()) {
+                        Toast.makeText(requireContext(), "Lỗi kết nối: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
                 }
             });
         });
@@ -104,5 +113,23 @@ public class VerifyFragment extends Fragment {
 
     private String getText(EditText editText) {
         return editText.getText() == null ? "" : editText.getText().toString().trim();
+    }
+
+    private void focusFirstEmptyOtp(EditText... fields) {
+        for (EditText field : fields) {
+            if (getText(field).isEmpty()) {
+                field.requestFocus();
+                return;
+            }
+        }
+    }
+
+    private void focusFirstInvalidOtp(EditText... fields) {
+        for (EditText field : fields) {
+            if (!getText(field).matches("\\d")) {
+                field.requestFocus();
+                return;
+            }
+        }
     }
 }

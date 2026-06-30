@@ -574,7 +574,6 @@ public class HomeFragment extends Fragment {
                     if (old == null || isLater(access.getAccessAt(), old.getAccessAt())) {
                         latestMap.put(access.getTaskId(), access);
                     }
-                    setupAvatarImage(user.getAvatarUrl());
                 }
 
                 List<RecentAccessResponse> uniqueAccesses = new ArrayList<>(latestMap.values());

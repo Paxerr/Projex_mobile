@@ -52,29 +52,46 @@ public class RePasswordFragment extends Fragment {
         EditText edtNewPassword = view.findViewById(R.id.edtNewPassword);
         EditText edtConfirmPassword = view.findViewById(R.id.edtConfirmPassword);
 
-        btnLogin.setOnClickListener(v -> {
-            requireActivity()
-                    .getSupportFragmentManager()
-                    .popBackStack(null,
-                            FragmentManager.POP_BACK_STACK_INCLUSIVE);
-        });
+        btnLogin.setOnClickListener(v -> requireActivity()
+                .getSupportFragmentManager()
+                .popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE));
 
         btnUpdatePassword.setOnClickListener(v -> {
-            String newPassword = getText(edtNewPassword);
-            String confirmPassword = getText(edtConfirmPassword);
+            String newPassword = getRawText(edtNewPassword);
+            String confirmPassword = getRawText(edtConfirmPassword);
 
             if (email.isEmpty() || code.isEmpty()) {
                 Toast.makeText(requireContext(), "Thiếu thông tin xác thực", Toast.LENGTH_SHORT).show();
                 return;
             }
 
-            if (newPassword.length() < 6) {
+            if (newPassword.isEmpty()) {
+                edtNewPassword.setError("Vui lòng nhập mật khẩu mới");
+                edtNewPassword.requestFocus();
+                return;
+            }
+
+            if (newPassword.length() < AuthErrorMapper.PASSWORD_MIN_LENGTH) {
                 edtNewPassword.setError("Mật khẩu phải có ít nhất 6 ký tự");
+                edtNewPassword.requestFocus();
+                return;
+            }
+
+            if (newPassword.length() > AuthErrorMapper.PASSWORD_MAX_LENGTH) {
+                edtNewPassword.setError("Mật khẩu không được vượt quá 100 ký tự");
+                edtNewPassword.requestFocus();
+                return;
+            }
+
+            if (confirmPassword.isEmpty()) {
+                edtConfirmPassword.setError("Vui lòng nhập lại mật khẩu");
+                edtConfirmPassword.requestFocus();
                 return;
             }
 
             if (!newPassword.equals(confirmPassword)) {
                 edtConfirmPassword.setError("Mật khẩu nhập lại không khớp");
+                edtConfirmPassword.requestFocus();
                 return;
             }
 
@@ -85,34 +102,40 @@ public class RePasswordFragment extends Fragment {
             body.put("newPassword", newPassword);
 
             ApiService apiService = RetrofitClient.getApiService(null);
-            apiService.resetPassword(body).enqueue(new Callback<JsonObject>() {
+            apiService.resetPassword(body).enqueue(new Callback<>() {
                 @Override
                 public void onResponse(@NonNull Call<JsonObject> call, @NonNull Response<JsonObject> response) {
                     btnUpdatePassword.setEnabled(true);
+                    if (!isAdded()) return;
 
                     if (!response.isSuccessful()) {
-                        Toast.makeText(requireContext(), "Không đặt lại được mật khẩu: " + response.code(), Toast.LENGTH_SHORT).show();
+                        String errorMessage = AuthErrorMapper.fromResponse(response, "Không đặt lại được mật khẩu");
+                        if (errorMessage.toLowerCase().contains("mật khẩu")) {
+                            edtNewPassword.setError(errorMessage);
+                            edtNewPassword.requestFocus();
+                        }
+                        Toast.makeText(requireContext(), errorMessage, Toast.LENGTH_SHORT).show();
                         return;
                     }
 
                     Toast.makeText(requireContext(), "Đặt lại mật khẩu thành công", Toast.LENGTH_SHORT).show();
                     requireActivity()
                             .getSupportFragmentManager()
-                            .popBackStack(null,
-                                    FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                            .popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
                 }
 
                 @Override
                 public void onFailure(@NonNull Call<JsonObject> call, @NonNull Throwable t) {
                     btnUpdatePassword.setEnabled(true);
-                    Toast.makeText(requireContext(), "Lỗi kết nối: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                    if (isAdded()) {
+                        Toast.makeText(requireContext(), "Lỗi kết nối: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
                 }
             });
         });
-
     }
 
-    private String getText(EditText editText) {
-        return editText.getText() == null ? "" : editText.getText().toString().trim();
+    private String getRawText(EditText editText) {
+        return editText.getText() == null ? "" : editText.getText().toString();
     }
 }

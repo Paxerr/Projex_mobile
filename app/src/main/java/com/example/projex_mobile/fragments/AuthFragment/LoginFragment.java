@@ -49,23 +49,9 @@ public class LoginFragment extends Fragment {
 
         btnLogin.setOnClickListener(v -> {
             String email = edtEmail.getText() == null ? "" : edtEmail.getText().toString().trim();
-            String password = edtPassword.getText() == null ? "" : edtPassword.getText().toString().trim();
+            String password = edtPassword.getText() == null ? "" : edtPassword.getText().toString();
 
-            if (email.isEmpty()) {
-                edtEmail.setError("Vui lòng nhập email hoặc tài khoản");
-                edtEmail.requestFocus();
-                return;
-            }
-
-            if (email.contains("@") && !Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-                edtEmail.setError("Email không hợp lệ");
-                edtEmail.requestFocus();
-                return;
-            }
-
-            if (password.isEmpty()) {
-                edtPassword.setError("Vui lòng nhập mật khẩu");
-                edtPassword.requestFocus();
+            if (!validateInput(email, password, edtEmail, edtPassword)) {
                 return;
             }
 
@@ -80,29 +66,24 @@ public class LoginFragment extends Fragment {
                 @Override
                 public void onResponse(@NonNull Call<JsonObject> call, @NonNull Response<JsonObject> response) {
                     btnLogin.setEnabled(true);
-
                     if (!isAdded()) return;
 
                     if (!response.isSuccessful()) {
-                        Toast.makeText(requireContext(),
-                                "Đăng nhập thất bại: " + response.code(),
-                                Toast.LENGTH_SHORT).show();
+                        String errorMessage = AuthErrorMapper.fromResponse(response, "Đăng nhập không thành công");
+                        applyLoginError(errorMessage, edtEmail, edtPassword);
+                        Toast.makeText(requireContext(), errorMessage, Toast.LENGTH_SHORT).show();
                         return;
                     }
 
                     JsonObject body = response.body();
                     if (body == null) {
-                        Toast.makeText(requireContext(),
-                                "Server không trả dữ liệu",
-                                Toast.LENGTH_SHORT).show();
+                        Toast.makeText(requireContext(), "Server không trả dữ liệu", Toast.LENGTH_SHORT).show();
                         return;
                     }
 
                     String token = extractString(body, "token");
                     if (token == null || token.isEmpty()) {
-                        Toast.makeText(requireContext(),
-                                "Đăng nhập thất bại: sever không trả token",
-                                Toast.LENGTH_SHORT).show();
+                        Toast.makeText(requireContext(), "Đăng nhập thất bại: server không trả token", Toast.LENGTH_SHORT).show();
                         return;
                     }
 
@@ -111,11 +92,7 @@ public class LoginFragment extends Fragment {
                     String responseEmail = userObject != null ? extractString(userObject, "email") : null;
 
                     int userId = 0;
-
-                    if (userObject != null
-                            && userObject.has("id")
-                            && !userObject.get("id").isJsonNull()) {
-
+                    if (userObject != null && userObject.has("id") && !userObject.get("id").isJsonNull()) {
                         userId = userObject.get("id").getAsInt();
                     }
 
@@ -159,6 +136,58 @@ public class LoginFragment extends Fragment {
         });
     }
 
+    private boolean validateInput(String email, String password, EditText edtEmail, EditText edtPassword) {
+        if (email.isEmpty()) {
+            edtEmail.setError("Vui lòng nhập email");
+            edtEmail.requestFocus();
+            return false;
+        }
+
+        if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            edtEmail.setError("Email không đúng định dạng");
+            edtEmail.requestFocus();
+            return false;
+        }
+
+        if (email.length() > AuthErrorMapper.EMAIL_MAX_LENGTH) {
+            edtEmail.setError("Email không được vượt quá 255 ký tự");
+            edtEmail.requestFocus();
+            return false;
+        }
+
+        if (password.isEmpty()) {
+            edtPassword.setError("Vui lòng nhập mật khẩu");
+            edtPassword.requestFocus();
+            return false;
+        }
+
+        if (password.length() < AuthErrorMapper.PASSWORD_MIN_LENGTH) {
+            edtPassword.setError("Mật khẩu phải có ít nhất 6 ký tự");
+            edtPassword.requestFocus();
+            return false;
+        }
+
+        if (password.length() > AuthErrorMapper.PASSWORD_MAX_LENGTH) {
+            edtPassword.setError("Mật khẩu không được vượt quá 100 ký tự");
+            edtPassword.requestFocus();
+            return false;
+        }
+
+        return true;
+    }
+
+    private void applyLoginError(String errorMessage, EditText edtEmail, EditText edtPassword) {
+        String normalized = errorMessage == null ? "" : errorMessage.toLowerCase();
+
+        if (normalized.contains("email")) {
+            edtEmail.setError(errorMessage);
+            edtEmail.requestFocus();
+        } else if (normalized.contains("mật khẩu")) {
+            edtPassword.setError(errorMessage);
+            edtPassword.requestFocus();
+        }
+    }
+
     private void openSocialLogin(String provider) {
         Uri loginUri = Uri.parse(RetrofitClient.BASE_URL)
                 .buildUpon()
@@ -170,7 +199,7 @@ public class LoginFragment extends Fragment {
             startActivity(new Intent(Intent.ACTION_VIEW, loginUri));
         } catch (ActivityNotFoundException exception) {
             if (isAdded()) {
-                Toast.makeText(requireContext(), "No browser app found", Toast.LENGTH_SHORT).show();
+                Toast.makeText(requireContext(), "Không tìm thấy trình duyệt để đăng nhập", Toast.LENGTH_SHORT).show();
             }
         }
     }
