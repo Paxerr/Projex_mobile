@@ -37,22 +37,28 @@ public class ForgotPasswordFragment extends Fragment {
         Button btnNext = view.findViewById(R.id.btnNext);
         EditText edtEmail = view.findViewById(R.id.edtEmailorName);
 
-        btnBack.setOnClickListener(v -> {
-            requireActivity()
-                    .getSupportFragmentManager()
-                    .popBackStack();
-        });
+        btnBack.setOnClickListener(v -> requireActivity()
+                .getSupportFragmentManager()
+                .popBackStack());
 
         btnNext.setOnClickListener(v -> {
             String email = edtEmail.getText() == null ? "" : edtEmail.getText().toString().trim();
 
             if (email.isEmpty()) {
                 edtEmail.setError("Vui lòng nhập email");
+                edtEmail.requestFocus();
                 return;
             }
 
             if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-                edtEmail.setError("Email không hợp lệ");
+                edtEmail.setError("Email không đúng định dạng");
+                edtEmail.requestFocus();
+                return;
+            }
+
+            if (email.length() > AuthErrorMapper.EMAIL_MAX_LENGTH) {
+                edtEmail.setError("Email không được vượt quá 255 ký tự");
+                edtEmail.requestFocus();
                 return;
             }
 
@@ -61,13 +67,19 @@ public class ForgotPasswordFragment extends Fragment {
             body.put("email", email);
 
             ApiService apiService = RetrofitClient.getApiService(null);
-            apiService.forgotPassword(body).enqueue(new Callback<JsonObject>() {
+            apiService.forgotPassword(body).enqueue(new Callback<>() {
                 @Override
                 public void onResponse(@NonNull Call<JsonObject> call, @NonNull Response<JsonObject> response) {
                     btnNext.setEnabled(true);
+                    if (!isAdded()) return;
 
                     if (!response.isSuccessful()) {
-                        Toast.makeText(requireContext(), "Không gửi được mã: " + response.code(), Toast.LENGTH_SHORT).show();
+                        String errorMessage = AuthErrorMapper.fromResponse(response, "Không gửi được mã xác thực");
+                        if (errorMessage.toLowerCase().contains("email")) {
+                            edtEmail.setError(errorMessage);
+                            edtEmail.requestFocus();
+                        }
+                        Toast.makeText(requireContext(), errorMessage, Toast.LENGTH_SHORT).show();
                         return;
                     }
 
@@ -83,11 +95,11 @@ public class ForgotPasswordFragment extends Fragment {
                 @Override
                 public void onFailure(@NonNull Call<JsonObject> call, @NonNull Throwable t) {
                     btnNext.setEnabled(true);
-                    Toast.makeText(requireContext(), "Lỗi kết nối: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                    if (isAdded()) {
+                        Toast.makeText(requireContext(), "Lỗi kết nối: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
                 }
             });
         });
-
-
     }
 }

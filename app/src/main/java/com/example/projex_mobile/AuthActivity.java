@@ -10,9 +10,16 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.projex_mobile.adapter.AuthPagerAdapter;
+import com.example.projex_mobile.api.ApiService;
+import com.example.projex_mobile.api.RetrofitClient;
+import com.example.projex_mobile.objects.User;
 import com.example.projex_mobile.utils.AuthSessionManager;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class AuthActivity extends AppCompatActivity {
     public static final String SOCIAL_AUTH_CALLBACK_URI = "projex://auth/callback";
@@ -50,7 +57,11 @@ public class AuthActivity extends AppCompatActivity {
             authContent.setVisibility(hasOverlay ? View.GONE : View.VISIBLE);
         });
 
-        handleSocialAuthCallback(getIntent());
+        if (isSocialAuthCallback(getIntent())) {
+            handleSocialAuthCallback(getIntent());
+        } else {
+            checkSavedToken();
+        }
     }
 
     @Override
@@ -61,7 +72,7 @@ public class AuthActivity extends AppCompatActivity {
     }
 
     private void handleSocialAuthCallback(Intent intent) {
-        if (intent == null || intent.getData() == null) {
+        if (!isSocialAuthCallback(intent)) {
             return;
         }
 
@@ -104,6 +115,50 @@ public class AuthActivity extends AppCompatActivity {
         AuthSessionManager.saveLogin(this, token, fullName, email, userId);
         startActivity(new Intent(this, HomeActivity.class));
         finish();
+    }
+
+    private void checkSavedToken() {
+        if (!AuthSessionManager.hasToken(this)) {
+            return;
+        }
+
+        String token = AuthSessionManager.getToken(this);
+        ApiService apiService = RetrofitClient.getApiService(token);
+        apiService.getProfile(token).enqueue(new Callback<>() {
+            @Override
+            public void onResponse(Call<User> call, Response<User> response) {
+                if (isFinishing() || isDestroyed()) return;
+
+                if (response.isSuccessful() && response.body() != null) {
+                    AuthSessionManager.saveProfile(AuthActivity.this, response.body());
+                    startActivity(new Intent(AuthActivity.this, HomeActivity.class));
+                    finish();
+                    return;
+                }
+
+                if (response.code() == 401 || response.code() == 403 || response.code() == 404) {
+                    AuthSessionManager.clearSession(AuthActivity.this);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<User> call, Throwable t) {
+                if (!isFinishing() && !isDestroyed()) {
+                    Toast.makeText(AuthActivity.this, "Không thể kiểm tra phiên đăng nhập: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
+
+    private boolean isSocialAuthCallback(Intent intent) {
+        if (intent == null || intent.getData() == null) {
+            return false;
+        }
+
+        Uri uri = intent.getData();
+        return "projex".equals(uri.getScheme())
+                && "auth".equals(uri.getHost())
+                && "/callback".equals(uri.getPath());
     }
 
     private static String firstNonEmpty(String... values) {
