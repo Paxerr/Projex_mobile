@@ -221,6 +221,9 @@ public class Add_TaskFragment extends Fragment {
                                     Toast.LENGTH_SHORT
                             ).show();
 
+                            getParentFragmentManager()
+                                    .setFragmentResult("task_changed", new Bundle());
+
                             requireActivity()
                                     .getSupportFragmentManager()
                                     .popBackStack();
