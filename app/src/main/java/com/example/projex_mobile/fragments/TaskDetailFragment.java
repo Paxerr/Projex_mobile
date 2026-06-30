@@ -193,7 +193,7 @@ public class TaskDetailFragment extends Fragment {
                             bindTask(task);
 
                             if (!accessRecorded) {
-                                recordTaskAccess();
+                                recordTaskAccess(null);
                                 accessRecorded = true;
                             }
                         } else {
@@ -422,9 +422,7 @@ public class TaskDetailFragment extends Fragment {
                                     normalizeStatus(
                                             txtStatus.getText().toString());
 
-                            recordTaskAccess();
-
-                            finishSave();
+                            recordTaskAccess(() -> finishSave());
                         } else {
                             if (response.code() == 403 && statusChanged) {
                                 updateTaskStatusOnly(false, true);
@@ -519,28 +517,32 @@ public class TaskDetailFragment extends Fragment {
                 .setNegativeButton("Hủy", null)
                 .show();
     }
-    private void recordTaskAccess() {
-        if (taskId == 0 || token == null || token.isEmpty()) return;
+    private void recordTaskAccess(Runnable onComplete) {
+        if (taskId == 0 || token == null || token.isEmpty()) {
+            if (onComplete != null) onComplete.run();
+            return;
+        }
 
         ApiService apiService = RetrofitClient.getApiService(null);
         apiService.recordTaskAccess(token, taskId)
                 .enqueue(new Callback<JsonObject>() {
                     @Override
                     public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-                        if (!isAdded()) return;
+                        if (!isAdded()) {
+                            if (onComplete != null) onComplete.run();
+                            return;
+                        }
                         if (!response.isSuccessful()) {
                             Toast.makeText(requireContext(),
                                     "Không lưu được recent: " + response.code(),
                                     Toast.LENGTH_SHORT).show();
                         }
+                        if (onComplete != null) onComplete.run();
                     }
 
                     @Override
                     public void onFailure(Call<JsonObject> call, Throwable t) {
-                        if (!isAdded()) return;
-                        Toast.makeText(requireContext(),
-                                "Lỗi recent: " + t.getMessage(),
-                                Toast.LENGTH_SHORT).show();
+                        if (onComplete != null) onComplete.run();
                     }
                 });
     }
